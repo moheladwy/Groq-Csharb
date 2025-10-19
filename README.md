@@ -1,24 +1,24 @@
 ﻿# Groq API C# Client Library
 
-Welcome to the Groq API C# Client Library! This powerful and flexible library provides a seamless interface to interact with the cutting-edge Groq AI API. Designed for .NET 8 and above, our library offers a range of features to enhance your AI-powered applications.
+Welcome to the Groq API C# Client Library! This powerful and flexible library provides a seamless interface to interact with the cutting-edge Groq AI API. Designed for .NET 9 and above, our library offers a range of features to enhance your AI-powered applications.
 
 ## 🌟 Features
 
-- 💬 **Chat Completions**: Engage in dynamic conversations with AI models
-- 🔊 **Audio Transcription**: Convert speech to text with high accuracy
-- 🌐 **Audio Translation**: Translate audio content across languages
-- 🛠️ **Tool Usage**: Extend AI capabilities with custom tools
-- 🌊 **Streaming Support**: Real-time responses for interactive applications
-- 📋 **Model Listing**: Retrieve available AI models
-- 👁️ **Vision Analysis**: Process and analyze images with multimodal models
+-   💬 **Chat Completions**: Engage in dynamic conversations with AI models
+-   🔊 **Audio Transcription**: Convert speech to text with high accuracy
+-   🌐 **Audio Translation**: Translate audio content across languages
+-   🛠️ **Tool Usage**: Extend AI capabilities with custom tools
+-   🌊 **Streaming Support**: Real-time responses for interactive applications
+-   📋 **Model Listing**: Retrieve available AI models
+-   👁️ **Vision Analysis**: Process and analyze images with multimodal models
 
 ## 📦 Installation
 
-To use this library in your .NET 8+ project:
+To use this library in your .NET 9+ project:
 
 1. Clone this repository or download the `GroqApiClient.cs` file.
 2. Add the file to your project.
-3. Ensure your project targets .NET 8 or later.
+3. Ensure your project targets .NET 9 or later.
 
 ## 🚀 Quick Start
 
@@ -296,16 +296,17 @@ if (modelsResponse != null && modelsResponse.TryGetPropertyValue("data", out var
 
 Our library supports a wide range of Groq models, including:
 
-- mixtral-8x7b-32768
-- llama3-70b-8192
-- llama3-8b-8192
-- gemma-7b-it
+-   mixtral-8x7b-32768
+-   llama3-70b-8192
+-   llama3-8b-8192
+-   gemma-7b-it
 
 ### Supported Vision Models
 
 The library supports the following vision models:
-- llama-3.2-90b-vision-preview: High-capacity vision model
-- llama-3.2-11b-vision-preview: Efficient vision model
+
+-   llama-3.2-90b-vision-preview: High-capacity vision model
+-   llama-3.2-11b-vision-preview: Efficient vision model
 
 ### Error Handling
 
@@ -344,8 +345,8 @@ Mention J. Gravelle if you use this code. He's sort of full of himself.
 
 ## 🙏 Acknowledgements
 
-- Special thanks to the Groq team for their incredible AI models and API.
-- Shoutout to all contributors who have helped improve this library.
+-   Special thanks to the Groq team for their incredible AI models and API.
+-   Shoutout to all contributors who have helped improve this library.
 
 ---
 
