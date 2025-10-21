@@ -5,18 +5,18 @@ namespace GroqApiLibrary.Interfaces;
 /// </summary>
 public interface ILlmTextProvider
 {
-  /// <summary>
-  ///     Generates a response using the LLM based on the user's prompt.
-  /// </summary>
-  /// <param name="userPrompt">The user's input prompt for text generation.</param>
-  /// <returns>A task that represents the asynchronous operation, containing the generated text response.</returns>
-  Task<string> GenerateAsync(string userPrompt);
+    /// <summary>
+    ///     Generates a response using the LLM based on the user's prompt.
+    /// </summary>
+    /// <param name="userPrompt">The user's input prompt for text generation.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the generated text response.</returns>
+    Task<string> GenerateAsync(string userPrompt);
 
-  /// <summary>
-  ///     Generates a response using the LLM based on both system and user prompts.
-  /// </summary>
-  /// <param name="systemPrompt">The system prompt providing context or instructions to the LLM.</param>
-  /// <param name="userPrompt">The user's input prompt for text generation.</param>
-  /// <returns>A task that represents the asynchronous operation, containing the generated text response.</returns>
-  Task<string> GenerateAsync(string systemPrompt, string userPrompt);
+    /// <summary>
+    ///     Generates a response using the LLM based on both system and user prompts.
+    /// </summary>
+    /// <param name="systemPrompt">The system prompt providing context or instructions to the LLM.</param>
+    /// <param name="userPrompt">The user's input prompt for text generation.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the generated text response.</returns>
+    Task<string> GenerateAsync(string systemPrompt, string userPrompt);
 }

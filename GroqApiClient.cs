@@ -8,7 +8,6 @@ namespace GroqApiLibrary;
 
 public class GroqApiClient : IDisposable
 {
-    private readonly HttpClient _httpClient;
     private const string BaseUrl = "https://api.groq.com/openai/v1";
     private const string ChatCompletionsEndpoint = "/chat/completions";
     private const string TranscriptionsEndpoint = "/audio/transcriptions";
@@ -17,6 +16,7 @@ public class GroqApiClient : IDisposable
     private const string VisionModels = "llama-3.2-90b-vision-preview,llama-3.2-11b-vision-preview";
     private const int MAX_IMAGE_SIZE_MB = 20;
     private const int MAX_BASE64_SIZE_MB = 4;
+    private readonly HttpClient _httpClient;
 
     public GroqApiClient(string apiKey)
     {
@@ -30,12 +30,21 @@ public class GroqApiClient : IDisposable
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
     }
 
+
+    public void Dispose()
+    {
+        _httpClient.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
     private async Task<string> ConvertImageToBase64(string imagePath)
     {
         if (!File.Exists(imagePath))
+        {
             throw new FileNotFoundException($"Image file not found: {imagePath}");
+        }
 
-        byte[] imageBytes = await File.ReadAllBytesAsync(imagePath);
+        var imageBytes = await File.ReadAllBytesAsync(imagePath);
         return Convert.ToBase64String(imageBytes);
     }
 
@@ -46,7 +55,8 @@ public class GroqApiClient : IDisposable
         if (!response.IsSuccessStatusCode)
         {
             var errorContent = await response.Content.ReadAsStringAsync();
-            throw new HttpRequestException($"API request failed with status code {response.StatusCode}. Response content: {errorContent}");
+            throw new HttpRequestException(
+                $"API request failed with status code {response.StatusCode}. Response content: {errorContent}");
         }
 
         return await response.Content.ReadFromJsonAsync<JsonObject>();
@@ -56,11 +66,12 @@ public class GroqApiClient : IDisposable
     {
         request["stream"] = true;
         var content = new StringContent(request.ToJsonString(), Encoding.UTF8, "application/json");
-        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, BaseUrl + ChatCompletionsEndpoint) { Content = content };
+        using var requestMessage =
+            new HttpRequestMessage(HttpMethod.Post, BaseUrl + ChatCompletionsEndpoint) { Content = content };
         using var response = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
         response.EnsureSuccessStatusCode();
         using var stream = await response.Content.ReadAsStreamAsync();
-        using var reader = new System.IO.StreamReader(stream);
+        using var reader = new StreamReader(stream);
         string? line;
         while ((line = await reader.ReadLineAsync()) != null)
         {
@@ -83,15 +94,21 @@ public class GroqApiClient : IDisposable
         content.Add(new StringContent(model), "model");
 
         if (!string.IsNullOrEmpty(prompt))
+        {
             content.Add(new StringContent(prompt), "prompt");
+        }
 
         content.Add(new StringContent(responseFormat), "response_format");
 
         if (!string.IsNullOrEmpty(language))
+        {
             content.Add(new StringContent(language), "language");
+        }
 
         if (temperature.HasValue)
+        {
             content.Add(new StringContent(temperature.Value.ToString()), "temperature");
+        }
 
         var response = await _httpClient.PostAsync(BaseUrl + TranscriptionsEndpoint, content);
         response.EnsureSuccessStatusCode();
@@ -106,12 +123,16 @@ public class GroqApiClient : IDisposable
         content.Add(new StringContent(model), "model");
 
         if (!string.IsNullOrEmpty(prompt))
+        {
             content.Add(new StringContent(prompt), "prompt");
+        }
 
         content.Add(new StringContent(responseFormat), "response_format");
 
         if (temperature.HasValue)
+        {
             content.Add(new StringContent(temperature.Value.ToString()), "temperature");
+        }
 
         var response = await _httpClient.PostAsync(BaseUrl + TranslationsEndpoint, content);
         response.EnsureSuccessStatusCode();
@@ -136,28 +157,21 @@ public class GroqApiClient : IDisposable
         {
             ["model"] = model,
             ["messages"] = new JsonArray
-              {
-                  new JsonObject
-                  {
-                      ["role"] = "user",
-                      ["content"] = new JsonArray
-                      {
-                          new JsonObject
-                          {
-                              ["type"] = "text",
-                              ["text"] = prompt
-                          },
-                          new JsonObject
-                          {
-                              ["type"] = "image_url",
-                              ["image_url"] = new JsonObject
-                              {
-                                  ["url"] = imageUrl
-                              }
-                          }
-                      }
-                  }
-              }
+            {
+                new JsonObject
+                {
+                    ["role"] = "user",
+                    ["content"] = new JsonArray
+                    {
+                        new JsonObject { ["type"] = "text", ["text"] = prompt },
+                        new JsonObject
+                        {
+                            ["type"] = "image_url",
+                            ["image_url"] = new JsonObject { ["url"] = imageUrl }
+                        }
+                    }
+                }
+            }
         };
 
         if (temperature.HasValue)
@@ -181,28 +195,24 @@ public class GroqApiClient : IDisposable
         {
             ["model"] = model,
             ["messages"] = new JsonArray
-              {
-                  new JsonObject
-                  {
-                      ["role"] = "user",
-                      ["content"] = new JsonArray
-                      {
-                          new JsonObject
-                          {
-                              ["type"] = "text",
-                              ["text"] = prompt
-                          },
-                          new JsonObject
-                          {
-                              ["type"] = "image_url",
-                              ["image_url"] = new JsonObject
-                              {
-                                  ["url"] = $"data:image/jpeg;base64,{base64Image}"
-                              }
-                          }
-                      }
-                  }
-              }
+            {
+                new JsonObject
+                {
+                    ["role"] = "user",
+                    ["content"] = new JsonArray
+                    {
+                        new JsonObject { ["type"] = "text", ["text"] = prompt },
+                        new JsonObject
+                        {
+                            ["type"] = "image_url",
+                            ["image_url"] = new JsonObject
+                            {
+                                ["url"] = $"data:image/jpeg;base64,{base64Image}"
+                            }
+                        }
+                    }
+                }
+            }
         };
 
         if (temperature.HasValue)
@@ -225,28 +235,22 @@ public class GroqApiClient : IDisposable
         {
             ["model"] = model,
             ["messages"] = new JsonArray
-              {
-                  new JsonObject
-                  {
-                      ["role"] = "user",
-                      ["content"] = new JsonArray
-                      {
-                          new JsonObject
-                          {
-                              ["type"] = "text",
-                              ["text"] = prompt
-                          },
-                          new JsonObject
-                          {
-                              ["type"] = "image_url",
-                              ["image_url"] = new JsonObject
-                              {
-                                  ["url"] = imageUrl
-                              }
-                          }
-                      }
-                  }
-              },
+            {
+                new JsonObject
+                {
+                    ["role"] = "user",
+                    ["content"] =
+                        new JsonArray
+                        {
+                            new JsonObject { ["type"] = "text", ["text"] = prompt },
+                            new JsonObject
+                            {
+                                ["type"] = "image_url",
+                                ["image_url"] = new JsonObject { ["url"] = imageUrl }
+                            }
+                        }
+                }
+            },
             ["tools"] = JsonSerializer.SerializeToNode(tools.Select(t => new
             {
                 type = t.Type,
@@ -274,28 +278,21 @@ public class GroqApiClient : IDisposable
         {
             ["model"] = model,
             ["messages"] = new JsonArray
-              {
-                  new JsonObject
-                  {
-                      ["role"] = "user",
-                      ["content"] = new JsonArray
-                      {
-                          new JsonObject
-                          {
-                              ["type"] = "text",
-                              ["text"] = prompt
-                          },
-                          new JsonObject
-                          {
-                              ["type"] = "image_url",
-                              ["image_url"] = new JsonObject
-                              {
-                                  ["url"] = imageUrl
-                              }
-                          }
-                      }
-                  }
-              },
+            {
+                new JsonObject
+                {
+                    ["role"] = "user",
+                    ["content"] = new JsonArray
+                    {
+                        new JsonObject { ["type"] = "text", ["text"] = prompt },
+                        new JsonObject
+                        {
+                            ["type"] = "image_url",
+                            ["image_url"] = new JsonObject { ["url"] = imageUrl }
+                        }
+                    }
+                }
+            },
             ["response_format"] = new JsonObject { ["type"] = "json_object" }
         };
 
@@ -304,32 +301,25 @@ public class GroqApiClient : IDisposable
 
     public async Task<JsonObject?> ListModelsAsync()
     {
-        HttpResponseMessage response = await _httpClient.GetAsync($"{BaseUrl}/models");
+        var response = await _httpClient.GetAsync($"{BaseUrl}/models");
         response.EnsureSuccessStatusCode();
 
-        string responseString = await response.Content.ReadAsStringAsync();
-        JsonObject? responseJson = JsonSerializer.Deserialize<JsonObject>(responseString);
+        var responseString = await response.Content.ReadAsStringAsync();
+        var responseJson = JsonSerializer.Deserialize<JsonObject>(responseString);
 
         return responseJson;
     }
 
-    public async Task<string> RunConversationWithToolsAsync(string userPrompt, List<Tool> tools, string model, string systemMessage)
+    public async Task<string> RunConversationWithToolsAsync(string userPrompt, List<Tool> tools, string model,
+        string systemMessage)
     {
         try
         {
             var messages = new List<JsonObject>
-              {
-                  new JsonObject
-                  {
-                      ["role"] = "system",
-                      ["content"] = systemMessage
-                  },
-                  new JsonObject
-                  {
-                      ["role"] = "user",
-                      ["content"] = userPrompt
-                  }
-              };
+            {
+                new() { ["role"] = "system", ["content"] = systemMessage },
+                new() { ["role"] = "user", ["content"] = userPrompt }
+            };
 
             var request = new JsonObject
             {
@@ -348,7 +338,8 @@ public class GroqApiClient : IDisposable
                 ["tool_choice"] = "auto"
             };
 
-            Console.WriteLine($"Sending request to API: {JsonSerializer.Serialize(request, new JsonSerializerOptions { WriteIndented = true })}");
+            Console.WriteLine(
+                $"Sending request to API: {JsonSerializer.Serialize(request, new JsonSerializerOptions { WriteIndented = true })}");
 
             var response = await CreateChatCompletionAsync(request);
             var responseMessage = response?["choices"]?[0]?["message"]?.AsObject();
@@ -415,29 +406,26 @@ public class GroqApiClient : IDisposable
 
     private void ValidateBase64Size(string base64String)
     {
-        double sizeInMB = (base64String.Length * 3.0 / 4.0) / (1024 * 1024);
+        var sizeInMB = base64String.Length * 3.0 / 4.0 / (1024 * 1024);
         if (sizeInMB > MAX_BASE64_SIZE_MB)
+        {
             throw new ArgumentException($"Base64 encoded image exceeds maximum size of {MAX_BASE64_SIZE_MB}MB");
+        }
     }
 
     private void ValidateImageUrl(string url)
     {
         if (string.IsNullOrEmpty(url))
+        {
             throw new ArgumentException("Image URL cannot be null or empty");
+        }
 
         if (!Uri.TryCreate(url, UriKind.Absolute, out _))
+        {
             throw new ArgumentException("Invalid image URL format");
-    }
-
-
-
-    public void Dispose()
-    {
-        _httpClient.Dispose();
-        GC.SuppressFinalize(this);
+        }
     }
 }
-
 
 public class Tool
 {
