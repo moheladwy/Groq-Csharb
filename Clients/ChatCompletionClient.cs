@@ -26,7 +26,10 @@ public sealed class ChatCompletionClient
     ///     Initializes a new instance of the ChatCompletionClient with a provided HttpClient.
     /// </summary>
     /// <param name="httpClient">The HttpClient instance to use for API requests.</param>
-    public ChatCompletionClient(HttpClient httpClient) => _httpClient = httpClient;
+    public ChatCompletionClient(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
 
     /// <summary>
     ///     Retrieves a list of available models from the Groq API.

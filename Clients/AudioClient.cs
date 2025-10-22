@@ -25,7 +25,10 @@ public sealed class AudioClient
     /// <param name="httpClient">
     ///     The <see cref="HttpClient" /> instance to use for audio-related API requests.
     /// </param>
-    public AudioClient(HttpClient httpClient) => _httpClient = httpClient;
+    public AudioClient(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
 
     /// <summary>
     ///     Creates a transcription of an audio file using the Groq API.
