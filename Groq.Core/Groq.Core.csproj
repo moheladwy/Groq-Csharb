@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <None Include="..\\README.md" Pack="True" PackagePath="\" />
-    <None Include="..\\favicon.png" Pack="True" PackagePath="\" />
+    <None Include="..\\README.md" Pack="True" PackagePath="\"/>
+    <None Include="..\\favicon.png" Pack="True" PackagePath="\"/>
   </ItemGroup>
 </Project>

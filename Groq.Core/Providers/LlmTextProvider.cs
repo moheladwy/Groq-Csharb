@@ -13,7 +13,19 @@ namespace Groq.Core.Providers;
 /// </summary>
 public sealed class LlmTextProvider : ILlmTextProvider
 {
+    /// <summary>
+    ///     Represents an instance of <see cref="ChatCompletionClient"/> utilized for creating chat completions
+    ///     in the LLM (Large Language Model) operations.
+    ///     This client enables communication with the underlying API to generate and retrieve
+    ///     language responses based on provided prompts.
+    /// </summary>
     private readonly ChatCompletionClient _client;
+
+    /// <summary>
+    ///     Specifies the identifier of the LLM (Large Language Model) to be utilized for generating text responses.
+    ///     This value determines which model will be used when interacting with the API via the
+    ///     <see cref="ChatCompletionClient"/> for text generation tasks.
+    /// </summary>
     private readonly string _model;
 
     /// <summary>
@@ -38,7 +50,7 @@ public sealed class LlmTextProvider : ILlmTextProvider
     /// <param name="userPrompt">The user's input prompt for text generation.</param>
     /// <returns>The generated text response from the model.</returns>
     /// <param name="structureOutputJsonFormat">A JSON format string that defines the desired structure of the output.</param>
-    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="userPrompt"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="userPrompt" /> is null.</exception>
     public async Task<string> GenerateAsync(
         string userPrompt,
         string? structureOutputJsonFormat = null
@@ -50,16 +62,13 @@ public sealed class LlmTextProvider : ILlmTextProvider
             ["model"] = _model,
             ["messages"] = JsonSerializer.SerializeToNode(
                 new[] { new { role = LlmRoles.UserRole, content = userPrompt } }
-            ),
+            )
         };
 
         if (structureOutputJsonFormat is not null)
         {
-            request.Add("response_format", new JsonObject
-            {
-                ["type"] = "json_schema",
-                ["json_schema"] = structureOutputJsonFormat,
-            });
+            request.Add("response_format",
+                new JsonObject { ["type"] = "json_schema", ["json_schema"] = structureOutputJsonFormat });
         }
 
         var response = await _client.CreateChatCompletionAsync(request);
@@ -73,7 +82,10 @@ public sealed class LlmTextProvider : ILlmTextProvider
     /// <param name="userPrompt">The user's input prompt for text generation.</param>
     /// <param name="structureOutputJsonFormat">A JSON format string that defines the desired structure of the output.</param>
     /// <returns> A task that represents the asynchronous operation, containing the generated text response.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="systemPrompt" />, or <paramref name="userPrompt" /> is null.</exception>
+    /// <exception cref="ArgumentNullException">
+    ///     Thrown when the <paramref name="systemPrompt" />, or
+    ///     <paramref name="userPrompt" /> is null.
+    /// </exception>
     public async Task<string> GenerateAsync(
         string systemPrompt,
         string userPrompt,
@@ -90,18 +102,15 @@ public sealed class LlmTextProvider : ILlmTextProvider
                 new[]
                 {
                     new { role = LlmRoles.SystemRole, content = systemPrompt },
-                    new { role = LlmRoles.UserRole, content = userPrompt },
+                    new { role = LlmRoles.UserRole, content = userPrompt }
                 }
             )
         };
 
         if (structureOutputJsonFormat is not null)
         {
-            request.Add("response_format", new JsonObject
-            {
-                ["type"] = "json_schema",
-                ["json_schema"] = structureOutputJsonFormat,
-            });
+            request.Add("response_format",
+                new JsonObject { ["type"] = "json_schema", ["json_schema"] = structureOutputJsonFormat });
         }
 
         var response = await _client.CreateChatCompletionAsync(request);

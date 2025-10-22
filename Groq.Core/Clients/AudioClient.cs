@@ -27,10 +27,7 @@ public sealed class AudioClient
     /// <param name="httpClient">
     ///     The <see cref="HttpClient" /> instance to use for audio-related API requests.
     /// </param>
-    public AudioClient(HttpClient httpClient)
-    {
-        _httpClient = httpClient;
-    }
+    public AudioClient(HttpClient httpClient) => _httpClient = httpClient;
 
     /// <summary>
     ///     Creates a transcription of an audio file using the Groq API.
@@ -137,16 +134,25 @@ public sealed class AudioClient
     ///     Creates English speech audio from the provided text input using PlayAI TTS model.
     /// </summary>
     /// <param name="input">The text content to convert to speech. Recommended to keep under 10K characters for best results.</param>
-    /// <param name="voice">The English voice to use for speech synthesis. See <see cref="EnglishVoices"/> for available options.</param>
+    /// <param name="voice">
+    ///     The English voice to use for speech synthesis. See <see cref="EnglishVoices" /> for available
+    ///     options.
+    /// </param>
     /// <returns>A byte array containing the audio data in WAV format.</returns>
     /// <exception cref="HttpRequestException">Thrown when the API request fails.</exception>
     /// <remarks>
-    ///     <para>This method uses the PlayAI TTS model to generate human-like English speech with customizable voice parameters.</para>
+    ///     <para>
+    ///         This method uses the PlayAI TTS model to generate human-like English speech with customizable voice
+    ///         parameters.
+    ///     </para>
     ///     <para><b>Model:</b> playai-tts</para>
     ///     <para><b>Pricing:</b> $50.00 per million characters (20,000 characters per $1)</para>
     ///     <para><b>Output Format:</b> WAV audio file</para>
     ///     <para><b>Best Practices:</b> Keep input text under 10K characters for optimal quality and performance.</para>
-    ///     <para><b>Use Cases:</b> Creative content generation, voice agents, conversational AI, customer support, accessibility tools.</para>
+    ///     <para>
+    ///         <b>Use Cases:</b> Creative content generation, voice agents, conversational AI, customer support,
+    ///         accessibility tools.
+    ///     </para>
     /// </remarks>
     public async Task<byte[]> CreateTextToEnglishSpeechAsync(string input, EnglishVoices voice)
     {
@@ -168,17 +174,29 @@ public sealed class AudioClient
     ///     Creates Arabic speech audio from the provided text input using PlayAI TTS Arabic model.
     /// </summary>
     /// <param name="input">The text content to convert to speech. Recommended to keep under 10K characters for best results.</param>
-    /// <param name="voice">The Arabic voice to use for speech synthesis. See <see cref="ArabicVoices"/> for available options.</param>
+    /// <param name="voice">
+    ///     The Arabic voice to use for speech synthesis. See <see cref="ArabicVoices" /> for available
+    ///     options.
+    /// </param>
     /// <returns>A byte array containing the audio data in WAV format.</returns>
     /// <exception cref="HttpRequestException">Thrown when the API request fails.</exception>
     /// <remarks>
-    ///     <para>This method uses the PlayAI TTS Arabic model to generate human-like Arabic speech with customizable voice parameters.</para>
+    ///     <para>
+    ///         This method uses the PlayAI TTS Arabic model to generate human-like Arabic speech with customizable voice
+    ///         parameters.
+    ///     </para>
     ///     <para><b>Model:</b> playai-tts-arabic</para>
     ///     <para><b>Languages:</b> Arabic (specialized) and English</para>
     ///     <para><b>Pricing:</b> $50.00 per million characters (20,000 characters per $1)</para>
     ///     <para><b>Output Format:</b> WAV audio file</para>
-    ///     <para><b>Best Practices:</b> Keep input text under 10K characters; consider cultural sensitivity for Arabic contexts.</para>
-    ///     <para><b>Use Cases:</b> Arabic creative content generation, voice agents, conversational AI, customer support for Arabic speakers, accessibility tools.</para>
+    ///     <para>
+    ///         <b>Best Practices:</b> Keep input text under 10K characters; consider cultural sensitivity for Arabic
+    ///         contexts.
+    ///     </para>
+    ///     <para>
+    ///         <b>Use Cases:</b> Arabic creative content generation, voice agents, conversational AI, customer support for
+    ///         Arabic speakers, accessibility tools.
+    ///     </para>
     /// </remarks>
     public async Task<byte[]> CreateTextToArabicSpeechAsync(string input, ArabicVoices voice)
     {

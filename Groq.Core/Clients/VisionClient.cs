@@ -36,10 +36,7 @@ public sealed class VisionClient
     /// <param name="chatCompletionClient">
     ///     The client of type <see cref="ChatCompletionClient" /> responsible for handling chat completions
     /// </param>
-    public VisionClient(ChatCompletionClient chatCompletionClient)
-    {
-        _chatCompletionClient = chatCompletionClient;
-    }
+    public VisionClient(ChatCompletionClient chatCompletionClient) => _chatCompletionClient = chatCompletionClient;
 
     /// <summary>
     ///     Base method for creating vision-based completions using the Groq API.

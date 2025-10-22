@@ -26,10 +26,7 @@ public sealed class ToolClient
     ///     The client of type <see cref="ChatCompletionClient" /> responsible for handling chat completions
     ///     with the Groq API.
     /// </param>
-    public ToolClient(ChatCompletionClient chatCompletionClient)
-    {
-        _chatCompletionClient = chatCompletionClient;
-    }
+    public ToolClient(ChatCompletionClient chatCompletionClient) => _chatCompletionClient = chatCompletionClient;
 
     /// <summary>
     ///     Runs a multi-turn conversation with tool-augmented capabilities using the Groq API.
