@@ -1,7 +1,9 @@
 using System.Globalization;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using GroqApiLibrary.Models;
 using GroqApiLibrary.Settings;
+using GroqApiLibrary.Settings.Voice;
 
 namespace GroqApiLibrary.Clients;
 
@@ -129,5 +131,68 @@ public sealed class AudioClient
         var response = await _httpClient.PostAsync(Endpoints.TranslationsEndpoint, content);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<JsonObject>();
+    }
+
+    /// <summary>
+    ///     Creates English speech audio from the provided text input using PlayAI TTS model.
+    /// </summary>
+    /// <param name="input">The text content to convert to speech. Recommended to keep under 10K characters for best results.</param>
+    /// <param name="voice">The English voice to use for speech synthesis. See <see cref="EnglishVoices"/> for available options.</param>
+    /// <returns>A byte array containing the audio data in WAV format.</returns>
+    /// <exception cref="HttpRequestException">Thrown when the API request fails.</exception>
+    /// <remarks>
+    ///     <para>This method uses the PlayAI TTS model to generate human-like English speech with customizable voice parameters.</para>
+    ///     <para><b>Model:</b> playai-tts</para>
+    ///     <para><b>Pricing:</b> $50.00 per million characters (20,000 characters per $1)</para>
+    ///     <para><b>Output Format:</b> WAV audio file</para>
+    ///     <para><b>Best Practices:</b> Keep input text under 10K characters for optimal quality and performance.</para>
+    ///     <para><b>Use Cases:</b> Creative content generation, voice agents, conversational AI, customer support, accessibility tools.</para>
+    /// </remarks>
+    public async Task<byte[]> CreateTextToEnglishSpeechAsync(string input, EnglishVoices voice)
+    {
+        var requestBody = new JsonObject
+        {
+            ["input"] = input,
+            ["model"] = AudioModels.PLAYAI_TTS.Id,
+            ["voice"] = $"{voice}-PlayAI",
+            ["response_format"] = "wav"
+        };
+
+        var response = await _httpClient.PostAsJsonAsync(Endpoints.TextToSpeechEndpoint, requestBody);
+        response.EnsureSuccessStatusCode();
+        var responseData = await response.Content.ReadAsByteArrayAsync();
+        return responseData;
+    }
+
+    /// <summary>
+    ///     Creates Arabic speech audio from the provided text input using PlayAI TTS Arabic model.
+    /// </summary>
+    /// <param name="input">The text content to convert to speech. Recommended to keep under 10K characters for best results.</param>
+    /// <param name="voice">The Arabic voice to use for speech synthesis. See <see cref="ArabicVoices"/> for available options.</param>
+    /// <returns>A byte array containing the audio data in WAV format.</returns>
+    /// <exception cref="HttpRequestException">Thrown when the API request fails.</exception>
+    /// <remarks>
+    ///     <para>This method uses the PlayAI TTS Arabic model to generate human-like Arabic speech with customizable voice parameters.</para>
+    ///     <para><b>Model:</b> playai-tts-arabic</para>
+    ///     <para><b>Languages:</b> Arabic (specialized) and English</para>
+    ///     <para><b>Pricing:</b> $50.00 per million characters (20,000 characters per $1)</para>
+    ///     <para><b>Output Format:</b> WAV audio file</para>
+    ///     <para><b>Best Practices:</b> Keep input text under 10K characters; consider cultural sensitivity for Arabic contexts.</para>
+    ///     <para><b>Use Cases:</b> Arabic creative content generation, voice agents, conversational AI, customer support for Arabic speakers, accessibility tools.</para>
+    /// </remarks>
+    public async Task<byte[]> CreateTextToArabicSpeechAsync(string input, ArabicVoices voice)
+    {
+        var requestBody = new JsonObject
+        {
+            ["input"] = input,
+            ["model"] = AudioModels.PLAYAI_TTS_ARABIC.Id,
+            ["voice"] = $"{voice}-PlayAI",
+            ["response_format"] = "wav"
+        };
+
+        var response = await _httpClient.PostAsJsonAsync(Endpoints.TextToSpeechEndpoint, requestBody);
+        response.EnsureSuccessStatusCode();
+        var responseData = await response.Content.ReadAsByteArrayAsync();
+        return responseData;
     }
 }
