@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <None Include="README.md" Pack="True" PackagePath="\" />
+    <None Include="favicon.png" Pack="True" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
