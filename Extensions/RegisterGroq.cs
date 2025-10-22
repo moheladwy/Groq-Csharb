@@ -2,7 +2,6 @@ using System.Net.Http.Headers;
 using GroqApiLibrary.Clients;
 using GroqApiLibrary.Providers;
 using GroqApiLibrary.Settings;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 

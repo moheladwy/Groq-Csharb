@@ -160,6 +160,9 @@ dotnet_diagnostic.CA2007.severity = none
 # CA1707: Identifiers should not contain underscores
 dotnet_diagnostic.CA1707.severity = none
 
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = none
+
 [*.{cpp,h,in}]
 curly_bracket_next_line = true
 indent_brace_style = Allman
