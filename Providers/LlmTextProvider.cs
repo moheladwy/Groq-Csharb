@@ -26,10 +26,7 @@ public sealed class LlmTextProvider : ILlmTextProvider
     ///     The model Id to use for text generation.
     ///     If null, defaults to <see cref="ChatModels.OPENAI_GPT_OSS_120B" />.
     /// </param>
-    public LlmTextProvider(
-        ChatCompletionClient chatCompletionClient,
-        string? model = null
-    )
+    public LlmTextProvider(ChatCompletionClient chatCompletionClient, string? model = null)
     {
         _client = chatCompletionClient;
         _model = model ?? ChatModels.OPENAI_GPT_OSS_120B.Id;
@@ -40,41 +37,81 @@ public sealed class LlmTextProvider : ILlmTextProvider
     /// </summary>
     /// <param name="userPrompt">The user's input prompt for text generation.</param>
     /// <returns>The generated text response from the model.</returns>
-    public async Task<string> GenerateAsync(string userPrompt)
+    /// <param name="structureOutputJsonFormat">A JSON format string that defines the desired structure of the output.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="userPrompt"/> is null.</exception>
+    public async Task<string> GenerateAsync(
+        string userPrompt,
+        string? structureOutputJsonFormat = null
+    )
     {
+        ArgumentNullException.ThrowIfNull(userPrompt);
         var request = new JsonObject
         {
             ["model"] = _model,
-            ["messages"] = JsonSerializer.SerializeToNode(new[]
-            {
-                new { role = LlmRoles.UserRole, content = userPrompt }
-            })
+            ["messages"] = JsonSerializer.SerializeToNode(
+                new[] { new { role = LlmRoles.UserRole, content = userPrompt } }
+            ),
         };
+
+        if (structureOutputJsonFormat is not null)
+        {
+            request.Add("response_format", new JsonObject
+            {
+                ["type"] = "json_schema",
+                ["json_schema"] = structureOutputJsonFormat,
+            });
+        }
 
         var response = await _client.CreateChatCompletionAsync(request);
         return response?["choices"]?[0]?["message"]?["content"]?.GetValue<string>() ?? string.Empty;
     }
 
     /// <summary>
-    ///     Generates text based on both system and user prompts using the configured LLM model.
+    ///     Generates a response using the LLM based on both system and user prompts with a structured output format.
     /// </summary>
-    /// <param name="systemPrompt">The system instructions or context for the generation.</param>
+    /// <param name="systemPrompt">The system prompt providing context or instructions to the LLM.</param>
     /// <param name="userPrompt">The user's input prompt for text generation.</param>
-    /// <returns>The generated text response from the model.</returns>
-    public async Task<string> GenerateAsync(string systemPrompt, string userPrompt)
+    /// <param name="structureOutputJsonFormat">A JSON format string that defines the desired structure of the output.</param>
+    /// <returns> A task that represents the asynchronous operation, containing the generated text response.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="systemPrompt" />, or <paramref name="userPrompt" /> is null.</exception>
+    public async Task<string> GenerateAsync(
+        string systemPrompt,
+        string userPrompt,
+        string? structureOutputJsonFormat = null
+    )
     {
+        ArgumentNullException.ThrowIfNull(systemPrompt);
+        ArgumentNullException.ThrowIfNull(userPrompt);
+
         var request = new JsonObject
         {
             ["model"] = _model,
-            ["messages"] = JsonSerializer.SerializeToNode(new[]
+            ["messages"] = JsonSerializer.SerializeToNode(
+                new[]
+                {
+                    new { role = LlmRoles.SystemRole, content = systemPrompt },
+                    new { role = LlmRoles.UserRole, content = userPrompt },
+                }
+            ),
+            ["response_format"] = new JsonObject
             {
-                new { role = LlmRoles.SystemRole, content = systemPrompt },
-                new { role = LlmRoles.UserRole, content = userPrompt }
-            })
+                ["type"] = "json_schema",
+                ["json_schema"] = structureOutputJsonFormat,
+            },
         };
 
+        if (structureOutputJsonFormat is not null)
+        {
+            request.Add("response_format", new JsonObject
+            {
+                ["type"] = "json_schema",
+                ["json_schema"] = structureOutputJsonFormat,
+            });
+        }
+
         var response = await _client.CreateChatCompletionAsync(request);
-        var result = response?["choices"]?[0]?["message"]?["content"]?.GetValue<string>() ?? string.Empty;
+        var result =
+            response?["choices"]?[0]?["message"]?["content"]?.GetValue<string>() ?? string.Empty;
 
         return result;
     }
