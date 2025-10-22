@@ -17,6 +17,9 @@ public static class Endpoints
     /// <summary>The endpoint for audio translations.</summary>
     public const string TranslationsEndpoint = "audio/translations";
 
+    /// <summary>The endpoint for text-to-speech conversions.</summary>
+    public const string TextToSpeechEndpoint = "audio/speech";
+
     /// <summary>The endpoint for retrieving all available models from the Groq API.</summary>
     public const string GetAllModelsEndpoint = "models";
 }
