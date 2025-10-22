@@ -1,4 +1,4 @@
-namespace GroqApiLibrary.Models;
+namespace Groq.Core.Models;
 
 /// <summary>
 /// Represents a tool that can be called by the model during execution.

@@ -1,11 +1,11 @@
 using System.Globalization;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
-using GroqApiLibrary.Models;
-using GroqApiLibrary.Settings;
-using GroqApiLibrary.Settings.Voice;
+using Groq.Core.Models;
+using Groq.Core.Settings;
+using Groq.Core.Settings.Voice;
 
-namespace GroqApiLibrary.Clients;
+namespace Groq.Core.Clients;
 
 /// <summary>
 ///     Represents a client for interacting with the audio-related services of the Groq API.

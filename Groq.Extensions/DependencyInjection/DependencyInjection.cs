@@ -1,11 +1,11 @@
 ﻿using System.Net.Http.Headers;
-using GroqApiLibrary.Clients;
-using GroqApiLibrary.Providers;
-using GroqApiLibrary.Settings;
+using Groq.Core.Clients;
+using Groq.Core.Providers;
+using Groq.Core.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Groq.Extensions.DependancyInjection;
+namespace Groq.Extensions.DependencyInjection;
 
 /// <summary>
 /// Provides extension methods to register Groq API services and related components in the dependency injection container.
@@ -15,7 +15,7 @@ namespace Groq.Extensions.DependancyInjection;
 /// service collection. It includes a method to register the required services and configure the HTTP client
 /// for interacting with the Groq API.
 /// </remarks>
-public static class DependancyInjection
+public static class DependencyInjection
 {
   /// <summary>
   ///     Adds Groq API-related services to the dependency injection container of the application.

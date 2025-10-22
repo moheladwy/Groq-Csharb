@@ -1,4 +1,4 @@
-namespace GroqApiLibrary.Settings.Voice;
+namespace Groq.Core.Settings.Voice;
 
 public enum EnglishVoices
 {

@@ -1,7 +1,7 @@
 // Licensed to the.NET Foundation under one or more agreements.
 // The.NET Foundation licenses this file to you under the MIT license.
 
-namespace GroqApiLibrary.Models;
+namespace Groq.Core.Models;
 
 /// <summary>
 /// Contains text generation and chat completion models including general-purpose LLMs,

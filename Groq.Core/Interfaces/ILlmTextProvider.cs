@@ -1,4 +1,4 @@
-namespace GroqApiLibrary.Interfaces;
+namespace Groq.Core.Interfaces;
 
 /// <summary>
 ///     Provides an interface for interacting with Large Language Models (LLM) to generate text responses.

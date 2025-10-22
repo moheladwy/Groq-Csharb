@@ -3,7 +3,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace GroqApiLibrary.Models;
+namespace Groq.Core.Models;
 
 /// <summary>
 /// Represents the response from the Groq API when listing available models.

@@ -1,9 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using GroqApiLibrary.Models;
-using GroqApiLibrary.Settings;
+using Groq.Core.Models;
+using Groq.Core.Settings;
 
-namespace GroqApiLibrary.Clients;
+namespace Groq.Core.Clients;
 
 /// <summary>
 ///     Provides methods for interacting with the Groq Vision APIs, enabling functionalities such as vision-based

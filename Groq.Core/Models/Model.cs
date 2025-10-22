@@ -3,7 +3,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace GroqApiLibrary.Models;
+namespace Groq.Core.Models;
 
 /// <summary>
 /// Represents a language model available in the Groq API.

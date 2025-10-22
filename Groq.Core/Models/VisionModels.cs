@@ -1,7 +1,7 @@
 // Licensed to the.NET Foundation under one or more agreements.
 // The.NET Foundation licenses this file to you under the MIT license.
 
-namespace GroqApiLibrary.Models;
+namespace Groq.Core.Models;
 
 /// <summary>
 /// Contains Meta's Llama 4 natively multimodal vision models that enable text and image understanding.

@@ -1,6 +1,6 @@
 using System.Text.Json.Nodes;
 
-namespace GroqApiLibrary.Models;
+namespace Groq.Core.Models;
 
 /// <summary>
 /// Represents a function that can be called by the model during execution.

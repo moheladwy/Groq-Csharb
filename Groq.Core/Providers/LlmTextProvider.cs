@@ -1,11 +1,11 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using GroqApiLibrary.Clients;
-using GroqApiLibrary.Interfaces;
-using GroqApiLibrary.Models;
-using GroqApiLibrary.Settings;
+using Groq.Core.Clients;
+using Groq.Core.Interfaces;
+using Groq.Core.Models;
+using Groq.Core.Settings;
 
-namespace GroqApiLibrary.Providers;
+namespace Groq.Core.Providers;
 
 /// <summary>
 ///     Provides integration with Groq LLM (Large Language Model) API for text generation.

@@ -1,6 +1,6 @@
-using GroqApiLibrary.Models;
+using Groq.Core.Models;
 
-namespace GroqApiLibrary.Settings;
+namespace Groq.Core.Settings;
 
 /// <summary>
 ///     Contains settings for the Groq API vision features.
