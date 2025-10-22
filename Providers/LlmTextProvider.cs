@@ -92,12 +92,7 @@ public sealed class LlmTextProvider : ILlmTextProvider
                     new { role = LlmRoles.SystemRole, content = systemPrompt },
                     new { role = LlmRoles.UserRole, content = userPrompt },
                 }
-            ),
-            ["response_format"] = new JsonObject
-            {
-                ["type"] = "json_schema",
-                ["json_schema"] = structureOutputJsonFormat,
-            },
+            )
         };
 
         if (structureOutputJsonFormat is not null)

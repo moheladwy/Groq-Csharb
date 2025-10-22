@@ -212,7 +212,7 @@ The library is **production-ready** with:
 -   HttpClient reuse via DI
 -   Resilience handlers for fault tolerance
 
-## � What's Left to Implement
+## 🚧 What's Left to Implement
 
 Based on Groq's latest API capabilities, the following features are **not yet implemented** in this library and are planned for future releases:
 
@@ -363,7 +363,7 @@ We welcome contributions! If you'd like to help implement any of these features:
 -   🟡 Enhanced reasoning features
 -   🟢 Documentation improvements and examples
 
-## �📋 Requirements
+## 📋 Requirements
 
 -   **.NET 9.0** or later
 -   Groq API key (get one at [console.groq.com](https://console.groq.com))
