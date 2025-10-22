@@ -1,9 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using GroqApiLibrary.Models;
-using GroqApiLibrary.Settings;
+using Groq.Core.Models;
+using Groq.Core.Settings;
 
-namespace GroqApiLibrary.Clients;
+namespace Groq.Core.Clients;
 
 /// <summary>
 ///     A client for interacting with the Groq API, including functionalities such as listing models
@@ -26,10 +26,7 @@ public sealed class ToolClient
     ///     The client of type <see cref="ChatCompletionClient" /> responsible for handling chat completions
     ///     with the Groq API.
     /// </param>
-    public ToolClient(ChatCompletionClient chatCompletionClient)
-    {
-        _chatCompletionClient = chatCompletionClient;
-    }
+    public ToolClient(ChatCompletionClient chatCompletionClient) => _chatCompletionClient = chatCompletionClient;
 
     /// <summary>
     ///     Runs a multi-turn conversation with tool-augmented capabilities using the Groq API.

@@ -1,4 +1,4 @@
-namespace GroqApiLibrary.Settings;
+namespace Groq.Core.Settings;
 
 /// <summary>
 ///     Provides predefined role constants for use in API requests involving language models (LLMs).

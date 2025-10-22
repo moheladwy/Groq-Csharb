@@ -2,10 +2,10 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using GroqApiLibrary.Models;
-using GroqApiLibrary.Settings;
+using Groq.Core.Models;
+using Groq.Core.Settings;
 
-namespace GroqApiLibrary.Clients;
+namespace Groq.Core.Clients;
 
 /// <summary>
 ///     A client for interacting with the Groq API's chat completion functionality.
@@ -26,16 +26,13 @@ public sealed class ChatCompletionClient
     ///     Initializes a new instance of the ChatCompletionClient with a provided HttpClient.
     /// </summary>
     /// <param name="httpClient">The HttpClient instance to use for API requests.</param>
-    public ChatCompletionClient(HttpClient httpClient)
-    {
-        _httpClient = httpClient;
-    }
+    public ChatCompletionClient(HttpClient httpClient) => _httpClient = httpClient;
 
     /// <summary>
     ///     Retrieves a list of available models from the Groq API.
     /// </summary>
     /// <returns>
-    /// A <c>ModelListResponse</c> containing the list of models.
+    ///     A <c>ModelListResponse</c> containing the list of models.
     /// </returns>
     /// <exception cref="HttpRequestException">Thrown when the API request fails.</exception>
     public async Task<ModelListResponse?> ListModelsAsync()

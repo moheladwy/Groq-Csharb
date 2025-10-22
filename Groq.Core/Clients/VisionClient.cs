@@ -1,9 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using GroqApiLibrary.Models;
-using GroqApiLibrary.Settings;
+using Groq.Core.Models;
+using Groq.Core.Settings;
 
-namespace GroqApiLibrary.Clients;
+namespace Groq.Core.Clients;
 
 /// <summary>
 ///     Provides methods for interacting with the Groq Vision APIs, enabling functionalities such as vision-based
@@ -36,10 +36,7 @@ public sealed class VisionClient
     /// <param name="chatCompletionClient">
     ///     The client of type <see cref="ChatCompletionClient" /> responsible for handling chat completions
     /// </param>
-    public VisionClient(ChatCompletionClient chatCompletionClient)
-    {
-        _chatCompletionClient = chatCompletionClient;
-    }
+    public VisionClient(ChatCompletionClient chatCompletionClient) => _chatCompletionClient = chatCompletionClient;
 
     /// <summary>
     ///     Base method for creating vision-based completions using the Groq API.
