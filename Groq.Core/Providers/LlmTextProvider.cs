@@ -1,8 +1,8 @@
 using System.Text.Json.Nodes;
 using Groq.Core.Clients;
+using Groq.Core.Configurations;
 using Groq.Core.Interfaces;
 using Groq.Core.Models;
-using Groq.Core.Settings;
 
 namespace Groq.Core.Providers;
 

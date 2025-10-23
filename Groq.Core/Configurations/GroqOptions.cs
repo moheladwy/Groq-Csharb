@@ -1,9 +1,9 @@
-namespace Groq.Core.Settings;
+namespace Groq.Core.Configurations;
 
 /// <summary>
 /// Configuration settings for the Groq API client.
 /// </summary>
-public class GroqSettings
+public class GroqOptions
 {
     /// <summary>
     /// Gets or sets the API key for authenticating with the Groq API.

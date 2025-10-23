@@ -1,9 +1,9 @@
 using System.Globalization;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using Groq.Core.Configurations;
+using Groq.Core.Configurations.Voice;
 using Groq.Core.Models;
-using Groq.Core.Settings;
-using Groq.Core.Settings.Voice;
 
 namespace Groq.Core.Clients;
 

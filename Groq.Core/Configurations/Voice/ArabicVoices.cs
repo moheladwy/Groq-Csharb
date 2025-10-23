@@ -1,4 +1,4 @@
-namespace Groq.Core.Settings.Voice;
+namespace Groq.Core.Configurations.Voice;
 
 public enum ArabicVoices
 {

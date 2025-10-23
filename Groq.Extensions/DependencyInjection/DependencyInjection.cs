@@ -1,8 +1,8 @@
 ﻿using System.Net.Http.Headers;
 using Groq.Core.Clients;
+using Groq.Core.Configurations;
 using Groq.Core.Interfaces;
 using Groq.Core.Providers;
-using Groq.Core.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http.Resilience;
@@ -35,7 +35,7 @@ public static class DependencyInjection
     ///     The builder to add the Groq API-related services to.
     /// </param>
     /// <param name="configureOptions">
-    ///     An action to configure the <see cref="GroqSettings" /> used for Groq API clients.
+    ///     An action to configure the <see cref="GroqOptions" /> used for Groq API clients.
     /// </param>
     /// <remarks>
     ///     This method registers various Groq API clients and providers, such as
@@ -54,7 +54,7 @@ public static class DependencyInjection
     /// <seealso cref="LlmTextProvider" />
     public static TBuilder AddGroqApiServices<TBuilder>(
         this TBuilder builder,
-        Action<GroqSettings> configureOptions)
+        Action<GroqOptions> configureOptions)
         where TBuilder : IHostApplicationBuilder
     {
         ArgumentNullException.ThrowIfNull(configureOptions);
@@ -62,7 +62,7 @@ public static class DependencyInjection
         // Register the HttpClient factory for Groq
         builder.Services.Configure(configureOptions);
         builder.Services
-            .AddOptions<GroqSettings>()
+            .AddOptions<GroqOptions>()
             .Validate(o => !string.IsNullOrWhiteSpace(o.ApiKey), "Groq:ApiKey is required.")
             .Validate(o => o.MaxRetries >= 0, "Groq:MaxRetries must be >= 0.")
             .Validate(o => o.Timeout > TimeSpan.Zero, "Groq:Timeout must be > 0.")
@@ -89,7 +89,7 @@ public static class DependencyInjection
             .AddScoped<ILlmTextProvider, LlmTextProvider>(sp =>
             {
                 var httpClientFactory = sp.GetRequiredService<ChatCompletionClient>();
-                var options = sp.GetRequiredService<IOptions<GroqSettings>>().Value;
+                var options = sp.GetRequiredService<IOptions<GroqOptions>>().Value;
                 return new LlmTextProvider(httpClientFactory, options.Model);
             })
             .AddScoped<GroqClient>(sp =>
@@ -135,14 +135,14 @@ public static class DependencyInjection
             .AddHttpClient(GroqHttpClientName)
             .ConfigureHttpClient((sp, client) =>
             {
-                var options = sp.GetRequiredService<IOptions<GroqSettings>>().Value;
+                var options = sp.GetRequiredService<IOptions<GroqOptions>>().Value;
                 client.BaseAddress = new Uri(options.BaseUrl);
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.ApiKey);
             })
             .AddStandardResilienceHandler()
             .Configure((options, sp) =>
             {
-                var settings = sp.GetRequiredService<IOptions<GroqSettings>>().Value;
+                var settings = sp.GetRequiredService<IOptions<GroqOptions>>().Value;
                 options.Retry = new HttpRetryStrategyOptions
                 {
                     Delay = settings.Delay,

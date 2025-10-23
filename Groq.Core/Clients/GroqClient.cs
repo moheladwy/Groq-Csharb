@@ -2,9 +2,9 @@
 // The.NET Foundation licenses this file to you under the MIT license.
 
 using System.Net.Http.Headers;
+using Groq.Core.Configurations;
 using Groq.Core.Interfaces;
 using Groq.Core.Providers;
-using Groq.Core.Settings;
 
 namespace Groq.Core.Clients;
 
@@ -63,18 +63,18 @@ public sealed class GroqClient
     /// <summary>
     /// Initializes a new instance of the <see cref="GroqClient"/> class with the specified settings.
     /// </summary>
-    /// <param name="options">The configuration settings for the Groq API client.</param>
+    /// <param name="options">The configuration options for the Groq API client.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is null.</exception>
     /// <exception cref="ArgumentException">Thrown when the API key in <paramref name="options"/> is null or empty.</exception>
     /// <remarks>
     /// This constructor creates a new <see cref="HttpClient"/> instance configured with the base URL,
-    /// timeout, and authorization header from the provided settings. This constructor should only be used if you are
+    /// timeout, and authorization header from the provided options. This constructor should only be used if you are
     /// using an application that doesn't support DI like Console Applications.
     /// For any Hosted Application that supports DI, we recommend using the <c>Groq.Extensions.DependencyInjection</c>
     /// package to be able to register the GroqClient in the service collection and take advantage of HttpClientFactory
     /// for proper HttpClient lifecycle management and connection pooling.
     /// </remarks>
-    public GroqClient(GroqSettings options)
+    public GroqClient(GroqOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentException.ThrowIfNullOrEmpty(options.ApiKey);
