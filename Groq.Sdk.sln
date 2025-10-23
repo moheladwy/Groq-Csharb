@@ -21,6 +21,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B1B72DA6-B8C1-45E0-AC72-69F38C70BEF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1B72DA6-B8C1-45E0-AC72-69F38C70BEF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1B72DA6-B8C1-45E0-AC72-69F38C70BEF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1B72DA6-B8C1-45E0-AC72-69F38C70BEF1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{50F29681-3196-4C4E-90F5-DAFBE4399F2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{50F29681-3196-4C4E-90F5-DAFBE4399F2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50F29681-3196-4C4E-90F5-DAFBE4399F2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,3 +45,5 @@ Global
 		SolutionGuid = {36BD0126-40D8-4A1D-A015-95DFF6423261}
 	EndGlobalSection
 EndGlobal
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Groq.Tests", "Groq.Tests\Groq.Tests.csproj", "{B1B72DA6-B8C1-45E0-AC72-69F38C70BEF1}"
+EndProject
