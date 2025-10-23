@@ -61,6 +61,12 @@ public static class DependencyInjection
 
         // Register the HttpClient factory for Groq
         builder.Services.Configure(configureOptions);
+        builder.Services
+            .AddOptions<GroqSettings>()
+            .Validate(o => !string.IsNullOrWhiteSpace(o.ApiKey), "Groq:ApiKey is required.")
+            .Validate(o => o.MaxRetries >= 0, "Groq:MaxRetries must be >= 0.")
+            .Validate(o => o.Timeout > TimeSpan.Zero, "Groq:Timeout must be > 0.")
+            .ValidateOnStart();
 
         builder.AddGroqHttpClientFactory();
 
