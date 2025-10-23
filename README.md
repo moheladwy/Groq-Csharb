@@ -382,50 +382,59 @@ We welcome contributions! If you'd like to help implement any of these features:
 
 ## 📦 Installation
 
+### Current Release
+
+**Version:** `2.0.0.1-alpha`
+
+This is an alpha release with the new architecture featuring GroqClient, GroqSettings, and HttpClientFactory integration.
+
 ### NuGet Packages
 
 The SDK is split into two packages for better modularity:
 
-#### **Groq.Core** (Required)
+#### **Groq.Sdk.Core** (Required)
 
 Core SDK containing all API clients, models, and providers.
 
 ```bash
-dotnet add package Groq.Core
+dotnet add package Groq.Sdk.Core --version 2.0.0.1-alpha
 ```
 
-#### **Groq.Extensions** (Optional)
+Or via Package Manager Console:
+
+```powershell
+Install-Package Groq.Sdk.Core -Version 2.0.0.1-alpha
+```
+
+#### **Groq.Sdk.Extensions.DependencyInjection** (Optional)
 
 Dependency injection extensions for ASP.NET Core and .NET Generic Host applications.
 
 ```bash
-dotnet add package Groq.Extensions
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.1-alpha
+```
+
+Or via Package Manager Console:
+
+```powershell
+Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.1-alpha
 ```
 
 ### Quick Install (Both Packages)
 
 ```bash
-dotnet add package Groq.Core
-dotnet add package Groq.Extensions
+dotnet add package Groq.Sdk.Core --version 2.0.0.1-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.1-alpha
 ```
 
 > **💡 Package Selection Guide:**
 >
-> -   Use **Groq.Core** only if you're manually instantiating clients with `HttpClient`
-> -   Add **Groq.Extensions** if you want automatic dependency injection setup (recommended for ASP.NET Core and .NET Generic Host apps)
-> -   Both packages work together seamlessly - Groq.Extensions automatically includes Groq.Core
-
-### From Source
-
-1. Clone this repository
-2. Add project references in your `.csproj`:
-
-```xml
-<ItemGroup>
-  <ProjectReference Include="../GroqApiLibrary/Groq.Core/Groq.Core.csproj" />
-  <ProjectReference Include="../GroqApiLibrary/Groq.Extensions/Groq.Extensions.csproj" />
-</ItemGroup>
-```
+> -   Use **Groq.Sdk.Core** only if you're manually instantiating clients with `HttpClient`
+> -   Add **Groq.Sdk.Extensions.DependencyInjection** if you want automatic dependency injection setup (recommended for ASP.NET Core and .NET Generic Host apps)
+> -   Both packages work together seamlessly - Groq.Sdk.Extensions.DependencyInjection automatically includes Groq.Sdk.Core
+>
+> **⚠️ Alpha Release Notice:**
+> This is an alpha version. APIs may change before the stable release. Please report any issues on [GitHub](https://github.com/moheladwy/GroqApiLibrary/issues).
 
 ## 🚀 Quick Start
 
