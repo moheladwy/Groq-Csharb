@@ -1,4 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <PackageId>Groq.Sdk.Core</PackageId>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="..\\README.md" Pack="True" PackagePath="\"/>
     <None Include="..\\favicon.png" Pack="True" PackagePath="\"/>

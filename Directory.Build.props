@@ -4,13 +4,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>Groq API Library</Title>
+    <Title>Groq Csharp SDK</Title>
+    <Product>Groq Csharp SDK</Product>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Authors>Mohamed Al-Adawy (moheladwy), J. Gravelle (original author)</Authors>
     <Description>A comprehensive .NET SDK for Groq AI API integration. Forked and enhanced from J. Gravelle's original GroqApiLibrary with modern architecture, HttpClientFactory pattern, GroqSettings configuration, and extensive feature additions. Supports chat completions, vision, audio (STT/TTS), tools, and streaming.</Description>
     <Copyright>©2025 - Mohamed Al-Adawy, Original ©2024 - J. Gravelle</Copyright>
-    <PackageProjectUrl>https://github.com/moheladwy/GroqApiLibrary</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/moheladwy/GroqApiLibrary</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/moheladwy/Groq-Csharb</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/moheladwy/Groq-Csharb</RepositoryUrl>
     <PackageIcon>favicon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Groq, API, .NET Core SDK, AI, LLM, Chat, Vision, Audio, TTS, STT</PackageTags>

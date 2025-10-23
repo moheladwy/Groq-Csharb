@@ -4,19 +4,10 @@ A comprehensive and modern .NET SDK for seamless integration with the Groq AI AP
 type-safe interface to access Groq's powerful language models, vision capabilities, audio processing, and advanced tool
 integration features.
 
-**📜 Origin & Attribution**  
-This project is a modernized fork of the original [GroqApiLibrary](https://github.com/jgravelle/GroqApiLibrary) by [J. Gravelle](https://github.com/jgravelle).  
+**📜 Origin & Attribution**
+This project is a modernized fork of the original [GroqApiLibrary](https://github.com/jgravelle/GroqApiLibrary) by [J. Gravelle](https://github.com/jgravelle).
 The original library provided a solid foundation for Groq API integration in .NET. This fork has been extensively refactored and enhanced.
 **Massive thanks to J. Gravelle for creating the original library!** 🙏
-
-<a href="https://groq.com" target="_blank" rel="noopener noreferrer">
-  <img
-    src="https://console.groq.com/powered-by-groq-dark.svg"
-    alt="Powered by Groq for fast inference."
-    width="200"
-    style="text-align: center; display: block; margin-left: auto; margin-right: auto;"
-  />
-</a>
 
 ## 📑 Table of Contents
 
@@ -1222,7 +1213,7 @@ Please ensure:
 
 This SDK is licensed under the MIT License.
 
-**Original Author**: J. Gravelle - [GitHub](https://github.com/jgravelle) | [Website](https://j.gravelle/)  
+**Original Author**: J. Gravelle - [GitHub](https://github.com/jgravelle) | [Website](https://j.gravelle/)
 **Current Maintainer**: Mohamed Eladwy (moheladwy) - [GitHub](https://github.com/moheladwy)
 
 ## 🙏 Acknowledgements
@@ -1242,7 +1233,7 @@ This SDK is licensed under the MIT License.
 
 ---
 
-**Originally created by J. Gravelle | Enhanced and maintained by Mohamed Eladwy**  
+**Originally created by J. Gravelle | Enhanced and maintained by Mohamed Eladwy**
 **Built with ❤️ for the .NET community**
 
 Happy coding with Groq! 🚀
