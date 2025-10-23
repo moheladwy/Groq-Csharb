@@ -19,6 +19,9 @@ public sealed class ToolClient
     /// <summary>Handles API communication for generating chat completions using the Groq API.</summary>
     private readonly ChatCompletionClient _chatCompletionClient;
 
+    /// <summary>Handles JSON serialization options.</summary>
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
+
     /// <summary>
     ///     Initializes a new instance of the ToolClient with a specified ChatCompletionClient and HttpClient.
     /// </summary>
@@ -26,7 +29,11 @@ public sealed class ToolClient
     ///     The client of type <see cref="ChatCompletionClient" /> responsible for handling chat completions
     ///     with the Groq API.
     /// </param>
-    public ToolClient(ChatCompletionClient chatCompletionClient) => _chatCompletionClient = chatCompletionClient;
+    public ToolClient(ChatCompletionClient chatCompletionClient)
+    {
+        _chatCompletionClient = chatCompletionClient;
+        _jsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
+    }
 
     /// <summary>
     ///     Runs a multi-turn conversation with tool-augmented capabilities using the Groq API.
@@ -39,48 +46,54 @@ public sealed class ToolClient
     /// <exception cref="HttpRequestException">Thrown when API requests fail.</exception>
     /// <exception cref="JsonException">Thrown when parsing JSON responses fails.</exception>
     /// <exception cref="Exception">Thrown for any other unexpected errors.</exception>
-    public async Task<string> RunConversationWithToolsAsync(string userPrompt, IReadOnlyCollection<Tool> tools,
+    public async Task<string> RunConversationWithToolsAsync(
+        string userPrompt,
+        IReadOnlyCollection<Tool> tools,
         string model,
-        string systemMessage)
+        string systemMessage
+    )
     {
         try
         {
             var messages = new List<JsonObject>
             {
                 new() { ["role"] = LlmRoles.SystemRole, ["content"] = systemMessage },
-                new() { ["role"] = LlmRoles.UserRole, ["content"] = userPrompt }
+                new() { ["role"] = LlmRoles.UserRole, ["content"] = userPrompt },
             };
 
             var request = new JsonObject
             {
                 ["model"] = model,
                 ["messages"] = JsonSerializer.SerializeToNode(messages),
-                ["tools"] = JsonSerializer.SerializeToNode(tools.Select(t => new
-                {
-                    type = t.Type,
-                    function = new
+                ["tools"] = JsonSerializer.SerializeToNode(
+                    tools.Select(t => new
                     {
-                        name = t.Function.Name,
-                        description = t.Function.Description,
-                        parameters = t.Function.Parameters
-                    }
-                })),
-                ["tool_choice"] = "auto"
+                        type = t.Type,
+                        function = new
+                        {
+                            name = t.Function.Name,
+                            description = t.Function.Description,
+                            parameters = t.Function.Parameters,
+                        },
+                    })
+                ),
+                ["tool_choice"] = "auto",
             };
 
             Console.WriteLine(
-                $"Sending request to API: {JsonSerializer.Serialize(request, new JsonSerializerOptions { WriteIndented = true })}");
+                $"Sending request to API: {JsonSerializer.Serialize(request, _jsonSerializerOptions)}"
+            );
 
             var response = await _chatCompletionClient.CreateChatCompletionAsync(request);
             var responseMessage = response?["choices"]?[0]?["message"]?.AsObject();
             var toolCalls = responseMessage?["tool_calls"]?.AsArray();
 
-            if (toolCalls == null || toolCalls.Count <= 0)
+            if (toolCalls == null || toolCalls.Count == 0)
             {
                 return responseMessage?["content"]?.GetValue<string>() ?? string.Empty;
             }
 
-            messages.Add(responseMessage);
+            messages.Add(responseMessage!);
             foreach (var toolCall in toolCalls)
             {
                 var functionName = toolCall?["function"]?["name"]?.GetValue<string>();
@@ -93,20 +106,23 @@ public sealed class ToolClient
                     if (tool != null)
                     {
                         var functionResponse = await tool.Function.ExecuteAsync(functionArgs);
-                        messages.Add(new JsonObject
-                        {
-                            ["tool_call_id"] = toolCallId,
-                            ["role"] = LlmRoles.ToolRole,
-                            ["name"] = functionName,
-                            ["content"] = functionResponse
-                        });
+                        messages.Add(
+                            new JsonObject
+                            {
+                                ["tool_call_id"] = toolCallId,
+                                ["role"] = LlmRoles.ToolRole,
+                                ["name"] = functionName,
+                                ["content"] = functionResponse,
+                            }
+                        );
                     }
                 }
             }
 
             request["messages"] = JsonSerializer.SerializeToNode(messages);
             var secondResponse = await _chatCompletionClient.CreateChatCompletionAsync(request);
-            return secondResponse?["choices"]?[0]?["message"]?["content"]?.GetValue<string>() ?? string.Empty;
+            return secondResponse?["choices"]?[0]?["message"]?["content"]?.GetValue<string>()
+                ?? string.Empty;
         }
         catch (HttpRequestException ex)
         {

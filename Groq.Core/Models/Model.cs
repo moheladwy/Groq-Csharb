@@ -26,7 +26,7 @@ public class Model
     /// </summary>
     /// <value>The type of object, typically "model".</value>
     [JsonPropertyName("object")]
-    public string Object { get; set; }
+    public required string Object { get; set; }
 
     /// <summary>
     ///     Gets or sets the Unix timestamp (in seconds) when the model was created.
@@ -40,7 +40,7 @@ public class Model
     /// </summary>
     /// <value>The owner organization name (e.g., "Meta", "OpenAI", "Groq", "Alibaba Cloud", "PlayAI", "Moonshot AI").</value>
     [JsonPropertyName("owned_by")]
-    public string OwnedBy { get; set; }
+    public required string OwnedBy { get; set; }
 
     /// <summary>
     ///     Gets or sets a value indicating whether the model is currently active and available for use.
