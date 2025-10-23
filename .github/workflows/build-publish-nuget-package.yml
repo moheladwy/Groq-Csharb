@@ -2,11 +2,7 @@ name: Build and Publish Groq Csharp SDK NuGet Package
 
 on:
   push:
-    branches-ignore: ["master"]
-    paths:
-      - "./**"
-      - ".github/workflows/build-publish-nuget-package.yml"
-  pull_request:
+    branches: ["master"]
     paths:
       - "./**"
       - ".github/workflows/build-publish-nuget-package.yml"
