@@ -53,6 +53,9 @@ public sealed class LlmTextProvider : ILlmTextProvider
     /// <exception cref="ArgumentNullException">
     ///     Thrown when the <paramref name="userPrompt" /> is null.
     /// </exception>
+    /// <exception cref="ArgumentException">
+    ///    Thrown when the <paramref name="structureOutputJsonFormat" /> is not a valid JSON string.
+    /// </exception>
     public async Task<string> GenerateAsync(
         string userPrompt,
         string? systemPrompt = null,
@@ -63,35 +66,33 @@ public sealed class LlmTextProvider : ILlmTextProvider
 
         var roles = new JsonArray
         {
-            new JsonObject
-            {
-                ["role"] = LlmRoles.UserRole,
-                ["content"] = userPrompt
-            }
+            new JsonObject { ["role"] = LlmRoles.UserRole, ["content"] = userPrompt },
         };
 
         if (systemPrompt is not null && systemPrompt.Length > 0)
         {
-            roles.Add(new JsonObject
-            {
-                ["role"] = LlmRoles.SystemRole,
-                ["content"] = systemPrompt
-            });
+            roles.Add(
+                new JsonObject { ["role"] = LlmRoles.SystemRole, ["content"] = systemPrompt }
+            );
         }
 
-        var request = new JsonObject
-        {
-            ["model"] = _model,
-            ["messages"] = roles
-        };
+        var request = new JsonObject { ["model"] = _model, ["messages"] = roles };
 
         if (structureOutputJsonFormat is not null)
         {
-            request.Add("response_format", new JsonObject
-            {
-                ["type"] = "json_schema",
-                ["json_schema"] = structureOutputJsonFormat
-            });
+            request.Add(
+                "response_format",
+                new JsonObject
+                {
+                    ["type"] = "json_schema",
+                    ["json_schema"] =
+                        JsonNode.Parse(structureOutputJsonFormat)
+                        ?? throw new ArgumentException(
+                            "Invalid JSON format string.",
+                            nameof(structureOutputJsonFormat)
+                        ),
+                }
+            );
         }
 
         var response = await _client.CreateChatCompletionAsync(request);
