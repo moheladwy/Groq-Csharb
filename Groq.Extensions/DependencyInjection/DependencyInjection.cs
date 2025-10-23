@@ -6,6 +6,7 @@ using Groq.Core.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http.Resilience;
+using Microsoft.Extensions.Options;
 
 namespace Groq.Extensions.DependencyInjection;
 
@@ -24,7 +25,8 @@ public static class DependencyInjection
     /// <summary>
     ///     The name of the Groq HTTP client used for making requests to the Groq API.
     /// </summary>
-    public static readonly string GroqHttpClientName = "GroqHttpClient";
+    // ReSharper disable once MemberCanBePrivate.Global
+    public const string GroqHttpClientName = "GroqHttpClient";
 
     /// <summary>
     ///     Adds Groq API-related services to the dependency injection container of the application.
@@ -32,8 +34,8 @@ public static class DependencyInjection
     /// <param name="builder">
     ///     The builder to add the Groq API-related services to.
     /// </param>
-    /// <param name="apiKey">
-    ///     The API key used for authorization with the Groq API.
+    /// <param name="configureOptions">
+    ///     An action to configure the <see cref="GroqSettings" /> used for Groq API clients.
     /// </param>
     /// <remarks>
     ///     This method registers various Groq API clients and providers, such as
@@ -52,18 +54,19 @@ public static class DependencyInjection
     /// <seealso cref="LlmTextProvider" />
     public static TBuilder AddGroqApiServices<TBuilder>(
         this TBuilder builder,
-        string apiKey,
-        string? model = null)
+        Action<GroqSettings> configureOptions)
         where TBuilder : IHostApplicationBuilder
     {
-        ArgumentException.ThrowIfNullOrEmpty(apiKey);
+        ArgumentNullException.ThrowIfNull(configureOptions);
 
         // Register the HttpClient factory for Groq
-        builder.AddGroqHttpClientFactory(apiKey);
+        builder.Services.Configure(configureOptions);
+
+        builder.AddGroqHttpClientFactory();
 
         // Register Groq API clients
-        builder.Services
-            .AddScoped<ChatCompletionClient>(sp =>
+        builder
+            .Services.AddScoped<ChatCompletionClient>(sp =>
             {
                 var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
                 var httpClient = httpClientFactory.CreateClient(GroqHttpClientName);
@@ -80,21 +83,33 @@ public static class DependencyInjection
             .AddScoped<ILlmTextProvider, LlmTextProvider>(sp =>
             {
                 var httpClientFactory = sp.GetRequiredService<ChatCompletionClient>();
-                return new LlmTextProvider(httpClientFactory, model);
+                var options = sp.GetRequiredService<IOptions<GroqSettings>>().Value;
+                return new LlmTextProvider(httpClientFactory, options.Model);
+            })
+            .AddScoped<GroqClient>(sp =>
+            {
+                var chatClient = sp.GetRequiredService<ChatCompletionClient>();
+                var audioClient = sp.GetRequiredService<AudioClient>();
+                var visionClient = sp.GetRequiredService<VisionClient>();
+                var toolClient = sp.GetRequiredService<ToolClient>();
+                var llmTextProvider = sp.GetRequiredService<ILlmTextProvider>();
+                return new GroqClient(
+                    chatClient,
+                    audioClient,
+                    visionClient,
+                    toolClient,
+                    llmTextProvider
+                );
             });
 
         return builder;
     }
-
 
     /// <summary>
     ///     Configures and registers the HTTP client factory for creating Groq HTTP clients.
     /// </summary>
     /// <param name="builder">
     ///     The application builder to which the Groq HTTP client factory will be added.
-    /// </param>
-    /// <param name="apiKey">
-    ///     The API key used for authorization with the Groq API.
     /// </param>
     /// <returns>
     ///     The modified <see cref="TBuilder" /> instance.
@@ -107,16 +122,30 @@ public static class DependencyInjection
     /// <exception cref="ArgumentException">
     ///     Thrown when the provided API key is null or empty.
     /// </exception>
-    private static TBuilder AddGroqHttpClientFactory<TBuilder>(this TBuilder builder, string apiKey)
+    private static TBuilder AddGroqHttpClientFactory<TBuilder>(this TBuilder builder)
         where TBuilder : IHostApplicationBuilder
     {
-        ArgumentException.ThrowIfNullOrEmpty(apiKey);
-
-        builder.Services.AddHttpClient(GroqHttpClientName, client =>
-        {
-            client.BaseAddress = new Uri(Endpoints.BaseUrl);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-        }).AddStandardResilienceHandler();
+        builder.Services
+            .AddHttpClient(GroqHttpClientName)
+            .ConfigureHttpClient((sp, client) =>
+            {
+                var options = sp.GetRequiredService<IOptions<GroqSettings>>().Value;
+                client.BaseAddress = new Uri(Endpoints.BaseUrl);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.ApiKey);
+                client.Timeout = options.Timeout;
+            })
+            .AddStandardResilienceHandler()
+            .Configure((options, sp) =>
+            {
+                var settings = sp.GetRequiredService<IOptions<GroqSettings>>().Value;
+                options.Retry = new HttpRetryStrategyOptions
+                {
+                    Delay = settings.Delay,
+                    MaxRetryAttempts = settings.MaxRetries,
+                    MaxDelay = settings.MaxDelay
+                };
+                options.AttemptTimeout = new HttpTimeoutStrategyOptions { Timeout = settings.Timeout };
+            });
 
         return builder;
     }
