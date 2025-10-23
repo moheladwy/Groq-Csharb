@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using Groq.Core.Clients;
+using Groq.Core.Interfaces;
 using Groq.Core.Providers;
 using Groq.Core.Settings;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,7 +50,10 @@ public static class DependencyInjection
     /// <seealso cref="VisionClient" />
     /// <seealso cref="ToolClient" />
     /// <seealso cref="LlmTextProvider" />
-    public static TBuilder AddGroqApiServices<TBuilder>(this TBuilder builder, string apiKey)
+    public static TBuilder AddGroqApiServices<TBuilder>(
+        this TBuilder builder,
+        string apiKey,
+        string? model = null)
         where TBuilder : IHostApplicationBuilder
     {
         ArgumentException.ThrowIfNullOrEmpty(apiKey);
@@ -73,8 +77,11 @@ public static class DependencyInjection
             })
             .AddScoped<VisionClient>()
             .AddScoped<ToolClient>()
-            .AddScoped<LlmTextProvider>()
-            ;
+            .AddScoped<ILlmTextProvider, LlmTextProvider>(sp =>
+            {
+                var httpClientFactory = sp.GetRequiredService<ChatCompletionClient>();
+                return new LlmTextProvider(httpClientFactory, model);
+            });
 
         return builder;
     }

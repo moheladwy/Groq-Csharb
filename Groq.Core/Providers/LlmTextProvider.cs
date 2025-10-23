@@ -1,4 +1,3 @@
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using Groq.Core.Clients;
 using Groq.Core.Interfaces;
@@ -45,37 +44,6 @@ public sealed class LlmTextProvider : ILlmTextProvider
     }
 
     /// <summary>
-    ///     Generates text based on the provided user prompt using the configured LLM model.
-    /// </summary>
-    /// <param name="userPrompt">The user's input prompt for text generation.</param>
-    /// <returns>The generated text response from the model.</returns>
-    /// <param name="structureOutputJsonFormat">A JSON format string that defines the desired structure of the output.</param>
-    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="userPrompt" /> is null.</exception>
-    public async Task<string> GenerateAsync(
-        string userPrompt,
-        string? structureOutputJsonFormat = null
-    )
-    {
-        ArgumentNullException.ThrowIfNull(userPrompt);
-        var request = new JsonObject
-        {
-            ["model"] = _model,
-            ["messages"] = JsonSerializer.SerializeToNode(
-                new[] { new { role = LlmRoles.UserRole, content = userPrompt } }
-            )
-        };
-
-        if (structureOutputJsonFormat is not null)
-        {
-            request.Add("response_format",
-                new JsonObject { ["type"] = "json_schema", ["json_schema"] = structureOutputJsonFormat });
-        }
-
-        var response = await _client.CreateChatCompletionAsync(request);
-        return response?["choices"]?[0]?["message"]?["content"]?.GetValue<string>() ?? string.Empty;
-    }
-
-    /// <summary>
     ///     Generates a response using the LLM based on both system and user prompts with a structured output format.
     /// </summary>
     /// <param name="systemPrompt">The system prompt providing context or instructions to the LLM.</param>
@@ -83,39 +51,51 @@ public sealed class LlmTextProvider : ILlmTextProvider
     /// <param name="structureOutputJsonFormat">A JSON format string that defines the desired structure of the output.</param>
     /// <returns> A task that represents the asynchronous operation, containing the generated text response.</returns>
     /// <exception cref="ArgumentNullException">
-    ///     Thrown when the <paramref name="systemPrompt" />, or
-    ///     <paramref name="userPrompt" /> is null.
+    ///     Thrown when the <paramref name="userPrompt" /> is null.
     /// </exception>
     public async Task<string> GenerateAsync(
-        string systemPrompt,
         string userPrompt,
+        string? systemPrompt = null,
         string? structureOutputJsonFormat = null
     )
     {
-        ArgumentNullException.ThrowIfNull(systemPrompt);
         ArgumentNullException.ThrowIfNull(userPrompt);
+
+        var roles = new JsonArray
+        {
+            new JsonObject
+            {
+                ["role"] = LlmRoles.UserRole,
+                ["content"] = userPrompt
+            }
+        };
+
+        if (systemPrompt is not null && systemPrompt.Length > 0)
+        {
+            roles.Add(new JsonObject
+            {
+                ["role"] = LlmRoles.SystemRole,
+                ["content"] = systemPrompt
+            });
+        }
 
         var request = new JsonObject
         {
             ["model"] = _model,
-            ["messages"] = JsonSerializer.SerializeToNode(
-                new[]
-                {
-                    new { role = LlmRoles.SystemRole, content = systemPrompt },
-                    new { role = LlmRoles.UserRole, content = userPrompt }
-                }
-            )
+            ["messages"] = roles
         };
 
         if (structureOutputJsonFormat is not null)
         {
-            request.Add("response_format",
-                new JsonObject { ["type"] = "json_schema", ["json_schema"] = structureOutputJsonFormat });
+            request.Add("response_format", new JsonObject
+            {
+                ["type"] = "json_schema",
+                ["json_schema"] = structureOutputJsonFormat
+            });
         }
 
         var response = await _client.CreateChatCompletionAsync(request);
-        var result =
-            response?["choices"]?[0]?["message"]?["content"]?.GetValue<string>() ?? string.Empty;
+        var result = response?["choices"]?[0]?["message"]?["content"]?.GetValue<string>() ?? string.Empty;
 
         return result;
     }
