@@ -7,6 +7,9 @@ on:
       - "**"
       - ".github/workflows/build-publish-nuget-package.yml"
 
+env:
+    GITHUB_USER: "moheladwy"
+
 jobs:
   lint:
     name: Lint Groq Csharp SDK
@@ -35,6 +38,9 @@ jobs:
 
       - name: Pack
         run: dotnet pack -c Release --no-restore -o ./nupkgs
+
+      - name: Configure Nuget Source
+        run: dotnet nuget add source --username ${{ env.GITHUB_USER }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ env.GITHUB_USER }}/index.json"
 
       - name: Publish
         run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
