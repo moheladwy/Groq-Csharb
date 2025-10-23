@@ -36,7 +36,3 @@ jobs:
       - name: Publish
         run: |
           dotnet pack -c Release -o ./nupkg
-
-          dotnet nuget push ./nupkg/*.nupkg \
-            --api-key ${{ secrets.GITHUB_TOKEN }} \
-            --source "github"
