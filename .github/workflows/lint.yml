@@ -1,0 +1,38 @@
+name: Lint Groq Csharp SDK
+
+on:
+  push:
+    branches-ignore: ["master"]
+    paths:
+      - "./**"
+      - ".github/workflows/lint.yml"
+  pull_request:
+    paths:
+      - "./**"
+      - ".github/workflows/lint.yml"
+
+jobs:
+  lint:
+    name: Lint Groq Csharp SDK
+    runs-on: ubuntu-latest
+    permissions:
+        packages: write
+        contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Test
+        run: dotnet test --no-restore --no-build --verbosity normal

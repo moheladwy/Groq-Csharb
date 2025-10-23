@@ -1,20 +1,23 @@
-name: Lint Groq API Library
+name: Build and Publish Groq Csharp SDK NuGet Package
 
 on:
   push:
     branches-ignore: ["master"]
     paths:
       - "./**"
-      - ".github/workflows/lint.yaml"
+      - ".github/workflows/build-publish-nuget-package.yml"
   pull_request:
     paths:
       - "./**"
-      - ".github/workflows/lint.yaml"
+      - ".github/workflows/build-publish-nuget-package.yml"
 
 jobs:
   lint:
-    name: Lint Groq API Library
+    name: Lint Groq Csharp SDK
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
 
     steps:
       - name: Checkout code
@@ -33,3 +36,11 @@ jobs:
 
       - name: Test
         run: dotnet test --no-restore --no-build --verbosity normal
+
+      - name: Publish
+        run: |
+          dotnet pack -c Release -o ./nupkg
+
+          dotnet nuget push ./nupkg/*.nupkg \
+            --api-key ${{ secrets.GITHUB_TOKEN }} \
+            --source "github"
