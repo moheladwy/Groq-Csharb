@@ -33,6 +33,5 @@ jobs:
       - name: Test
         run: dotnet test --no-restore --no-build --verbosity normal
 
-      - name: Publish
-        run: |
-          dotnet pack -c Release -o ./nupkg
+      - name: Pack
+        run: dotnet pack -c Release
