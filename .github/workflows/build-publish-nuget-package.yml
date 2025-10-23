@@ -35,3 +35,6 @@ jobs:
 
       - name: Pack
         run: dotnet pack -c Release --no-restore -o ./nupkgs
+
+      - name: Publish
+        run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
