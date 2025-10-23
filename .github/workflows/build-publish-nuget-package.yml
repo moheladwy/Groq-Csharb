@@ -4,7 +4,7 @@ on:
   push:
     branches: ["master"]
     paths:
-      - "./**"
+      - "**"
       - ".github/workflows/build-publish-nuget-package.yml"
 
 jobs:
