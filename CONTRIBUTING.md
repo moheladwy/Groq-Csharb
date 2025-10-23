@@ -1,6 +1,8 @@
-# Contributing to GroqApiLibrary
+# Contributing to Groq C# SDK
 
-Thank you for your interest in contributing to GroqApiLibrary! This document provides guidelines and instructions for contributing to this project.
+Thank you for your interest in contributing to the Groq C# SDK! This document provides guidelines and instructions for contributing to this project.
+
+> **Note**: This is a modernized fork of the original [GroqApiLibrary](https://github.com/jgravelle/GroqApiLibrary) by J. Gravelle. We welcome contributions that continue to enhance and improve the SDK while respecting the original foundation.
 
 ## 🌟 Ways to Contribute
 
@@ -28,7 +30,7 @@ There are many ways you can contribute to this project:
 
 ## 📜 Code of Conduct
 
-This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [j@gravelle.us](mailto:j@gravelle.us).
+This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [mohamed.h.eladwy@gmail.com](mailto:mohamed.h.eladwy@gmail.com).
 
 Key principles:
 
@@ -70,8 +72,8 @@ If this is your first contribution, look for issues labeled with:
 1. **Fork and Clone**
 
     ```bash
-    git clone https://github.com/YOUR_USERNAME/GroqApiLibrary.git
-    cd GroqApiLibrary
+    git clone https://github.com/YOUR_USERNAME/Groq-Csharp.git
+    cd Groq-Csharp
     ```
 
 2. **Restore Dependencies**
@@ -84,6 +86,8 @@ If this is your first contribution, look for issues labeled with:
 
     ```bash
     dotnet build
+    # Or build the solution
+    dotnet build Groq.Sdk.sln
     ```
 
 4. **Set Up API Key** (for testing)
@@ -103,37 +107,115 @@ If this is your first contribution, look for issues labeled with:
 
 ## 📁 Project Structure
 
+The SDK is split into two main projects for better modularity:
+
 ```
-GroqApiLibrary/
-├── Clients/              # API client implementations
-│   ├── AudioClient.cs
-│   ├── ChatCompletionClient.cs
-│   ├── ToolClient.cs
-│   └── VisionClient.cs
-├── Extensions/           # Dependency injection extensions
-│   └── RegisterGroq.cs
-├── Interfaces/           # Interface definitions
-│   └── ILlmTextProvider.cs
-├── Models/              # Model definitions and DTOs
-│   ├── AgentModels.cs
-│   ├── AudioModels.cs
-│   ├── ChatModels.cs
-│   ├── Function.cs
-│   ├── Model.cs
-│   ├── ModelListResponse.cs
-│   ├── Tool.cs
-│   └── VisionModels.cs
-├── Providers/           # Service providers
-│   └── LlmTextProvider.cs
-├── Settings/            # Configuration and constants
-│   ├── Endpoints.cs
-│   ├── LlmRoles.cs
-│   ├── VisionSettings.cs
-│   └── Voice/
-│       ├── ArabicVoices.cs
-│       └── EnglishVoices.cs
-└── GroqApiLibrary.csproj
+Groq-Csharp/
+├── Groq.Core/                    # Core SDK (required)
+│   ├── Clients/                  # API client implementations
+│   │   ├── AudioClient.cs        # Audio transcription, translation, TTS
+│   │   ├── ChatCompletionClient.cs  # Chat completions
+│   │   ├── GroqClient.cs         # Unified client (NEW)
+│   │   ├── ToolClient.cs         # Function calling and tools
+│   │   └── VisionClient.cs       # Vision analysis
+│   ├── Interfaces/               # Interface definitions
+│   │   └── ILlmTextProvider.cs
+│   ├── Models/                   # Model definitions and DTOs
+│   │   ├── AgentModels.cs
+│   │   ├── AudioModels.cs
+│   │   ├── ChatModels.cs
+│   │   ├── Function.cs
+│   │   ├── Model.cs
+│   │   ├── ModelListResponse.cs
+│   │   ├── Tool.cs
+│   │   └── VisionModels.cs
+│   ├── Providers/                # Service providers
+│   │   └── LlmTextProvider.cs
+│   ├── Settings/                 # Configuration and constants
+│   │   ├── Endpoints.cs
+│   │   ├── GroqSettings.cs       # Main configuration class (NEW)
+│   │   ├── LlmRoles.cs
+│   │   ├── VisionSettings.cs
+│   │   └── Voice/
+│   │       ├── ArabicVoices.cs
+│   │       └── EnglishVoices.cs
+│   └── Groq.Core.csproj
+│
+├── Groq.Extensions/              # DI extensions (optional)
+│   └── DependencyInjection/
+│       └── DependencyInjection.cs  # HttpClientFactory integration
+│
+├── Directory.Build.props         # Shared package metadata
+├── Directory.Packages.props      # Centralized package versions
+├── Groq.Sdk.sln                 # Solution file
+├── README.md
+├── CONTRIBUTING.md
+└── CODE_OF_CONDUCT.md
 ```
+
+### Key Components
+
+-   **Groq.Core**: Core library with all API clients, models, and providers
+-   **Groq.Extensions**: Optional DI integration with HttpClientFactory pattern
+-   **GroqClient**: Unified entry point providing access to all API capabilities
+-   **GroqSettings**: Configuration class with timeout, retry, and resilience options
+
+### Working with GroqClient
+
+The `GroqClient` provides a unified interface to all API capabilities:
+
+```csharp
+using Groq.Core.Clients;
+using Groq.Core.Settings;
+
+// Option 1: Using GroqSettings
+var settings = new GroqSettings
+{
+    ApiKey = "your-api-key",
+    Model = "llama-3.3-70b-versatile",
+    Timeout = TimeSpan.FromSeconds(100),
+    MaxRetries = 3
+};
+
+var client = new GroqClient(settings);
+
+// Access all clients through the unified interface
+await client.Chat.CreateChatCompletionAsync(request);
+await client.Audio.CreateTranscriptionAsync(audioStream, "file.mp3", model);
+await client.Vision.CreateVisionCompletionWithImageUrlAsync(url, prompt, model);
+await client.Tools.CreateChatCompletionWithToolsAsync(prompt, tools, model);
+var text = await client.LlmTextProvider.GenerateAsync("Write a poem");
+
+// Option 2: Using HttpClient directly
+var httpClient = new HttpClient { BaseAddress = new Uri("https://api.groq.com/openai/v1/") };
+httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+var client2 = new GroqClient(httpClient, model: "llama-3.3-70b-versatile");
+```
+
+### Dependency Injection Pattern
+
+When contributing to the DI extensions, follow the HttpClientFactory pattern:
+
+```csharp
+using Groq.Extensions.DependencyInjection;
+
+builder.AddGroqApiServices(options =>
+{
+    options.ApiKey = "your-api-key";
+    options.Model = "llama-3.3-70b-versatile";
+    options.Timeout = TimeSpan.FromSeconds(100);
+    options.MaxRetries = 3;
+    options.Delay = TimeSpan.FromSeconds(2);
+    options.MaxDelay = TimeSpan.FromSeconds(20);
+});
+```
+
+The DI system uses:
+
+-   Named HttpClient: `"GroqHttpClient"`
+-   Standard resilience handlers with configurable retry policies
+-   `IOptions<GroqSettings>` pattern for configuration
+-   Scoped lifetime for all clients
 
 ## 📝 Coding Standards
 
@@ -215,21 +297,24 @@ public async Task<JsonObject?> CreateChatCompletionAsync(JsonObject request)
 ### Example Test
 
 ```csharp
+using Groq.Core.Clients;
+using Groq.Core.Settings;
+using Groq.Core.Models;
+
 [Fact]
 public async Task CreateChatCompletionAsync_WithValidRequest_ReturnsResponse()
 {
     // Arrange
-    var httpClient = new HttpClient
+    var settings = new GroqSettings
     {
-        BaseAddress = new Uri("https://api.groq.com/openai/v1/")
+        ApiKey = Environment.GetEnvironmentVariable("GROQ_API_KEY")!,
+        Model = ChatModels.LLAMA_3_1_8B_INSTANT.Id
     };
-    httpClient.DefaultRequestHeaders.Authorization =
-        new AuthenticationHeaderValue("Bearer", Environment.GetEnvironmentVariable("GROQ_API_KEY"));
 
-    var client = new ChatCompletionClient(httpClient);
+    var groqClient = new GroqClient(settings);
     var request = new JsonObject
     {
-        ["model"] = "llama-3.1-8b-instant",
+        ["model"] = ChatModels.LLAMA_3_1_8B_INSTANT.Id,
         ["messages"] = new JsonArray
         {
             new JsonObject { ["role"] = "user", ["content"] = "Hello!" }
@@ -237,11 +322,34 @@ public async Task CreateChatCompletionAsync_WithValidRequest_ReturnsResponse()
     };
 
     // Act
-    var response = await client.CreateChatCompletionAsync(request);
+    var response = await groqClient.Chat.CreateChatCompletionAsync(request);
 
     // Assert
     Assert.NotNull(response);
     Assert.Contains("choices", response.AsObject().Select(kvp => kvp.Key));
+}
+
+[Fact]
+public async Task GroqClient_WithDependencyInjection_WorksCorrectly()
+{
+    // Arrange
+    var services = new ServiceCollection();
+    var builder = Host.CreateApplicationBuilder();
+
+    builder.AddGroqApiServices(options =>
+    {
+        options.ApiKey = Environment.GetEnvironmentVariable("GROQ_API_KEY")!;
+        options.Model = ChatModels.LLAMA_3_3_70B_VERSATILE.Id;
+    });
+
+    var host = builder.Build();
+    var groqClient = host.Services.GetRequiredService<GroqClient>();
+
+    // Act & Assert
+    Assert.NotNull(groqClient);
+    Assert.NotNull(groqClient.Chat);
+    Assert.NotNull(groqClient.Audio);
+    Assert.NotNull(groqClient.Vision);
 }
 ```
 
@@ -419,9 +527,10 @@ When adding new features:
 
 ### Getting Help
 
--   **GitHub Issues** - For bugs and feature requests
+-   **GitHub Issues** - [moheladwy/GroqApiLibrary/issues](https://github.com/moheladwy/Groq-Csharb/issues) - For bugs and feature requests
 -   **Discussions** - For questions and general discussion
 -   **Groq Community** - [community.groq.com](https://community.groq.com)
+-   **Original Repository** - [jgravelle/GroqApiLibrary](https://github.com/jgravelle/GroqApiLibrary) - Reference to the original project
 
 ### Asking Questions
 
@@ -473,6 +582,8 @@ By contributing, you agree that your contributions will be licensed under the sa
 
 ---
 
-**Thank you for contributing to GroqApiLibrary!** 🎉
+**Thank you for contributing to the Groq C# SDK!** 🎉
 
-Your contributions help make this library better for everyone in the .NET and AI community.
+Your contributions help make this SDK better for everyone in the .NET and AI community.
+
+**Original project by J. Gravelle | Enhanced and maintained by Mohamed Eladwy**
