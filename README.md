@@ -22,7 +22,11 @@ integration features.
 -   [Installation](#-installation)
 -   [Quick Start](#-quick-start)
     -   [Dependency Injection Setup (Recommended)](#dependency-injection-setup-recommended)
+        -   [Option 1: Using GroqClient (Simplified)](#option-1-using-groqclient-simplified)
+        -   [Option 2: Individual Client Injection](#option-2-individual-client-injection)
     -   [Manual Initialization](#manual-initialization)
+        -   [Option 1: Using GroqSettings](#option-1-using-groqsettings)
+        -   [Option 2: Using HttpClient Directly](#option-2-using-httpclient-directly)
 -   [Available Models](#-available-models)
     -   [Chat/Text Generation Models](#chattext-generation-models)
     -   [Vision Models](#vision-models)
@@ -40,7 +44,10 @@ integration features.
     -   [Content Moderation](#content-moderation)
     -   [Reasoning Models (Qwen)](#reasoning-models-qwen)
 -   [Configuration Options](#-configuration-options)
-    -   [HTTP Client Configuration](#http-client-configuration)
+    -   [GroqSettings Configuration](#groqsettings-configuration)
+    -   [Dependency Injection Configuration](#dependency-injection-configuration)
+    -   [Configuration from appsettings.json](#configuration-from-appsettingsjson)
+    -   [HTTP Client Factory Configuration](#http-client-factory-configuration)
     -   [Model Parameters](#model-parameters)
 -   [Error Handling](#-error-handling)
 -   [Performance Tips](#-performance-tips)
@@ -51,6 +58,7 @@ integration features.
 
 ## 🌟 Features
 
+-   🎯 **Unified GroqClient**: Single entry point to access all Groq API capabilities
 -   💬 **Chat Completions**: Engage with state-of-the-art language models including Llama, GPT-OSS, and Qwen
 -   🔊 **Audio Transcription**: High-accuracy speech-to-text with Whisper models (189x-216x speed)
 -   🗣️ **Text-to-Speech**: Natural voice synthesis with PlayAI models in English and Arabic
@@ -60,8 +68,10 @@ integration features.
 -   🌊 **Streaming Support**: Real-time token streaming for interactive applications
 -   🤖 **Agent Models**: Groq Compound systems with built-in tools (web search, code execution)
 -   🔒 **Content Moderation**: Llama Guard and Prompt Guard for safety and security
--   📦 **Dependency Injection**: First-class support for .NET DI with extension methods
--   🎯 **Type Safety**: Strongly-typed model definitions and comprehensive XML documentation
+-   📦 **Dependency Injection**: First-class support for .NET DI with HttpClientFactory pattern
+-   ⚙️ **Flexible Configuration**: GroqSettings with retry policies, timeout, and resilience handlers
+-   🔄 **Automatic Retries**: Built-in exponential backoff and circuit breaker patterns
+-   �️ **Type Safety**: Strongly-typed model definitions and comprehensive XML documentation
 
 ## ✅ Implementation Status
 
@@ -424,42 +434,106 @@ dotnet add package Groq.Extensions
 
 ### Dependency Injection Setup (Recommended)
 
+#### Option 1: Using GroqClient (Simplified)
+
 ```csharp
 using Groq.Extensions.DependencyInjection;
+using Groq.Core.Clients;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-// Register all Groq API services
-builder.AddGroqApiServices("your-api-key-here");
+// Register all Groq API services with settings
+builder.AddGroqApiServices(options =>
+{
+    options.ApiKey = "your-api-key-here";
+    options.Model = "llama-3.3-70b-versatile"; // Optional default model
+    options.Timeout = TimeSpan.FromSeconds(100); // Optional timeout
+    options.MaxRetries = 3; // Optional retry configuration
+});
 
 var app = builder.Build();
 ```
 
-Then inject the clients you need:
+Then inject the unified `GroqClient`:
+
+```csharp
+using Groq.Core.Clients;
+
+public class MyService
+{
+    private readonly GroqClient _groqClient;
+
+    public MyService(GroqClient groqClient)
+    {
+        _groqClient = groqClient;
+    }
+
+    public async Task UseGroqServices()
+    {
+        // Access all clients through the unified GroqClient
+        var chatResponse = await _groqClient.Chat.CreateChatCompletionAsync(...);
+        var audioData = await _groqClient.Audio.CreateTranscriptionAsync(...);
+        var visionResult = await _groqClient.Vision.CreateVisionCompletionWithImageUrlAsync(...);
+        var toolResponse = await _groqClient.Tools.CreateChatCompletionWithToolsAsync(...);
+        var textResult = await _groqClient.LlmTextProvider.GenerateAsync(...);
+    }
+}
+```
+
+#### Option 2: Individual Client Injection
 
 ```csharp
 using Groq.Core.Clients;
 using Groq.Core.Providers;
+using Groq.Core.Interfaces;
 
 public class MyService
 {
     private readonly ChatCompletionClient _chatClient;
     private readonly AudioClient _audioClient;
     private readonly VisionClient _visionClient;
+    private readonly ILlmTextProvider _llmProvider;
 
     public MyService(
         ChatCompletionClient chatClient,
         AudioClient audioClient,
-        VisionClient visionClient)
+        VisionClient visionClient,
+        ILlmTextProvider llmProvider)
     {
         _chatClient = chatClient;
         _audioClient = audioClient;
         _visionClient = visionClient;
+        _llmProvider = llmProvider;
     }
 }
 ```
 
 ### Manual Initialization
+
+#### Option 1: Using GroqSettings
+
+```csharp
+using Groq.Core.Clients;
+using Groq.Core.Settings;
+
+var settings = new GroqSettings
+{
+    ApiKey = "your-api-key-here",
+    Model = "llama-3.3-70b-versatile",
+    Timeout = TimeSpan.FromSeconds(100),
+    MaxRetries = 3,
+    Delay = TimeSpan.FromSeconds(2),
+    MaxDelay = TimeSpan.FromSeconds(20)
+};
+
+var groqClient = new GroqClient(settings);
+
+// Access all clients through GroqClient
+await groqClient.Chat.CreateChatCompletionAsync(...);
+await groqClient.Audio.CreateTranscriptionAsync(...);
+```
+
+#### Option 2: Using HttpClient Directly
 
 ```csharp
 using Groq.Core.Clients;
@@ -472,10 +546,14 @@ var httpClient = new HttpClient
 httpClient.DefaultRequestHeaders.Authorization =
     new AuthenticationHeaderValue("Bearer", "your-api-key-here");
 
+// Create individual clients
 var chatClient = new ChatCompletionClient(httpClient);
 var audioClient = new AudioClient(httpClient);
 var visionClient = new VisionClient(chatClient);
 var toolClient = new ToolClient(chatClient);
+
+// Or create unified GroqClient
+var groqClient = new GroqClient(httpClient, model: "llama-3.3-70b-versatile");
 ```
 
 ## 📚 Available Models
@@ -987,21 +1065,80 @@ var response = await chatClient.CreateChatCompletionAsync(request);
 
 ## 🔧 Configuration Options
 
-### HTTP Client Configuration
+### GroqSettings Configuration
+
+The SDK uses `GroqSettings` for comprehensive configuration:
 
 ```csharp
-var httpClient = new HttpClient
+using Groq.Core.Settings;
+
+var settings = new GroqSettings
 {
-    BaseAddress = new Uri("https://api.groq.com/openai/v1/"),
-    Timeout = TimeSpan.FromMinutes(5)
+    // Required
+    ApiKey = "your-api-key-here",
+
+    // Optional - API Configuration
+    BaseUrl = "https://api.groq.com/openai/v1/", // Default
+    Model = "llama-3.3-70b-versatile", // Default model for LlmTextProvider
+
+    // Optional - Timeout Configuration
+    Timeout = TimeSpan.FromSeconds(100), // Default: 100 seconds
+
+    // Optional - Retry Configuration
+    MaxRetries = 3, // Default: 3 attempts
+    Delay = TimeSpan.FromSeconds(2), // Default: 2 seconds initial delay
+    MaxDelay = TimeSpan.FromSeconds(20) // Default: 20 seconds max delay
 };
 
-httpClient.DefaultRequestHeaders.Authorization =
-    new AuthenticationHeaderValue("Bearer", apiKey);
-
-// Add custom headers
-httpClient.DefaultRequestHeaders.Add("X-Custom-Header", "value");
+var groqClient = new GroqClient(settings);
 ```
+
+### Dependency Injection Configuration
+
+When using DI, configure settings inline:
+
+```csharp
+builder.AddGroqApiServices(options =>
+{
+    options.ApiKey = builder.Configuration["Groq:ApiKey"]!;
+    options.Model = "llama-3.3-70b-versatile";
+    options.Timeout = TimeSpan.FromSeconds(120);
+    options.MaxRetries = 5;
+    options.Delay = TimeSpan.FromSeconds(1);
+    options.MaxDelay = TimeSpan.FromSeconds(30);
+});
+```
+
+### Configuration from appsettings.json
+
+```json
+{
+    "Groq": {
+        "ApiKey": "your-api-key-here",
+        "Model": "llama-3.3-70b-versatile",
+        "Timeout": "00:01:40",
+        "MaxRetries": 3,
+        "Delay": "00:00:02",
+        "MaxDelay": "00:00:20"
+    }
+}
+```
+
+```csharp
+builder.AddGroqApiServices(options =>
+{
+    builder.Configuration.GetSection("Groq").Bind(options);
+});
+```
+
+### HTTP Client Factory Configuration
+
+The SDK automatically uses `IHttpClientFactory` with resilience patterns:
+
+-   **Named Client**: `"GroqHttpClient"`
+-   **Resilience Handlers**: Automatic retry with exponential backoff
+-   **Timeout Strategy**: Configurable per-attempt and overall timeout
+-   **Circuit Breaker**: Built-in protection against cascading failures
 
 ### Model Parameters
 
