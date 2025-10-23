@@ -22,7 +22,7 @@ The original library provided a solid foundation for Groq API integration in .NE
         -   [Option 1: Using GroqClient (Simplified)](#option-1-using-groqclient-simplified)
         -   [Option 2: Individual Client Injection](#option-2-individual-client-injection)
     -   [Manual Initialization](#manual-initialization)
-        -   [Option 1: Using GroqSettings](#option-1-using-groqsettings)
+        -   [Option 1: Using GroqOptions](#option-1-using-groqoptions)
         -   [Option 2: Using HttpClient Directly](#option-2-using-httpclient-directly)
 -   [Available Models](#-available-models)
     -   [Chat/Text Generation Models](#chattext-generation-models)
@@ -41,7 +41,7 @@ The original library provided a solid foundation for Groq API integration in .NE
     -   [Content Moderation](#content-moderation)
     -   [Reasoning Models (Qwen)](#reasoning-models-qwen)
 -   [Configuration Options](#-configuration-options)
-    -   [GroqSettings Configuration](#groqsettings-configuration)
+    -   [GroqOptions Configuration](#groqoptions-configuration)
     -   [Dependency Injection Configuration](#dependency-injection-configuration)
     -   [Configuration from appsettings.json](#configuration-from-appsettingsjson)
     -   [HTTP Client Factory Configuration](#http-client-factory-configuration)
@@ -66,7 +66,7 @@ The original library provided a solid foundation for Groq API integration in .NE
 -   🤖 **Agent Models**: Groq Compound systems with built-in tools (web search, code execution)
 -   🔒 **Content Moderation**: Llama Guard and Prompt Guard for safety and security
 -   📦 **Dependency Injection**: First-class support for .NET DI with HttpClientFactory pattern
--   ⚙️ **Flexible Configuration**: GroqSettings with retry policies, timeout, and resilience handlers
+-   ⚙️ **Flexible Configuration**: GroqOptions with retry policies, timeout, and resilience handlers
 -   🔄 **Automatic Retries**: Built-in exponential backoff and circuit breaker patterns
 -   �️ **Type Safety**: Strongly-typed model definitions and comprehensive XML documentation
 
@@ -136,7 +136,7 @@ detailed breakdown of what has been implemented:
 -   Tool and Function classes for function calling
 -   Full parameter validation
 
-### Configuration & Settings (100% Complete)
+### Configuration & Configurations (100% Complete)
 
 ✅ **Endpoints**
 
@@ -149,13 +149,13 @@ detailed breakdown of what has been implemented:
 -   System, User, Assistant, Tool role constants
 -   Used consistently across all clients
 
-✅ **VisionSettings**
+✅ **VisionConfigurations**
 
 -   Default model configuration
 -   Size and resolution validation constants
 -   Supported model list management
 
-✅ **Voice Settings**
+✅ **Voice Configurations**
 
 -   EnglishVoices enum with 19 voice options
 -   ArabicVoices enum with 4 voice options
@@ -339,12 +339,11 @@ planned for future releases:
 -   Tool usage analytics and logging
 -   Built-in tool retry logic
 
-#### **10. Additional Settings & Configuration**
+##### **10. Additional Configurations & Configuration**
 
--   Prompt caching support
--   Regional/sovereign endpoint configuration
--   HIPAA compliance settings
--   Custom model version headers (`Groq-Model-Version`)
+-   Custom base URL support
+-   HIPAA compliance configurations
+-   Rate limiting and quota management
 
 ### Features NOT Planned (Not Supported by Groq)
 
@@ -384,9 +383,9 @@ We welcome contributions! If you'd like to help implement any of these features:
 
 ### Current Release
 
-**Version:** `2.0.0.1-alpha`
+**Version:** `2.0.0.2-alpha`
 
-This is an alpha release with the new architecture featuring GroqClient, GroqSettings, and HttpClientFactory integration.
+This is an alpha release with the new architecture featuring GroqClient, GroqOptions, and HttpClientFactory integration.
 
 ### NuGet Packages
 
@@ -397,13 +396,13 @@ The SDK is split into two packages for better modularity:
 Core SDK containing all API clients, models, and providers.
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.1-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.2-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Core -Version 2.0.0.1-alpha
+Install-Package Groq.Sdk.Core -Version 2.0.0.2-alpha
 ```
 
 #### **Groq.Sdk.Extensions.DependencyInjection** (Optional)
@@ -411,20 +410,20 @@ Install-Package Groq.Sdk.Core -Version 2.0.0.1-alpha
 Dependency injection extensions for ASP.NET Core and .NET Generic Host applications.
 
 ```bash
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.1-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.2-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.1-alpha
+Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.2-alpha
 ```
 
 ### Quick Install (Both Packages)
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.1-alpha
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.1-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.2-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.2-alpha
 ```
 
 > **💡 Package Selection Guide:**
@@ -448,7 +447,7 @@ using Groq.Core.Clients;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-// Register all Groq API services with settings
+// Register all Groq API services with options
 builder.AddGroqApiServices(options =>
 {
     options.ApiKey = "your-api-key-here";
@@ -516,13 +515,13 @@ public class MyService
 
 ### Manual Initialization
 
-#### Option 1: Using GroqSettings
+#### Option 1: Using GroqOptions
 
 ```csharp
 using Groq.Core.Clients;
-using Groq.Core.Settings;
+using Groq.Core.Configurations;
 
-var settings = new GroqSettings
+var options = new GroqOptions
 {
     ApiKey = "your-api-key-here",
     Model = "llama-3.3-70b-versatile",
@@ -532,7 +531,7 @@ var settings = new GroqSettings
     MaxDelay = TimeSpan.FromSeconds(20)
 };
 
-var groqClient = new GroqClient(settings);
+var groqClient = new GroqClient(options);
 
 // Access all clients through GroqClient
 await groqClient.Chat.CreateChatCompletionAsync(...);
@@ -812,7 +811,7 @@ Console.WriteLine(result?["text"]?.ToString());
 
 ````csharp
 ```csharp
-using Groq.Core.Settings.Voice;
+using Groq.Core.Configurations.Voice;
 
 var audioData = await audioClient.CreateTextToEnglishSpeechAsync(
     input: "Hello! Welcome to Groq API. This is an example of text-to-speech synthesis.",
@@ -833,7 +832,7 @@ await File.WriteAllBytesAsync("output.wav", audioData);
 #### Text-to-Speech (Arabic)
 
 ```csharp
-using Groq.Core.Settings.Voice;
+using Groq.Core.Configurations.Voice;
 
 var audioData = await audioClient.CreateTextToArabicSpeechAsync(
     input: "مرحبا بك في واجهة برمجة تطبيقات Groq",
@@ -1071,14 +1070,14 @@ var response = await chatClient.CreateChatCompletionAsync(request);
 
 ## 🔧 Configuration Options
 
-### GroqSettings Configuration
+### GroqOptions Configuration
 
-The SDK uses `GroqSettings` for comprehensive configuration:
+The SDK uses `GroqOptions` for comprehensive configuration:
 
 ```csharp
-using Groq.Core.Settings;
+using Groq.Core.Configurations;
 
-var settings = new GroqSettings
+var options = new GroqOptions
 {
     // Required
     ApiKey = "your-api-key-here",
@@ -1096,12 +1095,12 @@ var settings = new GroqSettings
     MaxDelay = TimeSpan.FromSeconds(20) // Default: 20 seconds max delay
 };
 
-var groqClient = new GroqClient(settings);
+var groqClient = new GroqClient(options);
 ```
 
 ### Dependency Injection Configuration
 
-When using DI, configure settings inline:
+When using DI, configure options inline:
 
 ```csharp
 builder.AddGroqApiServices(options =>

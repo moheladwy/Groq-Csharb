@@ -1,11 +1,11 @@
 using Groq.Core.Models;
 
-namespace Groq.Core.Settings;
+namespace Groq.Core.Configurations;
 
 /// <summary>
 ///     Contains settings for the Groq API vision features.
 /// </summary>
-public class VisionSettings
+public static class VisionSettings
 {
     /// <summary>Default vision model name.</summary>
     public const string DefaultVisionModel = "meta-llama/llama-4-scout-17b-16e-instruct";

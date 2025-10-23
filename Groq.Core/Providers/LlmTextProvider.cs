@@ -1,8 +1,8 @@
 using System.Text.Json.Nodes;
 using Groq.Core.Clients;
+using Groq.Core.Configurations;
 using Groq.Core.Interfaces;
 using Groq.Core.Models;
-using Groq.Core.Settings;
 
 namespace Groq.Core.Providers;
 
@@ -64,10 +64,7 @@ public sealed class LlmTextProvider : ILlmTextProvider
     {
         ArgumentNullException.ThrowIfNull(userPrompt);
 
-        var roles = new JsonArray
-        {
-            new JsonObject { ["role"] = LlmRoles.UserRole, ["content"] = userPrompt },
-        };
+        var roles = new JsonArray();
 
         if (systemPrompt is not null && systemPrompt.Length > 0)
         {
@@ -75,6 +72,7 @@ public sealed class LlmTextProvider : ILlmTextProvider
                 new JsonObject { ["role"] = LlmRoles.SystemRole, ["content"] = systemPrompt }
             );
         }
+        roles.Add(new JsonObject { ["role"] = LlmRoles.UserRole, ["content"] = userPrompt });
 
         var request = new JsonObject { ["model"] = _model, ["messages"] = roles };
 

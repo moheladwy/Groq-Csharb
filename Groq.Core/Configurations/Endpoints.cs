@@ -1,4 +1,4 @@
-namespace Groq.Core.Settings;
+namespace Groq.Core.Configurations;
 
 /// <summary>
 ///     Contains the endpoints for the Groq API.
