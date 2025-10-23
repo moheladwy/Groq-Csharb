@@ -19,5 +19,5 @@ public class Tool
     ///     A <see cref="Models.Function" /> object containing the function's name, description, parameters, and execution
     ///     logic.
     /// </value>
-    public Function Function { get; set; }
+    public required Function Function { get; set; }
 }

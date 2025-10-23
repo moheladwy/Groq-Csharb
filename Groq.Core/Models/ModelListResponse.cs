@@ -16,7 +16,7 @@ public class ModelListResponse
     /// </summary>
     /// <value>The type of object, typically "list" indicating this is a list response.</value>
     [JsonPropertyName("object")]
-    public string Object { get; set; }
+    public required string Object { get; set; }
 
     /// <summary>
     ///     Gets or sets the list of available models.
