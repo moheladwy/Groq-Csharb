@@ -130,9 +130,8 @@ public static class DependencyInjection
             .ConfigureHttpClient((sp, client) =>
             {
                 var options = sp.GetRequiredService<IOptions<GroqSettings>>().Value;
-                client.BaseAddress = new Uri(Endpoints.BaseUrl);
+                client.BaseAddress = new Uri(options.BaseUrl);
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.ApiKey);
-                client.Timeout = options.Timeout;
             })
             .AddStandardResilienceHandler()
             .Configure((options, sp) =>
