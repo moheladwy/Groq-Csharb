@@ -4,6 +4,11 @@ A comprehensive and modern .NET SDK for seamless integration with the Groq AI AP
 type-safe interface to access Groq's powerful language models, vision capabilities, audio processing, and advanced tool
 integration features.
 
+**📜 Origin & Attribution**  
+This project is a modernized fork of the original [GroqApiLibrary](https://github.com/jgravelle/GroqApiLibrary) by [J. Gravelle](https://github.com/jgravelle).  
+The original library provided a solid foundation for Groq API integration in .NET. This fork has been extensively refactored and enhanced.
+**Massive thanks to J. Gravelle for creating the original library!** 🙏
+
 <a href="https://groq.com" target="_blank" rel="noopener noreferrer">
   <img
     src="https://console.groq.com/powered-by-groq-dark.svg"
@@ -15,6 +20,7 @@ integration features.
 
 ## 📑 Table of Contents
 
+-   [Origin & Attribution](#origin--attribution)
 -   [Features](#-features)
 -   [Implementation Status](#-implementation-status)
 -   [What's Left to Implement](#-whats-left-to-implement)
@@ -1197,12 +1203,13 @@ catch (Exception ex)
 
 Contributions are welcome! To contribute:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes with tests
-4. Commit your changes (`git commit -m 'Add amazing feature'`)
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Open a Pull Request
+1. Check the [Issues](https://github.com/moheladwy/GroqApiLibrary/issues) page for existing discussions
+2. Fork the repository
+3. Create a feature branch (`git checkout -b feature/amazing-feature`)
+4. Make your changes with tests
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
 
 Please ensure:
 
@@ -1214,22 +1221,28 @@ Please ensure:
 ## 📄 License
 
 This SDK is licensed under the MIT License.
-Mention J. Gravelle if you use this code. He's sort of full of himself.
+
+**Original Author**: J. Gravelle - [GitHub](https://github.com/jgravelle) | [Website](https://j.gravelle/)  
+**Current Maintainer**: Mohamed Eladwy (moheladwy) - [GitHub](https://github.com/moheladwy)
 
 ## 🙏 Acknowledgements
 
+-   **J. Gravelle**: Original creator of GroqApiLibrary - thank you for laying the groundwork!
 -   **Groq Team**: For providing exceptional AI infrastructure and models
 -   **Model Providers**: Meta (Llama), OpenAI (GPT-OSS, Whisper), Alibaba Cloud (Qwen), Moonshot AI (Kimi), PlayAI (TTS)
--   **Contributors**: Thanks to all who have contributed to improving this SDK
+-   **Original Contributors**: [Marcus Cazzola](https://github.com/CanYouCatchMe01), [Jacob Thomas](https://github.com/Jacob-J-Thomas), and all others who contributed to the original project
+-   **Current Contributors**: Thanks to all who have contributed to improving this SDK
 
 ## 📞 Support
 
--   **Issues**: [GitHub Issues](https://github.com/jgravelle/GroqApiLibrary/issues)
+-   **Issues**: [GitHub Issues](https://github.com/moheladwy/GroqApiLibrary/issues)
+-   **Original Repository**: [jgravelle/GroqApiLibrary](https://github.com/jgravelle/GroqApiLibrary)
 -   **Groq Documentation**: [console.groq.com/docs](https://console.groq.com/docs)
 -   **API Keys**: [console.groq.com](https://console.groq.com)
 
 ---
 
+**Originally created by J. Gravelle | Enhanced and maintained by Mohamed Eladwy**  
 **Built with ❤️ for the .NET community**
 
 Happy coding with Groq! 🚀

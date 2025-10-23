@@ -6,14 +6,14 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Groq API Library</Title>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Authors>J. Gravelle</Authors>
-    <Description>This library provides a simple interface to interact with the Groq AI API. It allows you to send requests to the API and receive responses asynchronously using .NET 8. Now with Whisper text-to-speech AND tool support!</Description>
-    <Copyright>©2025 - J. Gravelle</Copyright>
-    <PackageProjectUrl>https://console.groq.com/docs/libraries</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/jgravelle/GroqApiLibrary</RepositoryUrl>
+    <Authors>Mohamed Al-Adawy (moheladwy), J. Gravelle (original author)</Authors>
+    <Description>A comprehensive .NET SDK for Groq AI API integration. Forked and enhanced from J. Gravelle's original GroqApiLibrary with modern architecture, HttpClientFactory pattern, GroqSettings configuration, and extensive feature additions. Supports chat completions, vision, audio (STT/TTS), tools, and streaming.</Description>
+    <Copyright>©2025 - Mohamed Al-Adawy, Original ©2024 - J. Gravelle</Copyright>
+    <PackageProjectUrl>https://github.com/moheladwy/GroqApiLibrary</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/moheladwy/GroqApiLibrary</RepositoryUrl>
     <PackageIcon>favicon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>Groq, API, .NET Core SDK</PackageTags>
+    <PackageTags>Groq, API, .NET Core SDK, AI, LLM, Chat, Vision, Audio, TTS, STT</PackageTags>
     <AssemblyVersion>2.0.0</AssemblyVersion>
     <FileVersion>2.0.0</FileVersion>
     <Version>2.0.0</Version>
