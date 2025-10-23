@@ -9,5 +9,6 @@ public class GroqSettings
   public string? Model { get; set; }
   public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(100);
   public int MaxRetries { get; set; } = 3;
-  public TimeSpan RetryDelay { get; set; } = TimeSpan.FromSeconds(2);
+  public TimeSpan Delay { get; set; } = TimeSpan.FromSeconds(2);
+  public TimeSpan MaxDelay { get; set; } = TimeSpan.FromSeconds(20);
 }
