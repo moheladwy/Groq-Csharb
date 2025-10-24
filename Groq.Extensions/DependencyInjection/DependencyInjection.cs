@@ -1,7 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using Groq.Core.Clients;
 using Groq.Core.Configurations;
-using Groq.Core.Interfaces;
 using Groq.Core.Providers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -86,7 +85,7 @@ public static class DependencyInjection
             })
             .AddScoped<VisionClient>()
             .AddScoped<ToolClient>()
-            .AddScoped<ILlmTextProvider, LlmTextProvider>(sp =>
+            .AddScoped<LlmTextProvider>(sp =>
             {
                 var httpClientFactory = sp.GetRequiredService<ChatCompletionClient>();
                 var options = sp.GetRequiredService<IOptions<GroqOptions>>().Value;
@@ -98,7 +97,7 @@ public static class DependencyInjection
                 var audioClient = sp.GetRequiredService<AudioClient>();
                 var visionClient = sp.GetRequiredService<VisionClient>();
                 var toolClient = sp.GetRequiredService<ToolClient>();
-                var llmTextProvider = sp.GetRequiredService<ILlmTextProvider>();
+                var llmTextProvider = sp.GetRequiredService<LlmTextProvider>();
                 return new GroqClient(
                     chatClient,
                     audioClient,
@@ -145,9 +144,7 @@ public static class DependencyInjection
                 var settings = sp.GetRequiredService<IOptions<GroqOptions>>().Value;
                 options.Retry = new HttpRetryStrategyOptions
                 {
-                    Delay = settings.Delay,
-                    MaxRetryAttempts = settings.MaxRetries,
-                    MaxDelay = settings.MaxDelay
+                    Delay = settings.Delay, MaxRetryAttempts = settings.MaxRetries, MaxDelay = settings.MaxDelay
                 };
                 options.AttemptTimeout = new HttpTimeoutStrategyOptions { Timeout = settings.Timeout };
             });

@@ -1,5 +1,12 @@
 # Contributing to Groq C# SDK
 
+> **⚠️ ALPHA DEVELOPMENT WARNING**  
+> **This SDK is currently in ALPHA stage (v2.0.0.x-alpha) and is NOT production-ready.**  
+> - The API surface may change significantly between releases  
+> - Breaking changes are expected as we refine the SDK architecture  
+> - Contributions are welcome, but expect rapid iteration and changes  
+> - Focus on testing, feedback, and experimental features  
+
 Thank you for your interest in contributing to the Groq C# SDK! This document provides guidelines and instructions for contributing to this project.
 
 > **Note**: This is a modernized fork of the original [GroqApiLibrary](https://github.com/jgravelle/GroqApiLibrary) by J. Gravelle. We welcome contributions that continue to enhance and improve the SDK while respecting the original foundation.

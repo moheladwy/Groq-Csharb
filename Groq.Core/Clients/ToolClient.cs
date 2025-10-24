@@ -58,7 +58,7 @@ public sealed class ToolClient
             var messages = new List<JsonObject>
             {
                 new() { ["role"] = LlmRoles.SystemRole, ["content"] = systemMessage },
-                new() { ["role"] = LlmRoles.UserRole, ["content"] = userPrompt },
+                new() { ["role"] = LlmRoles.UserRole, ["content"] = userPrompt }
             };
 
             var request = new JsonObject
@@ -73,11 +73,11 @@ public sealed class ToolClient
                         {
                             name = t.Function.Name,
                             description = t.Function.Description,
-                            parameters = t.Function.Parameters,
-                        },
+                            parameters = t.Function.Parameters
+                        }
                     })
                 ),
-                ["tool_choice"] = "auto",
+                ["tool_choice"] = "auto"
             };
 
             Console.WriteLine(
@@ -112,7 +112,7 @@ public sealed class ToolClient
                                 ["tool_call_id"] = toolCallId,
                                 ["role"] = LlmRoles.ToolRole,
                                 ["name"] = functionName,
-                                ["content"] = functionResponse,
+                                ["content"] = functionResponse
                             }
                         );
                     }
@@ -122,7 +122,7 @@ public sealed class ToolClient
             request["messages"] = JsonSerializer.SerializeToNode(messages);
             var secondResponse = await _chatCompletionClient.CreateChatCompletionAsync(request);
             return secondResponse?["choices"]?[0]?["message"]?["content"]?.GetValue<string>()
-                ?? string.Empty;
+                   ?? string.Empty;
         }
         catch (HttpRequestException ex)
         {
