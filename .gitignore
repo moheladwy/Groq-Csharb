@@ -364,3 +364,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+docs/TESTING_STRATEGY_REPORT.md
+docs/Unit_Testing_Plan.md
+docs/Builder_Tests_Summary.md

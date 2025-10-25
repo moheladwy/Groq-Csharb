@@ -4,8 +4,7 @@ A comprehensive and modern .NET SDK for seamless integration with the Groq AI AP
 type-safe interface to access Groq's powerful language models, vision capabilities, audio processing, and advanced tool
 integration features.
 
-> **⚠️ ALPHA RELEASE WARNING**  
-> **This package is currently in ALPHA stage (v2.0.0.x-alpha) and is NOT yet production-ready.**
+> **⚠️ ALPHA RELEASE WARNING** > **This package is currently in ALPHA stage (v2.0.0.x-alpha) and is NOT yet production-ready.**
 >
 > -   ✅ Safe for **playground and testing purposes**
 > -   ✅ Safe for **development and experimentation**
@@ -13,7 +12,7 @@ integration features.
 > -   🔄 APIs may change before the stable release
 > -   🐛 May contain bugs and incomplete features
 >
-> **Use at your own risk. Wait for the stable v2.0.0 release for production deployments.**  
+> **Use at your own risk. Wait for the stable v2.0.0 release for production deployments.**
 > Report issues at [GitHub Issues](https://github.com/moheladwy/GroqApiLibrary/issues)
 
 **📜 Origin & Attribution**
@@ -28,7 +27,6 @@ refactored and enhanced.
 -   [Origin & Attribution](#origin--attribution)
 -   [Features](#-features)
 -   [Implementation Status](#-implementation-status)
--   [What's Left to Implement](#-whats-left-to-implement)
 -   [Requirements](#-requirements)
 -   [Installation](#-installation)
 -   [Quick Start](#-quick-start)
@@ -124,11 +122,10 @@ detailed breakdown of what has been implemented:
 -   Flexible tool definition with async execution
 -   Complete function calling workflow
 
-### Providers & Interfaces (100% Complete)
+### Providers (100% Complete)
 
 ✅ **LlmTextProvider**
 
--   Implements ILlmTextProvider interface
 -   Single-prompt generation
 -   System + user prompt generation
 -   Structured JSON output support
@@ -237,159 +234,7 @@ The SDK is **production-ready** with:
 -   HttpClient reuse via DI
 -   Resilience handlers for fault tolerance
 
-## 🚧 What's Left to Implement
-
-Based on Groq's latest API capabilities, the following features are **not yet implemented** in this SDK and are
-planned for future releases:
-
-### High Priority Features
-
-#### **1. Responses API**
-
--   **Status**: Not Implemented
--   **Description**: OpenAI-compatible Responses API with multi-turn conversations, image inputs, built-in tools, and
-    structured outputs
--   **Features to Add**:
-    -   Response creation with `client.responses.create()`
-    -   Multi-turn stateless conversations
-    -   Image input support (already have vision, needs Responses API integration)
-    -   Built-in tools: Code Execution (`code_interpreter`) and Browser Search (`browser_search`)
-    -   Structured outputs with JSON schema validation
-    -   Reasoning output (`reasoning` parameter with effort levels)
-    -   Parse responses with schema validation libraries (Pydantic-style)
--   **API Endpoint**: `/v1/responses`
--   **Reference**: [Responses API Documentation](https://console.groq.com/docs/responses-api)
-
-#### **2. Batch API**
-
--   **Status**: Not Implemented
--   **Description**: Asynchronous batch processing for large-scale workloads with 50% cost reduction
--   **Features to Add**:
-    -   Upload batch files (JSONL format)
-    -   Create batch jobs for chat completions, audio transcription, and audio translation
-    -   Check batch status
-    -   Retrieve batch results
-    -   List and filter batches
-    -   Support for up to 50,000 lines per batch file
-    -   24-hour to 7-day completion windows
--   **API Endpoints**: `/v1/files`, `/v1/batches`
--   **Reference**: [Batch API Documentation](https://console.groq.com/docs/batch)
-
-#### **3. Model Context Protocol (MCP)**
-
--   **Status**: Not Implemented
--   **Description**: Open-source standard for connecting AI models to external systems (databases, APIs, tools)
--   **Features to Add**:
-    -   Remote MCP server support
-    -   MCP tool definitions and server connections
-    -   Authentication and security headers
-    -   Multiple MCP servers per request
-    -   Integration with Responses API
-    -   Built-in support for popular MCP servers (Firecrawl, Parallel, Stripe, HuggingFace, etc.)
--   **Use Cases**: GitHub integration, web search, payment processing, database queries
--   **Reference**: [MCP Documentation](https://console.groq.com/docs/mcp)
-
-#### **4. Advanced Reasoning Features**
-
--   **Status**: Partially Implemented
--   **Current Support**: Basic reasoning with Qwen model (via `reasoning_effort` parameter)
--   **Missing Features**:
-    -   GPT-OSS reasoning with effort levels (`low`, `medium`, `high`)
-    -   Reasoning format control (`parsed`, `raw`, `hidden`)
-    -   `include_reasoning` parameter for GPT-OSS models
-    -   Reasoning token tracking and usage details
-    -   Streaming reasoning output
--   **Models**: GPT-OSS 20B, GPT-OSS 120B, Qwen3 32B
--   **Reference**: [Reasoning Documentation](https://console.groq.com/docs/reasoning)
-
-#### **5. Compound System Built-in Tools**
-
--   **Status**: Not Implemented
--   **Description**: Groq Compound systems with pre-built tools for agentic workflows
--   **Built-in Tools to Add**:
-    -   **Web Search**: Real-time web content with automatic citations
-    -   **Visit Website**: Fetch and analyze specific web pages
-    -   **Browser Automation**: Automated browser interactions
-    -   **Code Execution**: Already have basic support, needs Compound integration
-    -   **Wolfram Alpha**: Computational knowledge and calculations
--   **Features**:
-    -   Tool configuration via `compound_custom.tools.enabled_tools`
-    -   System versioning support
-    -   Intelligent tool selection by models
--   **Models**: `groq/compound`, `groq/compound-mini`
--   **Reference**: [Built-in Tools Documentation](https://console.groq.com/docs/compound/built-in-tools)
-
-### Medium Priority Features
-
-#### **6. Enhanced Structured Outputs**
-
--   **Status**: Basic Support Exists
--   **Missing**:
-    -   Schema validation library integration (Pydantic-style for .NET)
-    -   `response.parse()` methods
-    -   Automatic schema generation from classes
-    -   JSON Schema Mode support (beyond basic JSON Object Mode)
-
-#### **7. Files API**
-
--   **Status**: Not Implemented
--   **Description**: Upload, manage, and retrieve files for batch processing and fine-tuning
--   **Endpoints**: `/v1/files`, `/v1/files/{file_id}`, `/v1/files/{file_id}/content`
-
-#### **8. Streaming Enhancements**
-
--   **Status**: Partially Implemented
--   **Current**: Chat completion streaming exists
--   **Missing**:
-    -   Responses API streaming
-    -   Reasoning streaming with separate chunks
-    -   Server-Sent Events (SSE) parsing improvements
-
-### Low Priority / Future Features
-
-#### **9. Advanced Tool Features**
-
--   Approval workflows for tool execution
--   Tool result filtering (`allowed_tools`)
--   Tool usage analytics and logging
--   Built-in tool retry logic
-
-##### **10. Additional Configurations & Configuration**
-
--   Custom base URL support
--   HIPAA compliance configurations
--   Rate limiting and quota management
-
-### Features NOT Planned (Not Supported by Groq)
-
-The following Responses API features are not supported by Groq and won't be implemented:
-
--   `previous_response_id`
--   `store`
--   `truncation` (currently unsupported)
--   `include` parameter
--   `safety_identifier`
--   `prompt_cache_key`
-
-### Contributing to These Features
-
-We welcome contributions! If you'd like to help implement any of these features:
-
-1. Check the [Issues](https://github.com/jgravelle/GroqApiLibrary/issues) page for existing discussions
-2. Create a new issue to propose your implementation approach
-3. Fork the repository and submit a pull request
-4. Ensure all tests pass and add new tests for new features
-5. Update documentation and examples
-
-**Priority areas where help is needed:**
-
--   🔴 Responses API implementation (most requested)
--   🔴 Batch API implementation (high value)
--   🟡 MCP integration (complex but powerful)
--   🟡 Enhanced reasoning features
--   🟢 Documentation improvements and examples
-
-## 📋 Requirements
+## Requirements
 
 -   **.NET 9.0** or later
 -   Groq API key (get one at [console.groq.com](https://console.groq.com))
@@ -400,7 +245,7 @@ We welcome contributions! If you'd like to help implement any of these features:
 
 **Version:** `2.0.0.3-alpha`
 
-> **⚠️ ALPHA RELEASE - NOT PRODUCTION READY**  
+> **⚠️ ALPHA RELEASE - NOT PRODUCTION READY**
 > This is an alpha release with the new architecture featuring:
 >
 > -   ✨ **NEW:** ChatCompletionRequestBuilder for fluent request construction
