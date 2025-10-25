@@ -91,7 +91,7 @@ refactored and enhanced.
 
 ### Current Release
 
-**Version:** `2.0.0.3-alpha`
+**Version:** `2.0.0.4-alpha`
 
 > **⚠️ ALPHA RELEASE - NOT PRODUCTION READY**
 > This is an alpha release with the new architecture featuring:
@@ -112,13 +112,13 @@ The SDK is split into two packages for better modularity:
 Core SDK containing all API clients, models, providers, and the new ChatCompletionRequestBuilder.
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.3-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.4-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Core -Version 2.0.0.3-alpha
+Install-Package Groq.Sdk.Core -Version 2.0.0.4-alpha
 ```
 
 #### **Groq.Sdk.Extensions.DependencyInjection** (Optional)
@@ -126,20 +126,20 @@ Install-Package Groq.Sdk.Core -Version 2.0.0.3-alpha
 Dependency injection extensions for ASP.NET Core and .NET Generic Host applications.
 
 ```bash
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.3-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.4-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.3-alpha
+Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.4-alpha
 ```
 
 ### Quick Install (Both Packages)
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.3-alpha
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.3-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.4-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.4-alpha
 ```
 
 > **💡 Package Selection Guide:**
