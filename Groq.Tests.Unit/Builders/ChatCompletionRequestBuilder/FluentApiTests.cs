@@ -1,13 +1,9 @@
-using System.Text.Json;
-using Groq.Core.Models;
-
-namespace Groq.Tests.Unit.Builders;
+namespace Groq.Tests.Unit.Builders.ChatCompletionRequestBuilder;
 
 /// <summary>
 ///     Tests for ChatCompletionRequestBuilder fluent API functionality.
-///     Tests ID: BF-001 to BF-005
 /// </summary>
-public class BuilderFluentApiTests
+public class FluentApiTests
 {
     // Const values corresponding to private fields in ChatCompletionRequestBuilder
     private const string CitationOptionsValue = "enabled";
@@ -43,7 +39,7 @@ public class BuilderFluentApiTests
     public void Builder_Should_Support_Method_Chaining()
     {
         // Arrange & Act
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt, SystemPrompt)
             .WithTemperature(Temperature)
@@ -63,54 +59,60 @@ public class BuilderFluentApiTests
     public void Builder_Should_Return_Builder_Instance_From_All_Methods()
     {
         // Arrange
-        var builder = new ChatCompletionRequestBuilder();
+        var builder = new Core.Builders.ChatCompletionRequestBuilder();
         var testJsonObject = new JsonObject { ["test"] = "value" };
         var testJsonArray = new JsonArray { "item1", "item2" };
         var testJsonNode = JsonNode.Parse("\"test\"");
 
         // Act & Assert - Core Methods
-        builder.WithModel(DefaultModel).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithMessages(UserPrompt).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithMessages(UserPrompt, SystemPrompt).ShouldBeOfType<ChatCompletionRequestBuilder>();
+        builder.WithModel(DefaultModel).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithMessages(UserPrompt).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithMessages(UserPrompt, SystemPrompt).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
 
         // Optional Parameters
-        builder.WithCitationOptions(CitationOptionsValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithCompoundCustom(testJsonObject).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithDisableToolValidation(DisableToolValidationValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithDocuments(testJsonArray).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithFrequencyPenalty(FrequencyPenaltyValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithIncludeReasoning(IncludeReasoningValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithLogitBias(testJsonObject).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithLogprobs(LogprobsValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithMaxCompletionTokens(MaxCompletionTokensValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithMetadata(testJsonObject).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithN(NValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithParallelToolCalls(ParallelToolCallsValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithPresencePenalty(PresencePenaltyValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithReasoningEffort(ReasoningEffortValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithReasoningFormat(ReasoningFormatValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithResponseFormat("{\"type\":\"json_object\"}").ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithSearchSettings(testJsonObject).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithSeed(SeedValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithServiceTier(ServiceTierValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithStop(testJsonNode!).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithStore(StoreValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithStream(StreamValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithStreamOptions(testJsonObject).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithTemperature(TemperatureValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithToolChoice(testJsonNode!).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithTools(testJsonArray).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithTopLogprobs(TopLogprobsValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithTopP(TopPValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithUser(UserValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
+        builder.WithCitationOptions(CitationOptionsValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithCompoundCustom(testJsonObject).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithDisableToolValidation(DisableToolValidationValue)
+            .ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithDocuments(testJsonArray).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithFrequencyPenalty(FrequencyPenaltyValue)
+            .ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithIncludeReasoning(IncludeReasoningValue)
+            .ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithLogitBias(testJsonObject).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithLogprobs(LogprobsValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithMaxCompletionTokens(MaxCompletionTokensValue)
+            .ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithMetadata(testJsonObject).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithN(NValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithParallelToolCalls(ParallelToolCallsValue)
+            .ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithPresencePenalty(PresencePenaltyValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithReasoningEffort(ReasoningEffortValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithReasoningFormat(ReasoningFormatValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithResponseFormat("{\"type\":\"json_object\"}")
+            .ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithSearchSettings(testJsonObject).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithSeed(SeedValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithServiceTier(ServiceTierValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithStop(testJsonNode!).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithStore(StoreValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithStream(StreamValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithStreamOptions(testJsonObject).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithTemperature(TemperatureValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithToolChoice(testJsonNode!).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithTools(testJsonArray).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithTopLogprobs(TopLogprobsValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithTopP(TopPValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithUser(UserValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
 
         // Deprecated Methods (for backward compatibility)
 #pragma warning disable CS0618 // Type or member is obsolete
-        builder.WithExcludeDomains(testJsonArray).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithFunctionCall(testJsonNode!).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithFunctions(testJsonArray).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithIncludeDomains(testJsonArray).ShouldBeOfType<ChatCompletionRequestBuilder>();
-        builder.WithMaxTokens(MaxTokensValue).ShouldBeOfType<ChatCompletionRequestBuilder>();
+        builder.WithExcludeDomains(testJsonArray).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithFunctionCall(testJsonNode!).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithFunctions(testJsonArray).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithIncludeDomains(testJsonArray).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithMaxTokens(MaxTokensValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
 #pragma warning restore CS0618 // Type or member is obsolete
     }
 
@@ -138,8 +140,7 @@ public class BuilderFluentApiTests
                     ["description"] = "Get weather information",
                     ["parameters"] = new JsonObject
                     {
-                        ["type"] = "object",
-                        ["properties"] = new JsonObject { }
+                        ["type"] = "object", ["properties"] = new JsonObject()
                     }
                 }
             }
@@ -148,17 +149,13 @@ public class BuilderFluentApiTests
         var testFunctionCall = JsonNode.Parse("\"auto\"");
         var testFunctions = new JsonArray
         {
-            new JsonObject
-            {
-                ["name"] = "old_function",
-                ["description"] = "Legacy function"
-            }
+            new JsonObject { ["name"] = "old_function", ["description"] = "Legacy function" }
         };
         var testIncludeDomains = new JsonArray { "trusted.com", "verified.com" };
 
         // Act
 #pragma warning disable CS0618 // Type or member is obsolete
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt, SystemPrompt)
             .WithCitationOptions(CitationOptionsValue)
@@ -281,7 +278,7 @@ public class BuilderFluentApiTests
     public void Builder_Should_Omit_Null_Optional_Parameters()
     {
         // Arrange & Act
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
             .Build();
@@ -348,7 +345,7 @@ public class BuilderFluentApiTests
                                       """;
 
         // Act
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
             .WithResponseFormat(responseFormat)
@@ -386,7 +383,7 @@ public class BuilderFluentApiTests
         };
 
         // Act
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages("What's the weather?")
             .WithTools(tools)
@@ -406,7 +403,7 @@ public class BuilderFluentApiTests
         const string stopSequence = "\n";
 
         // Act
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
             .WithStop(JsonValue.Create(stopSequence))
@@ -424,7 +421,7 @@ public class BuilderFluentApiTests
         var stopSequences = new JsonArray { "\n", "END", "STOP" };
 
         // Act
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
             .WithStop(stopSequences)
@@ -440,15 +437,15 @@ public class BuilderFluentApiTests
     public void Builder_Should_Handle_All_Boolean_Parameters()
     {
         // Arrange & Act - Test all 6 boolean parameters in ChatCompletionRequestBuilder
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
-            .WithDisableToolValidation(true)     // Boolean param 1: disable_tool_validation
-            .WithIncludeReasoning(true)          // Boolean param 2: include_reasoning
-            .WithLogprobs(true)                  // Boolean param 3: logprobs
-            .WithParallelToolCalls(false)        // Boolean param 4: parallel_tool_calls
-            .WithStore(true)                     // Boolean param 5: store
-            .WithStream(true)                    // Boolean param 6: stream
+            .WithDisableToolValidation(true) // Boolean param 1: disable_tool_validation
+            .WithIncludeReasoning(true) // Boolean param 2: include_reasoning
+            .WithLogprobs(true) // Boolean param 3: logprobs
+            .WithParallelToolCalls(false) // Boolean param 4: parallel_tool_calls
+            .WithStore(true) // Boolean param 5: store
+            .WithStream(true) // Boolean param 6: stream
             .Build();
 
         // Assert - Verify all 6 boolean parameters are set correctly
@@ -475,14 +472,14 @@ public class BuilderFluentApiTests
     public void Builder_Should_Handle_String_Parameters()
     {
         // Arrange & Act - Test all 6 string parameters in ChatCompletionRequestBuilder
-        var request = new ChatCompletionRequestBuilder()
-            .WithModel(DefaultModel)                     // String param 1: model (required)
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
+            .WithModel(DefaultModel) // String param 1: model (required)
             .WithMessages(UserPrompt)
-            .WithCitationOptions("enabled")              // String param 2: citation_options
-            .WithReasoningEffort("medium")               // String param 3: reasoning_effort
-            .WithReasoningFormat("parsed")               // String param 4: reasoning_format
-            .WithServiceTier("on_demand")                // String param 5: service_tier
-            .WithUser("user-123")                        // String param 6: user
+            .WithCitationOptions("enabled") // String param 2: citation_options
+            .WithReasoningEffort("medium") // String param 3: reasoning_effort
+            .WithReasoningFormat("parsed") // String param 4: reasoning_format
+            .WithServiceTier("on_demand") // String param 5: service_tier
+            .WithUser("user-123") // String param 6: user
             .Build();
 
         // Assert - Verify all 6 string parameters are set correctly
@@ -517,14 +514,14 @@ public class BuilderFluentApiTests
 
         // Act
 #pragma warning disable CS0618 // Type or member is obsolete
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
-            .WithMaxCompletionTokens(maxCompletionTokens)  // Integer param 1: max_completion_tokens
-            .WithMaxTokens(maxTokens)                      // Integer param 2: max_tokens (deprecated)
-            .WithN(n)                                      // Integer param 3: n
-            .WithSeed(seed)                                // Integer param 4: seed
-            .WithTopLogprobs(topLogprobs)                  // Integer param 5: top_logprobs
+            .WithMaxCompletionTokens(maxCompletionTokens) // Integer param 1: max_completion_tokens
+            .WithMaxTokens(maxTokens) // Integer param 2: max_tokens (deprecated)
+            .WithN(n) // Integer param 3: n
+            .WithSeed(seed) // Integer param 4: seed
+            .WithTopLogprobs(topLogprobs) // Integer param 5: top_logprobs
             .Build();
 #pragma warning restore CS0618 // Type or member is obsolete
 
@@ -549,20 +546,20 @@ public class BuilderFluentApiTests
     public void Builder_Should_Use_Static_Create_Method()
     {
         // Act - Create builder using static factory method
-        var builder = ChatCompletionRequestBuilder.Create();
+        var builder = Core.Builders.ChatCompletionRequestBuilder.Create();
 
         // Assert - Verify Create() returns a new instance
         builder.ShouldNotBeNull();
-        builder.ShouldBeOfType<ChatCompletionRequestBuilder>();
+        builder.ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
 
         // Assert - Verify each call to Create() returns a new instance
-        var builder2 = ChatCompletionRequestBuilder.Create();
+        var builder2 = Core.Builders.ChatCompletionRequestBuilder.Create();
         builder2.ShouldNotBeNull();
-        builder2.ShouldBeOfType<ChatCompletionRequestBuilder>();
+        builder2.ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
         builder2.ShouldNotBeSameAs(builder); // Different instances
 
         // Assert - Verify the created builder can be used for method chaining
-        var request = ChatCompletionRequestBuilder.Create()
+        var request = Core.Builders.ChatCompletionRequestBuilder.Create()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
             .WithTemperature(TemperatureValue)
@@ -589,15 +586,15 @@ public class BuilderFluentApiTests
         var streamOptions = new JsonObject { ["include_usage"] = true };
 
         // Act
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
-            .WithCompoundCustom(compoundCustom)       // JsonObject param 1: compound_custom
-            .WithLogitBias(logitBias)                 // JsonObject param 2: logit_bias
-            .WithMetadata(metadata)                   // JsonObject param 3: metadata
+            .WithCompoundCustom(compoundCustom) // JsonObject param 1: compound_custom
+            .WithLogitBias(logitBias) // JsonObject param 2: logit_bias
+            .WithMetadata(metadata) // JsonObject param 3: metadata
             .WithResponseFormat(responseFormatSchema) // JsonObject param 4: response_format (set via string)
-            .WithSearchSettings(searchSettings)       // JsonObject param 5: search_settings
-            .WithStreamOptions(streamOptions)         // JsonObject param 6: stream_options
+            .WithSearchSettings(searchSettings) // JsonObject param 5: search_settings
+            .WithStreamOptions(streamOptions) // JsonObject param 6: stream_options
             .Build();
 
         // Assert - Verify all 6 JsonObject parameters are set correctly
@@ -646,7 +643,7 @@ public class BuilderFluentApiTests
         };
 
         // Act
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages("Summarize the documents")
             .WithDocuments(documents)
@@ -686,13 +683,13 @@ public class BuilderFluentApiTests
         const double presencePenalty = 0.4;
 
         // Act
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
-            .WithTemperature(temperature)           // Double param 1: temperature
-            .WithTopP(topP)                         // Double param 2: top_p
+            .WithTemperature(temperature) // Double param 1: temperature
+            .WithTopP(topP) // Double param 2: top_p
             .WithFrequencyPenalty(frequencyPenalty) // Double param 3: frequency_penalty
-            .WithPresencePenalty(presencePenalty)   // Double param 4: presence_penalty
+            .WithPresencePenalty(presencePenalty) // Double param 4: presence_penalty
             .Build();
 
         // Assert - Verify all 4 double parameters are set correctly
@@ -716,11 +713,7 @@ public class BuilderFluentApiTests
         var documents = new JsonArray { new JsonObject { ["content"] = "doc1" } };
         var tools = new JsonArray
         {
-            new JsonObject
-            {
-                ["type"] = "function",
-                ["function"] = new JsonObject { ["name"] = "test_tool" }
-            }
+            new JsonObject { ["type"] = "function", ["function"] = new JsonObject { ["name"] = "test_tool" } }
         };
         var excludeDomains = new JsonArray { "spam.com" };
         var functions = new JsonArray { new JsonObject { ["name"] = "test_func" } };
@@ -728,13 +721,13 @@ public class BuilderFluentApiTests
 
         // Act
 #pragma warning disable CS0618 // Type or member is obsolete
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
-            .WithDocuments(documents)           // JsonArray param 1: documents
-            .WithTools(tools)                   // JsonArray param 2: tools
+            .WithDocuments(documents) // JsonArray param 1: documents
+            .WithTools(tools) // JsonArray param 2: tools
             .WithExcludeDomains(excludeDomains) // JsonArray param 3: exclude_domains (deprecated)
-            .WithFunctions(functions)           // JsonArray param 4: functions (deprecated)
+            .WithFunctions(functions) // JsonArray param 4: functions (deprecated)
             .WithIncludeDomains(includeDomains) // JsonArray param 5: include_domains (deprecated)
             .Build();
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -766,11 +759,11 @@ public class BuilderFluentApiTests
 
         // Act
 #pragma warning disable CS0618 // Type or member is obsolete
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
-            .WithStop(stopNode!)              // JsonNode param 1: stop
-            .WithToolChoice(toolChoiceNode!)  // JsonNode param 2: tool_choice
+            .WithStop(stopNode!) // JsonNode param 1: stop
+            .WithToolChoice(toolChoiceNode!) // JsonNode param 2: tool_choice
             .WithFunctionCall(functionCallNode!) // JsonNode param 3: function_call (deprecated)
             .Build();
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -790,7 +783,7 @@ public class BuilderFluentApiTests
     public void Builder_Should_Overwrite_Messages_On_Multiple_Calls()
     {
         // Arrange & Act - Call WithMessages twice, second call should overwrite
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages("First message", "First system")
             .WithMessages("Second message", "Second system") // This should overwrite
@@ -814,7 +807,7 @@ public class BuilderFluentApiTests
         const int largeValue = 1000000;
 
         // Act
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
             .WithN(zero)
@@ -838,7 +831,7 @@ public class BuilderFluentApiTests
         const double maxPenalty = 2.0;
 
         // Act
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
             .WithTemperature(minTemperature)
@@ -862,7 +855,7 @@ public class BuilderFluentApiTests
         var emptyTools = new JsonArray();
 
         // Act
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
             .WithDocuments(emptyDocuments)
@@ -885,7 +878,7 @@ public class BuilderFluentApiTests
         var emptyLogitBias = new JsonObject();
 
         // Act
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
             .WithMetadata(emptyMetadata)
@@ -906,12 +899,11 @@ public class BuilderFluentApiTests
         // Arrange - Test toolChoice as an object (not just string)
         var toolChoiceObject = new JsonObject
         {
-            ["type"] = "function",
-            ["function"] = new JsonObject { ["name"] = "specific_function" }
+            ["type"] = "function", ["function"] = new JsonObject { ["name"] = "specific_function" }
         };
 
         // Act
-        var request = new ChatCompletionRequestBuilder()
+        var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt)
             .WithToolChoice(toolChoiceObject)
@@ -930,7 +922,7 @@ public class BuilderFluentApiTests
         const string invalidJson = "{ invalid json }";
 
         // Act & Assert
-        var builder = new ChatCompletionRequestBuilder()
+        var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
             .WithMessages(UserPrompt);
 
