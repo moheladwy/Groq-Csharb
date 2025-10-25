@@ -54,6 +54,8 @@ public sealed class ChatCompletionClient
     /// <exception cref="HttpRequestException">Thrown when the API request fails.</exception>
     public async Task<JsonObject?> CreateChatCompletionAsync(JsonObject request)
     {
+        ArgumentNullException.ThrowIfNull(request, nameof(request));
+        request["stream"] = false;
         var response = await _httpClient.PostAsJsonAsync(Endpoints.ChatCompletionsEndpoint, request);
         if (!response.IsSuccessStatusCode)
         {
