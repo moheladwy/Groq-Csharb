@@ -13,7 +13,7 @@ integration features.
 > -   🐛 May contain bugs and incomplete features
 >
 > **Use at your own risk. Wait for the stable v2.0.0 release for production deployments.**
-> Report issues at [GitHub Issues](https://github.com/moheladwy/GroqApiLibrary/issues)
+> Report issues at [GitHub Issues](https://github.com/moheladwy/Groq-Csharp/issues)
 
 **📜 Origin & Attribution**
 This project is a modernized fork of the original [GroqApiLibrary](https://github.com/jgravelle/GroqApiLibrary)
@@ -26,7 +26,6 @@ refactored and enhanced.
 
 -   [Origin & Attribution](#origin--attribution)
 -   [Features](#-features)
--   [Implementation Status](#-implementation-status)
 -   [Requirements](#-requirements)
 -   [Installation](#-installation)
 -   [Quick Start](#-quick-start)
@@ -81,158 +80,7 @@ refactored and enhanced.
 -   📦 **Dependency Injection**: First-class support for .NET DI with HttpClientFactory pattern
 -   ⚙️ **Flexible Configuration**: GroqOptions with retry policies, timeout, and resilience handlers
 -   🔄 **Automatic Retries**: Built-in exponential backoff and circuit breaker patterns
--   �️ **Type Safety**: Strongly-typed model definitions and comprehensive XML documentation
-
-## ✅ Implementation Status
-
-This SDK is **feature-complete** with comprehensive implementations across all core functionality areas. Below is a
-detailed breakdown of what has been implemented:
-
-### Core Clients (100% Complete)
-
-✅ **ChatCompletionClient**
-
--   Full chat completion support with synchronous and streaming modes
--   List available models functionality
--   Comprehensive error handling and validation
--   Fully documented with XML comments
-
-✅ **AudioClient**
-
--   Speech-to-Text transcription (Whisper models)
--   Audio translation to English
--   Text-to-Speech synthesis for English (19 voices)
--   Text-to-Speech synthesis for Arabic (4 voices)
--   Multipart form data handling for audio uploads
--   All methods fully implemented and documented
-
-✅ **VisionClient**
-
--   Image analysis via URL
--   Image analysis via Base64 encoding
--   Vision with tool calling support
--   JSON mode output formatting
--   Image validation (URL format, Base64 size, resolution limits)
--   Fully integrated with ChatCompletionClient
-
-✅ **ToolClient**
-
--   Multi-turn conversation with tool integration
--   Automatic tool execution and response handling
--   Flexible tool definition with async execution
--   Complete function calling workflow
-
-### Providers (100% Complete)
-
-✅ **LlmTextProvider**
-
--   Single-prompt generation
--   System + user prompt generation
--   Structured JSON output support
--   Configurable model selection
-
-### Models & Data Structures (100% Complete)
-
-✅ **Model Definitions**
-
--   ChatModels: 8 models (Llama, GPT-OSS, Qwen, Kimi, Guard models)
--   AudioModels: 4 models (Whisper v3, Whisper v3 Turbo, PlayAI TTS variants)
--   VisionModels: 2 models (Llama 4 Scout, Llama 4 Maverick)
--   AgentModels: 2 models (Groq Compound, Groq Compound Mini)
--   All models include comprehensive metadata and documentation
-
-✅ **Supporting Classes**
-
--   Model class with JSON serialization
--   ModelListResponse for API responses
--   Tool and Function classes for function calling
--   Full parameter validation
-
-### Configuration & Configurations (100% Complete)
-
-✅ **Endpoints**
-
--   Base URL configuration
--   All API endpoint constants defined
--   Chat completions, transcriptions, translations, TTS, models list
-
-✅ **LlmRoles**
-
--   System, User, Assistant, Tool role constants
--   Used consistently across all clients
-
-✅ **VisionConfigurations**
-
--   Default model configuration
--   Size and resolution validation constants
--   Supported model list management
-
-✅ **Voice Configurations**
-
--   EnglishVoices enum with 19 voice options
--   ArabicVoices enum with 4 voice options
--   Type-safe voice selection
-
-### Dependency Injection (100% Complete)
-
-✅ **RegisterGroq Extension**
-
--   Generic IHostApplicationBuilder support
--   Automatic registration of all clients and providers
--   HttpClient configuration with resilience handlers
--   Bearer token authentication setup
--   Scoped lifetime management for all services
-
-### Documentation (100% Complete)
-
-✅ **XML Documentation**
-
--   Every public class, method, and property documented
--   Comprehensive remarks sections with usage guidelines
--   Parameter descriptions and return value documentation
--   Exception documentation
--   Best practices and use case examples
-
-✅ **README Documentation**
-
--   Complete feature overview
--   Quick start guides (DI and manual)
--   Model specifications and benchmarks
--   Usage examples for all major features
--   Error handling guidelines
--   Performance tips
-
-### What's Ready to Use
-
-The SDK is **production-ready** with:
-
--   ✅ All core Groq API features implemented
--   ✅ Comprehensive error handling
--   ✅ Full async/await support
--   ✅ Streaming support for chat completions
--   ✅ Type-safe model definitions
--   ✅ Dependency injection integration
--   ✅ Resilient HTTP client configuration
--   ✅ Complete XML documentation
--   ✅ Extensive README with examples
-
-### Architecture Highlights
-
-**Design Patterns:**
-
--   Client classes for separation of concerns
--   Provider pattern for LLM text generation
--   Interface-based design (ILlmTextProvider)
--   Extension methods for DI registration
--   Static model classes for easy reference
-
-**Best Practices:**
-
--   Async/await throughout
--   IDisposable patterns for streams
--   ArgumentNullException for parameter validation
--   HttpClient reuse via DI
--   Resilience handlers for fault tolerance
+-   🛡️ **Type Safety**: Strongly-typed model definitions and comprehensive XML documentation
 
 ## Requirements
 
@@ -307,7 +155,7 @@ dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.3-alp
 
 > **⚠️ Alpha Release Notice:**
 > This is an alpha version. APIs may change before the stable release. Please report any issues
-> on [GitHub](https://github.com/moheladwy/GroqApiLibrary/issues).
+> on [GitHub](https://github.com/moheladwy/Groq-Csharp/issues).
 
 ## 🚀 Quick Start
 
@@ -710,7 +558,6 @@ Console.WriteLine(result?["text"]?.ToString());
 
 #### Text-to-Speech (English)
 
-````csharp
 ```csharp
 using Groq.Core.Configurations.Voice;
 
@@ -718,17 +565,16 @@ var audioData = await audioClient.CreateTextToEnglishSpeechAsync(
     input: "Hello! Welcome to Groq API. This is an example of text-to-speech synthesis.",
     voice: EnglishVoices.Celeste
 );
-````
+```
 
+```csharp
 // Save to file
-await File.WriteAllBytesAsync("output.wav", audioData);
-
 // Available English voices:
 // Arista, Atlas, Basil, Briggs, Calum, Celeste, Cheyenne, Chip,
 // Cillian, Deedee, Fritz, Gail, Indigo, Mamaw, Mason, Mikail,
 // Mitch, Quinn, Thunder
-
-````
+await File.WriteAllBytesAsync("output.wav", audioData);
+```
 
 #### Text-to-Speech (Arabic)
 
@@ -743,7 +589,7 @@ var audioData = await audioClient.CreateTextToArabicSpeechAsync(
 await File.WriteAllBytesAsync("arabic_output.wav", audioData);
 
 // Available Arabic voices: Ahmad, Amira, Khalid, Nasser
-````
+```
 
 ### Tool Usage & Function Calling
 
@@ -1103,7 +949,7 @@ catch (Exception ex)
 
 Contributions are welcome! To contribute:
 
-1. Check the [Issues](https://github.com/moheladwy/GroqApiLibrary/issues) page for existing discussions
+1. Check the [Issues](https://github.com/moheladwy/Groq-Csharp/issues) page for existing discussions
 2. Fork the repository
 3. Create a feature branch (`git checkout -b feature/amazing-feature`)
 4. Make your changes with tests
@@ -1130,14 +976,13 @@ This SDK is licensed under the MIT License.
 -   **J. Gravelle**: Original creator of GroqApiLibrary - thank you for laying the groundwork!
 -   **Groq Team**: For providing exceptional AI infrastructure and models
 -   **Model Providers**: Meta (Llama), OpenAI (GPT-OSS, Whisper), Alibaba Cloud (Qwen), Moonshot AI (Kimi), PlayAI (TTS)
--   **Original Contributors
-    **: [Marcus Cazzola](https://github.com/CanYouCatchMe01), [Jacob Thomas](https://github.com/Jacob-J-Thomas), and all
+-   **Original Contributors**: [Marcus Cazzola](https://github.com/CanYouCatchMe01), [Jacob Thomas](https://github.com/Jacob-J-Thomas), and all
     others who contributed to the original project
 -   **Current Contributors**: Thanks to all who have contributed to improving this SDK
 
 ## 📞 Support
 
--   **Issues**: [GitHub Issues](https://github.com/moheladwy/GroqApiLibrary/issues)
+-   **Issues**: [GitHub Issues](https://github.com/moheladwy/Groq-Csharp/issues)
 -   **Original Repository**: [jgravelle/GroqApiLibrary](https://github.com/jgravelle/GroqApiLibrary)
 -   **Groq Documentation**: [console.groq.com/docs](https://console.groq.com/docs)
 -   **API Keys**: [console.groq.com](https://console.groq.com)
