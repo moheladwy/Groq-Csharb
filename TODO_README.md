@@ -10,12 +10,18 @@
 
 ### ✅ Completed Today
 
+-   **Model JSON Serialization Tests**: Created comprehensive test suite with 17 tests
+    -   ModelResponseJsonValidationTests.cs: Tests for Model and ModelListResponse classes
+    -   Coverage: JSON serialization/deserialization, round-trip validation, error handling
+    -   All tests passing (100% success rate)
+    -   Total project tests: **70 tests** (up from 54)
 -   **ChatCompletionRequestBuilder Unit Tests**: Created comprehensive test suite with 54 tests
     -   ValidationTests.cs: 24 tests covering all validation scenarios
     -   FluentApiTests.cs: 30 tests covering fluent API, parameters, and edge cases
     -   Coverage: ~90% of ChatCompletionRequestBuilder.cs
     -   All tests passing (100% success rate)
     -   Using Shouldly assertions (BSD 3-Clause license - commercial-safe)
+-   **Documentation**: Created Model_Serialization_Tests_Summary.md with detailed test documentation
 -   **Documentation**: Created Builder_Tests_Summary.md with detailed test documentation
 -   **TODO Tracking**: Separated TODO items from README.md into this dedicated tracking file
 
@@ -32,7 +38,7 @@
 | Category              | Status         | Progress |
 | --------------------- | -------------- | -------- |
 | **Core SDK Features** | ✅ Complete    | 100%     |
-| **Unit Tests**        | 🔄 In Progress | 35%      |
+| **Unit Tests**        | 🔄 In Progress | 40%      |
 | **Integration Tests** | ❌ Not Started | 0%       |
 | **Advanced Features** | ❌ Not Started | 0%       |
 | **Documentation**     | ✅ Complete    | 100%     |
@@ -176,10 +182,15 @@ The SDK is **ready** with:
 
 ## 🔄 In Progress
 
-### Unit Testing (35% Complete)
+### Unit Testing (40% Complete - 70/175 planned tests)
 
 #### ✅ Completed Tests
 
+-   **Model JSON Serialization Tests** (17 tests, 100% passing)
+    -   ✅ ModelResponseJsonValidationTests.cs - Model and ModelListResponse JSON tests
+    -   Location: `/Groq.Tests.Unit/Models/`
+    -   Coverage: Serialization, deserialization, round-trip, error handling, edge cases
+    -   Features: Required property validation, snake_case mapping, null handling
 -   **ChatCompletionRequestBuilder Tests** (54 tests, 100% passing)
     -   ✅ ValidationTests.cs (24 tests) - Comprehensive validation and error handling
     -   ✅ FluentApiTests.cs (30 tests) - Fluent API, parameter handling, edge cases
@@ -188,13 +199,12 @@ The SDK is **ready** with:
 
 #### 🔄 Planned Unit Tests
 
-**Phase 1: Models & DTOs (0/28 tests)**
+**Phase 1: Models & DTOs (17/28 tests complete)**
 
--   ❌ ModelTests.cs (6 tests)
--   ❌ ModelListResponseTests.cs (5 tests)
--   ❌ FunctionTests.cs (6 tests)
--   ❌ ToolTests.cs (4 tests)
--   ❌ GroqOptionsTests.cs (7 tests)
+-   ✅ ModelResponseJsonValidationTests.cs (17 tests) - Model and ModelListResponse serialization
+-   ❌ FunctionTests.cs (6 tests) - Function class validation and execution
+-   ❌ ToolTests.cs (4 tests) - Tool class structure and integration
+-   ❌ GroqOptionsTests.cs (7 tests) - Configuration options validation
 
 **Phase 2: Configurations (0/10 tests)**
 
