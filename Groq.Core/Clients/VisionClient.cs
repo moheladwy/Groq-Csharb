@@ -1,5 +1,5 @@
-using System.Text.Json;
 using System.Text.Json.Nodes;
+using Groq.Core.Builders;
 using Groq.Core.Configurations;
 using Groq.Core.Models;
 
@@ -69,31 +69,16 @@ public sealed class VisionClient
     {
         ValidateImageUrl(imageUrl);
 
-        var request = new JsonObject
-        {
-            ["model"] = model,
-            ["messages"] = new JsonArray
-            {
-                new JsonObject
-                {
-                    ["role"] = LlmRoles.UserRole,
-                    ["content"] = new JsonArray
-                    {
-                        new JsonObject { ["type"] = "text", ["text"] = prompt },
-                        new JsonObject
-                        {
-                            ["type"] = "image_url",
-                            ["image_url"] = new JsonObject { ["url"] = imageUrl }
-                        }
-                    }
-                }
-            }
-        };
+        var builder = ChatCompletionRequestBuilder
+            .Create()
+            .WithModel(model)
+            .WithUserPrompt(prompt)
+            .WithImageUrl(imageUrl);
 
         if (temperature.HasValue)
-        {
-            request["temperature"] = temperature.Value;
-        }
+            builder = builder.WithTemperature(temperature.Value);
+
+        var request = builder.Build();
 
         return await CreateVisionCompletionAsync(request);
     }
@@ -118,34 +103,16 @@ public sealed class VisionClient
         var base64Image = await ConvertImageToBase64(imagePath);
         ValidateBase64Size(base64Image);
 
-        var request = new JsonObject
-        {
-            ["model"] = model,
-            ["messages"] = new JsonArray
-            {
-                new JsonObject
-                {
-                    ["role"] = "user",
-                    ["content"] = new JsonArray
-                    {
-                        new JsonObject { ["type"] = "text", ["text"] = prompt },
-                        new JsonObject
-                        {
-                            ["type"] = "image_url",
-                            ["image_url"] = new JsonObject
-                            {
-                                ["url"] = $"data:image/jpeg;base64,{base64Image}"
-                            }
-                        }
-                    }
-                }
-            }
-        };
+        var builder = ChatCompletionRequestBuilder
+            .Create()
+            .WithModel(model)
+            .WithUserPrompt(prompt)
+            .WithImageUrl($"data:image/jpeg;base64,{base64Image}");
 
         if (temperature.HasValue)
-        {
-            request["temperature"] = temperature.Value;
-        }
+            builder = builder.WithTemperature(temperature.Value);
+
+        var request = builder.Build();
 
         return await CreateVisionCompletionAsync(request);
     }
@@ -168,37 +135,31 @@ public sealed class VisionClient
     {
         ValidateImageUrl(imageUrl);
 
-        var request = new JsonObject
+        if (tools.Count == 0)
+            throw new ArgumentException("At least one tool must be specified");
+
+        var toolsObject = new JsonArray();
+
+        tools.ToList().ForEach(t => toolsObject.Add(new JsonObject
         {
-            ["model"] = model,
-            ["messages"] = new JsonArray
+            ["type"] = t.Type,
+            ["function"] = new JsonObject
             {
-                new JsonObject
-                {
-                    ["role"] = "user",
-                    ["content"] =
-                        new JsonArray
-                        {
-                            new JsonObject { ["type"] = "text", ["text"] = prompt },
-                            new JsonObject
-                            {
-                                ["type"] = "image_url", ["image_url"] = new JsonObject { ["url"] = imageUrl }
-                            }
-                        }
-                }
-            },
-            ["tools"] = JsonSerializer.SerializeToNode(tools.Select(t => new
-            {
-                type = t.Type,
-                function = new
-                {
-                    name = t.Function.Name,
-                    description = t.Function.Description,
-                    parameters = t.Function.Parameters
-                }
-            })),
-            ["tool_choice"] = "auto"
-        };
+                ["name"] = t.Function.Name,
+                ["description"] = t.Function.Description,
+                ["parameters"] = t.Function.Parameters
+            }
+        }));
+
+        var builder = ChatCompletionRequestBuilder
+            .Create()
+            .WithModel(model)
+            .WithUserPrompt(prompt)
+            .WithImageUrl(imageUrl)
+            .WithTools(toolsObject)
+            .WithToolChoice("auto");
+
+        var request = builder.Build();
 
         return await CreateVisionCompletionAsync(request);
     }
@@ -219,27 +180,13 @@ public sealed class VisionClient
     {
         ValidateImageUrl(imageUrl);
 
-        var request = new JsonObject
-        {
-            ["model"] = model,
-            ["messages"] = new JsonArray
-            {
-                new JsonObject
-                {
-                    ["role"] = "user",
-                    ["content"] = new JsonArray
-                    {
-                        new JsonObject { ["type"] = "text", ["text"] = prompt },
-                        new JsonObject
-                        {
-                            ["type"] = "image_url",
-                            ["image_url"] = new JsonObject { ["url"] = imageUrl }
-                        }
-                    }
-                }
-            },
-            ["response_format"] = new JsonObject { ["type"] = "json_object" }
-        };
+        var request = ChatCompletionRequestBuilder
+            .Create()
+            .WithModel(model)
+            .WithUserPrompt(prompt)
+            .WithImageUrl(imageUrl)
+            .WithResponseFormat("{ }")
+            .Build();
 
         return await CreateVisionCompletionAsync(request);
     }

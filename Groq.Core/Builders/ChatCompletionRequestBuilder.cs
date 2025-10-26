@@ -33,6 +33,10 @@ public class ChatCompletionRequestBuilder
     private int? _maxTokens;
 
     // Required parameters
+    private string _userPrompt = string.Empty;
+    private string? _systemPrompt;
+    private string? _assistantPrompt;
+    private string? _imageUrl;
     private JsonArray? _messages;
     private JsonObject? _metadata;
     private string? _model;
@@ -59,21 +63,165 @@ public class ChatCompletionRequestBuilder
     /// <summary>
     ///     Sets the list of messages comprising the conversation so far.
     /// </summary>
-    /// <param name="userPrompt">The user's input prompt.</param>
-    /// <param name="systemPrompt">Optional system prompt for context or instructions.</param>
+    /// <param name="messages">Array of message objects.</param>
     /// <returns>The ChatCompletionRequestBuilder instance for method chaining.</returns>
-    public ChatCompletionRequestBuilder WithMessages(string userPrompt, string? systemPrompt = null)
+    /// <exception cref="ArgumentNullException">Thrown when messages is null.</exception>
+    /// <remarks>
+    ///     <para>
+    ///         <b>IMPORTANT:</b> If this method is used to set messages directly, the following methods will have 
+    ///         no effect even if called: <see cref="WithUserPrompt"/>, <see cref="WithSystemPrompt"/>, 
+    ///         <see cref="WithAssistantPrompt"/>, and <see cref="WithImageUrl"/>.
+    ///     </para>
+    ///     <para>
+    ///         Use this method when you need full control over the message structure, or use the convenience 
+    ///         methods (WithUserPrompt, etc.) to automatically build the messages array.
+    ///     </para>
+    /// </remarks>
+    public ChatCompletionRequestBuilder WithMessages(JsonArray messages)
     {
-        _messages = [];
+        ArgumentNullException.ThrowIfNull(messages, nameof(messages));
 
-        if (systemPrompt is not null)
-        {
-            _messages.Add(new JsonObject { ["role"] = LlmRoles.SystemRole, ["content"] = systemPrompt });
-        }
-
-        _messages.Add(new JsonObject { ["role"] = LlmRoles.UserRole, ["content"] = userPrompt });
+        _messages = messages;
 
         return this;
+    }
+
+    /// <summary>
+    ///     Sets the user prompt for the conversation.
+    /// </summary>
+    /// <param name="userPrompt">The user's message text.</param>
+    /// <returns>The ChatCompletionRequestBuilder instance for method chaining.</returns>
+    /// <exception cref="ArgumentException">Thrown when userPrompt is null or empty.</exception>
+    /// <remarks>
+    ///     <para>
+    ///         This is a convenience method that automatically builds the messages array. The user prompt is required 
+    ///         and will be included in the final request as a message with role "user".
+    ///     </para>
+    ///     <para>
+    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called. 
+    ///         Use either WithMessages for full control, or use this method along with <see cref="WithSystemPrompt"/>, 
+    ///         <see cref="WithAssistantPrompt"/>, and <see cref="WithImageUrl"/> for automatic message building.
+    ///     </para>
+    /// </remarks>
+    public ChatCompletionRequestBuilder WithUserPrompt(string userPrompt)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(userPrompt, nameof(userPrompt));
+
+        _userPrompt = userPrompt;
+
+        return this;
+    }
+
+    /// <summary>
+    ///     Sets the system prompt for the conversation.
+    /// </summary>
+    /// <param name="systemPrompt">The system message text that sets the context or behavior for the assistant.</param>
+    /// <returns>The ChatCompletionRequestBuilder instance for method chaining.</returns>
+    /// <exception cref="ArgumentException">Thrown when systemPrompt is null or empty.</exception>
+    /// <remarks>
+    ///     <para>
+    ///         This is a convenience method that automatically builds the messages array. The system prompt is optional 
+    ///         and will be included as the first message with role "system" if provided.
+    ///     </para>
+    ///     <para>
+    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called. 
+    ///         Use either WithMessages for full control, or use this method along with <see cref="WithUserPrompt"/> 
+    ///         for automatic message building.
+    ///     </para>
+    /// </remarks>
+    public ChatCompletionRequestBuilder WithSystemPrompt(string systemPrompt)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(systemPrompt, nameof(systemPrompt));
+
+        _systemPrompt = systemPrompt;
+
+        return this;
+    }
+
+    /// <summary>
+    ///     Sets the assistant prompt for the conversation.
+    /// </summary>
+    /// <param name="assistantPrompt">The assistant's message text to provide context for the conversation.</param>
+    /// <returns>The ChatCompletionRequestBuilder instance for method chaining.</returns>
+    /// <exception cref="ArgumentException">Thrown when assistantPrompt is null or empty.</exception>
+    /// <remarks>
+    ///     <para>
+    ///         This is a convenience method that automatically builds the messages array. The assistant prompt is optional 
+    ///         and will be included as a message with role "assistant" if provided, positioned after the system message 
+    ///         (if any) and before the user message.
+    ///     </para>
+    ///     <para>
+    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called. 
+    ///         Use either WithMessages for full control, or use this method along with <see cref="WithUserPrompt"/> 
+    ///         for automatic message building.
+    ///     </para>
+    /// </remarks>
+    public ChatCompletionRequestBuilder WithAssistantPrompt(string assistantPrompt)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(assistantPrompt, nameof(assistantPrompt));
+
+        _assistantPrompt = assistantPrompt;
+
+        return this;
+    }
+
+    /// <summary>
+    ///     Sets the image URL for vision-based requests.
+    /// </summary>
+    /// <param name="imageUrl">The URL of the image to analyze.</param>
+    /// <returns>The ChatCompletionRequestBuilder instance for method chaining.</returns>
+    /// <exception cref="ArgumentException">Thrown when imageUrl is null or empty.</exception>
+    /// <remarks>
+    ///     <para>
+    ///         This is a convenience method that automatically builds the messages array with multimodal content. 
+    ///         The image URL is optional and will be included in the user message content alongside the text prompt.
+    ///     </para>
+    ///     <para>
+    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called. 
+    ///         Use either WithMessages for full control over multimodal content, or use this method along with 
+    ///         <see cref="WithUserPrompt"/> for automatic message building with vision support.
+    ///     </para>
+    ///     <para>
+    ///         This method is typically used with vision-capable models like Llama 4 Scout or Llama 4 Maverick.
+    ///     </para>
+    /// </remarks>
+    public ChatCompletionRequestBuilder WithImageUrl(string imageUrl)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(imageUrl, nameof(imageUrl));
+
+        _imageUrl = imageUrl;
+
+        return this;
+    }
+
+    private JsonArray BuildMessage()
+    {
+        if (string.IsNullOrEmpty(_userPrompt) || string.IsNullOrWhiteSpace(_userPrompt))
+        {
+            throw new InvalidOperationException("User prompt is required. Use WithUserPrompt() to set it.");
+        }
+        _messages = [];
+
+        if (_systemPrompt is not null)
+        {
+            _messages.Add(new JsonObject { ["role"] = LlmRoles.SystemRole, ["content"] = _systemPrompt });
+        }
+
+        if (_assistantPrompt is not null)
+        {
+            _messages.Add(new JsonObject { ["role"] = LlmRoles.AssistantRole, ["content"] = _assistantPrompt });
+        }
+
+        var userContent = new JsonArray { new JsonObject { ["type"] = "text", ["text"] = _userPrompt } };
+
+        if (_imageUrl is not null)
+        {
+            userContent.Add(new JsonObject { ["type"] = "image_url", ["image_url"] = new JsonObject { ["url"] = _imageUrl } });
+        }
+
+        _messages.Add(new JsonObject { ["role"] = LlmRoles.UserRole, ["content"] = userContent });
+
+        return _messages;
     }
 
     /// <summary>
@@ -477,10 +625,8 @@ public class ChatCompletionRequestBuilder
             throw new InvalidOperationException("Model is required. Use WithModel() to set it.");
         }
 
-        if (_messages is null)
-        {
-            throw new InvalidOperationException("Messages are required. Use WithMessages() to set them.");
-        }
+        // Ensure messages are built
+        _messages ??= BuildMessage();
 
         var request = new JsonObject { ["model"] = _model, ["messages"] = _messages };
 

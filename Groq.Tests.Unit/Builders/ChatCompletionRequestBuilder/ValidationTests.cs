@@ -12,7 +12,7 @@ public class ValidationTests
     {
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
-            .WithMessages("Test message");
+            .WithUserPrompt("Test message");
 
         // Act & Assert
         var exception = Should.Throw<InvalidOperationException>(() => builder.Build());
@@ -28,7 +28,7 @@ public class ValidationTests
 
         // Act & Assert
         var exception = Should.Throw<InvalidOperationException>(() => builder.Build());
-        exception.Message.ShouldContain("Messages are required");
+        exception.Message.ShouldContain("User prompt is required");
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public class ValidationTests
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("")
-            .WithMessages("Test message");
+            .WithUserPrompt("Test message");
 
         // Act & Assert
         var exception = Should.Throw<InvalidOperationException>(() => builder.Build());
@@ -60,19 +60,14 @@ public class ValidationTests
     #region Messages Parameter Validation
 
     [Fact]
-    public void Builder_Should_Accept_Empty_User_Prompt()
+    public void Builder_Should_Throw_When_User_Prompt_Is_Empty()
     {
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
-            .WithModel("llama-3.1-8b")
-            .WithMessages("");
+            .WithModel("llama-3.1-8b");
 
-        // Act
-        var request = builder.Build();
-
-        // Assert
-        var messages = request["messages"]!.AsArray();
-        messages[0]!["content"]!.GetValue<string>().ShouldBeEmpty();
+        // Act & Assert
+        Should.Throw<ArgumentException>(() => builder.WithUserPrompt(""));
     }
 
     [Fact]
@@ -82,7 +77,7 @@ public class ValidationTests
         var userPrompt = "Hello";
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages(userPrompt);
+            .WithUserPrompt(userPrompt);
 
         // Act
         var request = builder.Build();
@@ -94,21 +89,15 @@ public class ValidationTests
     }
 
     [Fact]
-    public void Builder_Should_Accept_Empty_System_Prompt()
+    public void Builder_Should_Throw_When_System_Prompt_Is_Empty()
     {
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages("User message", "");
+            .WithUserPrompt("User message");
 
-        // Act
-        var request = builder.Build();
-
-        // Assert
-        var messages = request["messages"]!.AsArray();
-        messages.Count.ShouldBe(2);
-        messages[0]!["role"]!.GetValue<string>().ShouldBe("system");
-        messages[0]!["content"]!.GetValue<string>().ShouldBeEmpty();
+        // Act & Assert
+        Should.Throw<ArgumentException>(() => builder.WithSystemPrompt(""));
     }
 
     [Fact]
@@ -118,14 +107,15 @@ public class ValidationTests
         var longPrompt = new string('a', 100000); // 100k characters
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages(longPrompt);
+            .WithUserPrompt(longPrompt);
 
         // Act
         var request = builder.Build();
 
         // Assert
         var messages = request["messages"]!.AsArray();
-        messages[0]!["content"]!.GetValue<string>().Length.ShouldBe(100000);
+        var content = messages[0]!["content"]!.AsArray();
+        content[0]!["text"]!.GetValue<string>().Length.ShouldBe(100000);
     }
 
     [Fact]
@@ -135,14 +125,15 @@ public class ValidationTests
         var specialPrompt = "Test\n\r\t\"'\\<>{}[]@#$%^&*()";
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages(specialPrompt);
+            .WithUserPrompt(specialPrompt);
 
         // Act
         var request = builder.Build();
 
         // Assert
         var messages = request["messages"]!.AsArray();
-        messages[0]!["content"]!.GetValue<string>().ShouldBe(specialPrompt);
+        var content = messages[0]!["content"]!.AsArray();
+        content[0]!["text"]!.GetValue<string>().ShouldBe(specialPrompt);
     }
 
     [Fact]
@@ -152,14 +143,15 @@ public class ValidationTests
         var unicodePrompt = "Hello 世界 🌍 مرحبا";
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages(unicodePrompt);
+            .WithUserPrompt(unicodePrompt);
 
         // Act
         var request = builder.Build();
 
         // Assert
         var messages = request["messages"]!.AsArray();
-        messages[0]!["content"]!.GetValue<string>().ShouldBe(unicodePrompt);
+        var content = messages[0]!["content"]!.AsArray();
+        content[0]!["text"]!.GetValue<string>().ShouldBe(unicodePrompt);
     }
 
     #endregion
@@ -173,7 +165,7 @@ public class ValidationTests
         const string invalidJson = "{ this is not valid json }";
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages("Test");
+            .WithUserPrompt("Test");
 
         // Act & Assert
         Should.Throw<JsonException>(() => builder.WithResponseFormat(invalidJson));
@@ -185,7 +177,7 @@ public class ValidationTests
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages("Test");
+            .WithUserPrompt("Test");
 
         // Act & Assert
         Should.Throw<JsonException>(() => builder.WithResponseFormat(""));
@@ -197,7 +189,7 @@ public class ValidationTests
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages("Test");
+            .WithUserPrompt("Test");
 
         // Act & Assert
         Should.Throw<ArgumentNullException>(() => builder.WithResponseFormat(null!));
@@ -210,7 +202,7 @@ public class ValidationTests
         const string validJson = "{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"}}}";
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages("Test")
+            .WithUserPrompt("Test")
             .WithResponseFormat(validJson);
 
         // Act
@@ -231,7 +223,7 @@ public class ValidationTests
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages("Test")
+            .WithUserPrompt("Test")
             .WithTemperature(0.0);
 
         // Act
@@ -247,7 +239,7 @@ public class ValidationTests
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages("Test")
+            .WithUserPrompt("Test")
             .WithTemperature(2.0);
 
         // Act
@@ -263,7 +255,7 @@ public class ValidationTests
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages("Test")
+            .WithUserPrompt("Test")
             .WithFrequencyPenalty(-2.0)
             .WithPresencePenalty(-2.0);
 
@@ -281,7 +273,7 @@ public class ValidationTests
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages("Test")
+            .WithUserPrompt("Test")
             .WithFrequencyPenalty(2.0)
             .WithPresencePenalty(2.0);
 
@@ -299,7 +291,7 @@ public class ValidationTests
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages("Test")
+            .WithUserPrompt("Test")
             .WithN(0)
             .WithMaxCompletionTokens(0)
             .WithTopLogprobs(0);
@@ -319,7 +311,7 @@ public class ValidationTests
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages("Test")
+            .WithUserPrompt("Test")
             .WithSeed(-12345);
 
         // Act
@@ -335,7 +327,7 @@ public class ValidationTests
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages("Test")
+            .WithUserPrompt("Test")
             .WithMaxCompletionTokens(int.MaxValue)
             .WithSeed(int.MaxValue);
 
@@ -358,7 +350,7 @@ public class ValidationTests
         var specialString = "test@#$%^&*(){}[]";
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages("Test")
+            .WithUserPrompt("Test")
             .WithUser(specialString)
             .WithCitationOptions(specialString);
 
@@ -377,7 +369,7 @@ public class ValidationTests
         var longModelName = new string('m', 1000);
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(longModelName)
-            .WithMessages("Test");
+            .WithUserPrompt("Test");
 
         // Act
         var request = builder.Build();
@@ -396,7 +388,7 @@ public class ValidationTests
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel("llama-3.1-8b")
-            .WithMessages("Test");
+            .WithUserPrompt("Test");
 
         // Act - First build succeeds
         var request1 = builder.Build();
@@ -414,7 +406,7 @@ public class ValidationTests
     {
         // Arrange
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
-            .WithMessages("Test");
+            .WithUserPrompt("Test");
 
         // Act - First build fails
         Should.Throw<InvalidOperationException>(() => builder.Build());

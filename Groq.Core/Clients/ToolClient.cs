@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Groq.Core.Builders;
 using Groq.Core.Configurations;
 using Groq.Core.Models;
 
@@ -19,9 +20,6 @@ public sealed class ToolClient
     /// <summary>Handles API communication for generating chat completions using the Groq API.</summary>
     private readonly ChatCompletionClient _chatCompletionClient;
 
-    /// <summary>Handles JSON serialization options.</summary>
-    private readonly JsonSerializerOptions _jsonSerializerOptions;
-
     /// <summary>
     ///     Initializes a new instance of the ToolClient with a specified ChatCompletionClient and HttpClient.
     /// </summary>
@@ -29,11 +27,7 @@ public sealed class ToolClient
     ///     The client of type <see cref="ChatCompletionClient" /> responsible for handling chat completions
     ///     with the Groq API.
     /// </param>
-    public ToolClient(ChatCompletionClient chatCompletionClient)
-    {
-        _chatCompletionClient = chatCompletionClient;
-        _jsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
-    }
+    public ToolClient(ChatCompletionClient chatCompletionClient) => _chatCompletionClient = chatCompletionClient;
 
     /// <summary>
     ///     Runs a multi-turn conversation with tool-augmented capabilities using the Groq API.
@@ -55,74 +49,68 @@ public sealed class ToolClient
     {
         try
         {
-            var messages = new List<JsonObject>
+            var toolsJsonArray = new JsonArray();
+            tools.ToList().ForEach(t => toolsJsonArray.Add(new JsonObject
             {
-                new() { ["role"] = LlmRoles.SystemRole, ["content"] = systemMessage },
-                new() { ["role"] = LlmRoles.UserRole, ["content"] = userPrompt }
-            };
+                ["type"] = t.Type,
+                ["function"] = new JsonObject
+                {
+                    ["name"] = t.Function.Name,
+                    ["description"] = t.Function.Description,
+                    ["parameters"] = t.Function.Parameters
+                }
+            }));
 
-            var request = new JsonObject
-            {
-                ["model"] = model,
-                ["messages"] = JsonSerializer.SerializeToNode(messages),
-                ["tools"] = JsonSerializer.SerializeToNode(
-                    tools.Select(t => new
-                    {
-                        type = t.Type,
-                        function = new
-                        {
-                            name = t.Function.Name,
-                            description = t.Function.Description,
-                            parameters = t.Function.Parameters
-                        }
-                    })
-                ),
-                ["tool_choice"] = "auto"
-            };
-
-            Console.WriteLine(
-                $"Sending request to API: {JsonSerializer.Serialize(request, _jsonSerializerOptions)}"
-            );
+            var request = ChatCompletionRequestBuilder
+                .Create()
+                .WithModel(model)
+                .WithUserPrompt(userPrompt)
+                .WithSystemPrompt(systemMessage)
+                .WithTools(toolsJsonArray)
+                .WithToolChoice("auto")
+                .Build();
 
             var response = await _chatCompletionClient.CreateChatCompletionAsync(request);
             var responseMessage = response?["choices"]?[0]?["message"]?.AsObject();
             var toolCalls = responseMessage?["tool_calls"]?.AsArray();
 
-            if (toolCalls == null || toolCalls.Count == 0)
+            if (toolCalls is null || toolCalls.Count == 0)
             {
                 return responseMessage?["content"]?.GetValue<string>() ?? string.Empty;
             }
 
-            messages.Add(responseMessage!);
+            var messages = request["messages"]!.AsArray().ToList();
             foreach (var toolCall in toolCalls)
             {
                 var functionName = toolCall?["function"]?["name"]?.GetValue<string>();
                 var functionArgs = toolCall?["function"]?["arguments"]?.GetValue<string>();
                 var toolCallId = toolCall?["id"]?.GetValue<string>();
 
-                if (!string.IsNullOrEmpty(functionName) && !string.IsNullOrEmpty(functionArgs))
+                if (string.IsNullOrEmpty(functionName) || string.IsNullOrEmpty(functionArgs))
                 {
-                    var tool = tools.ToList().Find(t => t.Function.Name == functionName);
-                    if (tool != null)
-                    {
-                        var functionResponse = await tool.Function.ExecuteAsync(functionArgs);
-                        messages.Add(
-                            new JsonObject
-                            {
-                                ["tool_call_id"] = toolCallId,
-                                ["role"] = LlmRoles.ToolRole,
-                                ["name"] = functionName,
-                                ["content"] = functionResponse
-                            }
-                        );
-                    }
+                    continue;
                 }
+
+                var tool = tools.ToList().Find(t => t.Function.Name == functionName);
+                if (tool is null)
+                {
+                    continue;
+                }
+
+                var functionResponse = await tool.Function.ExecuteAsync(functionArgs);
+                messages.Add(new JsonObject
+                    {
+                        ["tool_call_id"] = toolCallId,
+                        ["role"] = LlmRoles.ToolRole,
+                        ["name"] = functionName,
+                        ["content"] = functionResponse
+                    }
+                );
             }
 
             request["messages"] = JsonSerializer.SerializeToNode(messages);
             var secondResponse = await _chatCompletionClient.CreateChatCompletionAsync(request);
-            return secondResponse?["choices"]?[0]?["message"]?["content"]?.GetValue<string>()
-                   ?? string.Empty;
+            return secondResponse?["choices"]?[0]?["message"]?["content"]?.GetValue<string>() ?? string.Empty;
         }
         catch (HttpRequestException ex)
         {
