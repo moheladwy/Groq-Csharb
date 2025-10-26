@@ -196,7 +196,7 @@ public class ChatCompletionRequestBuilder
 
     private JsonArray BuildMessage()
     {
-        if (string.IsNullOrEmpty(_userPrompt) || string.IsNullOrWhiteSpace(_userPrompt))
+        if (string.IsNullOrWhiteSpace(_userPrompt))
         {
             throw new InvalidOperationException("User prompt is required. Use WithUserPrompt() to set it.");
         }

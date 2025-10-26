@@ -79,7 +79,9 @@ public sealed class ToolClient
                 return responseMessage?["content"]?.GetValue<string>() ?? string.Empty;
             }
 
-            var messages = request["messages"]!.AsArray().ToList();
+            // Build messages list independently from the request object
+            var initialMessages = request["messages"]!.AsArray();
+            var messages = initialMessages.Select(m => m).ToList(); // Copy initial messages
             foreach (var toolCall in toolCalls)
             {
                 var functionName = toolCall?["function"]?["name"]?.GetValue<string>();
@@ -99,12 +101,12 @@ public sealed class ToolClient
 
                 var functionResponse = await tool.Function.ExecuteAsync(functionArgs);
                 messages.Add(new JsonObject
-                    {
-                        ["tool_call_id"] = toolCallId,
-                        ["role"] = LlmRoles.ToolRole,
-                        ["name"] = functionName,
-                        ["content"] = functionResponse
-                    }
+                {
+                    ["tool_call_id"] = toolCallId,
+                    ["role"] = LlmRoles.ToolRole,
+                    ["name"] = functionName,
+                    ["content"] = functionResponse
+                }
                 );
             }
 

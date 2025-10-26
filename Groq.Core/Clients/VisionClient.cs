@@ -185,7 +185,7 @@ public sealed class VisionClient
             .WithModel(model)
             .WithUserPrompt(prompt)
             .WithImageUrl(imageUrl)
-            .WithResponseFormat("{ }")
+            .WithResponseFormat("{\"type\":\"json_object\"}")
             .Build();
 
         return await CreateVisionCompletionAsync(request);
