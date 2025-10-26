@@ -15,9 +15,9 @@
     <PackageIcon>favicon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Groq, API, .NET Core SDK, AI, LLM, Chat, Vision, Audio, TTS, STT</PackageTags>
-    <AssemblyVersion>2.0.0.4</AssemblyVersion>
-    <FileVersion>2.0.0.4</FileVersion>
-    <Version>2.0.0.4-alpha</Version>
+    <AssemblyVersion>2.0.0.5</AssemblyVersion>
+    <FileVersion>2.0.0.5</FileVersion>
+    <Version>2.0.0.5-alpha</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 </Project>
