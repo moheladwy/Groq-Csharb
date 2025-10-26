@@ -66,12 +66,13 @@ public sealed class LlmTextProvider
         var builder = ChatCompletionRequestBuilder
             .Create()
             .WithModel(model ?? _model)
-            .WithMessages(userPrompt, systemPrompt);
+            .WithUserPrompt(userPrompt);
+
+        if (systemPrompt is not null)
+           builder = builder.WithSystemPrompt(systemPrompt);
 
         if (structureOutputJsonFormat is not null)
-        {
             builder = builder.WithResponseFormat(structureOutputJsonFormat);
-        }
 
         var request = builder.Build();
         var response = await _client.CreateChatCompletionAsync(request);
@@ -107,12 +108,13 @@ public sealed class LlmTextProvider
         var builder = ChatCompletionRequestBuilder
             .Create()
             .WithModel(model ?? _model)
-            .WithMessages(userPrompt, systemPrompt);
+            .WithUserPrompt(userPrompt);
+
+        if (systemPrompt is not null)
+            builder = builder.WithSystemPrompt(systemPrompt);
 
         if (structureOutputJsonFormat is not null)
-        {
             builder = builder.WithResponseFormat(structureOutputJsonFormat);
-        }
 
         var request = builder.Build();
 

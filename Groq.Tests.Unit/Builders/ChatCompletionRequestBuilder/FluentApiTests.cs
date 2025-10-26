@@ -41,7 +41,8 @@ public class FluentApiTests
         // Arrange & Act
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt, SystemPrompt)
+            .WithUserPrompt(UserPrompt)
+            .WithSystemPrompt(SystemPrompt)
             .WithTemperature(Temperature)
             .WithMaxCompletionTokens(MaxTokens)
             .WithTopP(TopP)
@@ -66,8 +67,11 @@ public class FluentApiTests
 
         // Act & Assert - Core Methods
         builder.WithModel(DefaultModel).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
-        builder.WithMessages(UserPrompt).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
-        builder.WithMessages(UserPrompt, SystemPrompt).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithUserPrompt(UserPrompt).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithSystemPrompt(SystemPrompt).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithAssistantPrompt("Assistant context").ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithImageUrl("https://example.com/image.jpg").ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithMessages(testJsonArray).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
 
         // Optional Parameters
         builder.WithCitationOptions(CitationOptionsValue).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
@@ -157,7 +161,8 @@ public class FluentApiTests
 #pragma warning disable CS0618 // Type or member is obsolete
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt, SystemPrompt)
+            .WithUserPrompt(UserPrompt)
+            .WithSystemPrompt(SystemPrompt)
             .WithCitationOptions(CitationOptionsValue)
             .WithCompoundCustom(testCompoundCustom)
             .WithDisableToolValidation(DisableToolValidationValue)
@@ -280,7 +285,7 @@ public class FluentApiTests
         // Arrange & Act
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .Build();
 
         // Assert - Verify only required parameters exist
@@ -347,7 +352,7 @@ public class FluentApiTests
         // Act
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithResponseFormat(responseFormat)
             .Build();
 
@@ -385,7 +390,7 @@ public class FluentApiTests
         // Act
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages("What's the weather?")
+            .WithUserPrompt("What's the weather?")
             .WithTools(tools)
             .Build();
 
@@ -405,7 +410,7 @@ public class FluentApiTests
         // Act
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithStop(JsonValue.Create(stopSequence))
             .Build();
 
@@ -423,7 +428,7 @@ public class FluentApiTests
         // Act
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithStop(stopSequences)
             .Build();
 
@@ -439,7 +444,7 @@ public class FluentApiTests
         // Arrange & Act - Test all 6 boolean parameters in ChatCompletionRequestBuilder
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithDisableToolValidation(true) // Boolean param 1: disable_tool_validation
             .WithIncludeReasoning(true) // Boolean param 2: include_reasoning
             .WithLogprobs(true) // Boolean param 3: logprobs
@@ -474,7 +479,7 @@ public class FluentApiTests
         // Arrange & Act - Test all 6 string parameters in ChatCompletionRequestBuilder
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel) // String param 1: model (required)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithCitationOptions("enabled") // String param 2: citation_options
             .WithReasoningEffort("medium") // String param 3: reasoning_effort
             .WithReasoningFormat("parsed") // String param 4: reasoning_format
@@ -516,7 +521,7 @@ public class FluentApiTests
 #pragma warning disable CS0618 // Type or member is obsolete
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithMaxCompletionTokens(maxCompletionTokens) // Integer param 1: max_completion_tokens
             .WithMaxTokens(maxTokens) // Integer param 2: max_tokens (deprecated)
             .WithN(n) // Integer param 3: n
@@ -561,7 +566,7 @@ public class FluentApiTests
         // Assert - Verify the created builder can be used for method chaining
         var request = Core.Builders.ChatCompletionRequestBuilder.Create()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithTemperature(TemperatureValue)
             .Build();
 
@@ -588,7 +593,7 @@ public class FluentApiTests
         // Act
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithCompoundCustom(compoundCustom) // JsonObject param 1: compound_custom
             .WithLogitBias(logitBias) // JsonObject param 2: logit_bias
             .WithMetadata(metadata) // JsonObject param 3: metadata
@@ -645,7 +650,7 @@ public class FluentApiTests
         // Act
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages("Summarize the documents")
+            .WithUserPrompt("Summarize the documents")
             .WithDocuments(documents)
             .Build();
 
@@ -685,7 +690,7 @@ public class FluentApiTests
         // Act
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithTemperature(temperature) // Double param 1: temperature
             .WithTopP(topP) // Double param 2: top_p
             .WithFrequencyPenalty(frequencyPenalty) // Double param 3: frequency_penalty
@@ -723,7 +728,7 @@ public class FluentApiTests
 #pragma warning disable CS0618 // Type or member is obsolete
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithDocuments(documents) // JsonArray param 1: documents
             .WithTools(tools) // JsonArray param 2: tools
             .WithExcludeDomains(excludeDomains) // JsonArray param 3: exclude_domains (deprecated)
@@ -761,7 +766,7 @@ public class FluentApiTests
 #pragma warning disable CS0618 // Type or member is obsolete
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithStop(stopNode!) // JsonNode param 1: stop
             .WithToolChoice(toolChoiceNode!) // JsonNode param 2: tool_choice
             .WithFunctionCall(functionCallNode!) // JsonNode param 3: function_call (deprecated)
@@ -780,13 +785,15 @@ public class FluentApiTests
     }
 
     [Fact]
-    public void Builder_Should_Overwrite_Messages_On_Multiple_Calls()
+    public void Builder_Should_Overwrite_UserPrompt_And_SystemPrompt_On_Multiple_Calls()
     {
-        // Arrange & Act - Call WithMessages twice, second call should overwrite
+        // Arrange & Act - Call WithUserPrompt and WithSystemPrompt twice, second calls should overwrite
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages("First message", "First system")
-            .WithMessages("Second message", "Second system") // This should overwrite
+            .WithUserPrompt("First message")
+            .WithSystemPrompt("First system")
+            .WithUserPrompt("Second message") // This should overwrite
+            .WithSystemPrompt("Second system") // This should overwrite
             .Build();
 
         // Assert - Only the second set of messages should be present
@@ -795,7 +802,8 @@ public class FluentApiTests
         messages[0]!["role"]!.GetValue<string>().ShouldBe("system");
         messages[0]!["content"]!.GetValue<string>().ShouldBe("Second system");
         messages[1]!["role"]!.GetValue<string>().ShouldBe("user");
-        messages[1]!["content"]!.GetValue<string>().ShouldBe("Second message");
+        var userContent = messages[1]!["content"]!.AsArray();
+        userContent[0]!["text"]!.GetValue<string>().ShouldBe("Second message");
     }
 
     [Fact]
@@ -809,7 +817,7 @@ public class FluentApiTests
         // Act
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithN(zero)
             .WithSeed(negativeValue)
             .WithMaxCompletionTokens(largeValue)
@@ -833,7 +841,7 @@ public class FluentApiTests
         // Act
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithTemperature(minTemperature)
             .WithTopP(maxTemperature)
             .WithFrequencyPenalty(minPenalty)
@@ -857,7 +865,7 @@ public class FluentApiTests
         // Act
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithDocuments(emptyDocuments)
             .WithTools(emptyTools)
             .Build();
@@ -880,7 +888,7 @@ public class FluentApiTests
         // Act
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithMetadata(emptyMetadata)
             .WithLogitBias(emptyLogitBias)
             .Build();
@@ -899,13 +907,14 @@ public class FluentApiTests
         // Arrange - Test toolChoice as an object (not just string)
         var toolChoiceObject = new JsonObject
         {
-            ["type"] = "function", ["function"] = new JsonObject { ["name"] = "specific_function" }
+            ["type"] = "function",
+            ["function"] = new JsonObject { ["name"] = "specific_function" }
         };
 
         // Act
         var request = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt)
+            .WithUserPrompt(UserPrompt)
             .WithToolChoice(toolChoiceObject)
             .Build();
 
@@ -924,7 +933,7 @@ public class FluentApiTests
         // Act & Assert
         var builder = new Core.Builders.ChatCompletionRequestBuilder()
             .WithModel(DefaultModel)
-            .WithMessages(UserPrompt);
+            .WithUserPrompt(UserPrompt);
 
         Should.Throw<JsonException>(() => builder.WithResponseFormat(invalidJson));
     }
