@@ -13,17 +13,17 @@ public class ModelResponseJsonValidationTests
     {
         // Arrange
         const string json = """
-            {
-                "id": "llama-3.1-8b-instant",
-                "object": "model",
-                "created": 1693721698,
-                "owned_by": "Meta",
-                "active": true,
-                "context_window": 131072,
-                "public_apps": null,
-                "max_completion_tokens": 8192
-            }
-            """;
+                            {
+                                "id": "llama-3.1-8b-instant",
+                                "object": "model",
+                                "created": 1693721698,
+                                "owned_by": "Meta",
+                                "active": true,
+                                "context_window": 131072,
+                                "public_apps": null,
+                                "max_completion_tokens": 8192
+                            }
+                            """;
 
         // Act
         var model = JsonSerializer.Deserialize<Model>(json);
@@ -45,20 +45,20 @@ public class ModelResponseJsonValidationTests
     {
         // Arrange
         const string json = """
-            {
-                "id": "whisper-large-v3",
-                "object": "model",
-                "created": 1677649963,
-                "owned_by": "OpenAI",
-                "active": true,
-                "context_window": 448,
-                "public_apps": {
-                    "app_count": 5,
-                    "featured": true
-                },
-                "max_completion_tokens": 448
-            }
-            """;
+                            {
+                                "id": "whisper-large-v3",
+                                "object": "model",
+                                "created": 1677649963,
+                                "owned_by": "OpenAI",
+                                "active": true,
+                                "context_window": 448,
+                                "public_apps": {
+                                    "app_count": 5,
+                                    "featured": true
+                                },
+                                "max_completion_tokens": 448
+                            }
+                            """;
 
         // Act
         var model = JsonSerializer.Deserialize<Model>(json);
@@ -134,17 +134,17 @@ public class ModelResponseJsonValidationTests
     {
         // Arrange - Test with very large context window (e.g., 1M tokens)
         const string json = """
-            {
-                "id": "future-model-1m-context",
-                "object": "model",
-                "created": 1735689600,
-                "owned_by": "Groq",
-                "active": true,
-                "context_window": 1000000,
-                "public_apps": null,
-                "max_completion_tokens": 100000
-            }
-            """;
+                            {
+                                "id": "future-model-1m-context",
+                                "object": "model",
+                                "created": 1735689600,
+                                "owned_by": "Groq",
+                                "active": true,
+                                "context_window": 1000000,
+                                "public_apps": null,
+                                "max_completion_tokens": 100000
+                            }
+                            """;
 
         // Act
         var model = JsonSerializer.Deserialize<Model>(json);
@@ -160,17 +160,17 @@ public class ModelResponseJsonValidationTests
     {
         // Arrange
         const string json = """
-            {
-                "id": "deprecated-model",
-                "object": "model",
-                "created": 1640995200,
-                "owned_by": "Legacy",
-                "active": false,
-                "context_window": 2048,
-                "public_apps": null,
-                "max_completion_tokens": 1024
-            }
-            """;
+                            {
+                                "id": "deprecated-model",
+                                "object": "model",
+                                "created": 1640995200,
+                                "owned_by": "Legacy",
+                                "active": false,
+                                "context_window": 2048,
+                                "public_apps": null,
+                                "max_completion_tokens": 1024
+                            }
+                            """;
 
         // Act
         var model = JsonSerializer.Deserialize<Model>(json);
@@ -219,32 +219,32 @@ public class ModelResponseJsonValidationTests
     {
         // Arrange
         const string json = """
-            {
-                "object": "list",
-                "data": [
-                    {
-                        "id": "llama-3.1-8b-instant",
-                        "object": "model",
-                        "created": 1693721698,
-                        "owned_by": "Meta",
-                        "active": true,
-                        "context_window": 131072,
-                        "public_apps": null,
-                        "max_completion_tokens": 8192
-                    },
-                    {
-                        "id": "whisper-large-v3",
-                        "object": "model",
-                        "created": 1677649963,
-                        "owned_by": "OpenAI",
-                        "active": true,
-                        "context_window": 448,
-                        "public_apps": null,
-                        "max_completion_tokens": 448
-                    }
-                ]
-            }
-            """;
+                            {
+                                "object": "list",
+                                "data": [
+                                    {
+                                        "id": "llama-3.1-8b-instant",
+                                        "object": "model",
+                                        "created": 1693721698,
+                                        "owned_by": "Meta",
+                                        "active": true,
+                                        "context_window": 131072,
+                                        "public_apps": null,
+                                        "max_completion_tokens": 8192
+                                    },
+                                    {
+                                        "id": "whisper-large-v3",
+                                        "object": "model",
+                                        "created": 1677649963,
+                                        "owned_by": "OpenAI",
+                                        "active": true,
+                                        "context_window": 448,
+                                        "public_apps": null,
+                                        "max_completion_tokens": 448
+                                    }
+                                ]
+                            }
+                            """;
 
         // Act
         var response = JsonSerializer.Deserialize<ModelListResponse>(json);
@@ -267,11 +267,11 @@ public class ModelResponseJsonValidationTests
     {
         // Arrange
         const string json = """
-            {
-                "object": "list",
-                "data": []
-            }
-            """;
+                            {
+                                "object": "list",
+                                "data": []
+                            }
+                            """;
 
         // Act
         var response = JsonSerializer.Deserialize<ModelListResponse>(json);
@@ -369,42 +369,42 @@ public class ModelResponseJsonValidationTests
     {
         // Arrange
         const string json = """
-            {
-                "object": "list",
-                "data": [
-                    {
-                        "id": "llama-3.1-8b-instant",
-                        "object": "model",
-                        "created": 1693721698,
-                        "owned_by": "Meta",
-                        "active": true,
-                        "context_window": 131072,
-                        "public_apps": null,
-                        "max_completion_tokens": 8192
-                    },
-                    {
-                        "id": "whisper-large-v3",
-                        "object": "model",
-                        "created": 1677649963,
-                        "owned_by": "OpenAI",
-                        "active": true,
-                        "context_window": 448,
-                        "public_apps": null,
-                        "max_completion_tokens": 448
-                    },
-                    {
-                        "id": "qwen-2.5-32b-instruct",
-                        "object": "model",
-                        "created": 1725580800,
-                        "owned_by": "Alibaba Cloud",
-                        "active": true,
-                        "context_window": 32768,
-                        "public_apps": null,
-                        "max_completion_tokens": 8192
-                    }
-                ]
-            }
-            """;
+                            {
+                                "object": "list",
+                                "data": [
+                                    {
+                                        "id": "llama-3.1-8b-instant",
+                                        "object": "model",
+                                        "created": 1693721698,
+                                        "owned_by": "Meta",
+                                        "active": true,
+                                        "context_window": 131072,
+                                        "public_apps": null,
+                                        "max_completion_tokens": 8192
+                                    },
+                                    {
+                                        "id": "whisper-large-v3",
+                                        "object": "model",
+                                        "created": 1677649963,
+                                        "owned_by": "OpenAI",
+                                        "active": true,
+                                        "context_window": 448,
+                                        "public_apps": null,
+                                        "max_completion_tokens": 448
+                                    },
+                                    {
+                                        "id": "qwen-2.5-32b-instruct",
+                                        "object": "model",
+                                        "created": 1725580800,
+                                        "owned_by": "Alibaba Cloud",
+                                        "active": true,
+                                        "context_window": 32768,
+                                        "public_apps": null,
+                                        "max_completion_tokens": 8192
+                                    }
+                                ]
+                            }
+                            """;
 
         // Act
         var response = JsonSerializer.Deserialize<ModelListResponse>(json);
@@ -460,16 +460,16 @@ public class ModelResponseJsonValidationTests
     {
         // Arrange - Missing required "id" property
         const string json = """
-            {
-                "object": "model",
-                "created": 1693721698,
-                "owned_by": "Meta",
-                "active": true,
-                "context_window": 131072,
-                "public_apps": null,
-                "max_completion_tokens": 8192
-            }
-            """;
+                            {
+                                "object": "model",
+                                "created": 1693721698,
+                                "owned_by": "Meta",
+                                "active": true,
+                                "context_window": 131072,
+                                "public_apps": null,
+                                "max_completion_tokens": 8192
+                            }
+                            """;
 
         // Act & Assert
         Should.Throw<JsonException>(() => JsonSerializer.Deserialize<Model>(json));
@@ -480,10 +480,10 @@ public class ModelResponseJsonValidationTests
     {
         // Arrange - Missing required "object" property
         const string json = """
-            {
-                "data": []
-            }
-            """;
+                            {
+                                "data": []
+                            }
+                            """;
 
         // Act & Assert
         Should.Throw<JsonException>(() => JsonSerializer.Deserialize<ModelListResponse>(json));

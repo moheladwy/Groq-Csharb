@@ -4,13 +4,14 @@ A comprehensive and modern .NET SDK for seamless integration with the Groq AI AP
 type-safe interface to access Groq's powerful language models, vision capabilities, audio processing, and advanced tool
 integration features.
 
-> **⚠️ ALPHA RELEASE WARNING** > **This package is currently in ALPHA stage (v2.0.0.x-alpha) and is NOT yet production-ready.**
+> **⚠️ ALPHA RELEASE WARNING** > **This package is currently in ALPHA stage (v2.0.0.x-alpha) and is NOT yet
+production-ready.**
 >
-> -   ✅ Safe for **playground and testing purposes**
-> -   ✅ Safe for **development and experimentation**
-> -   ❌ **NOT recommended for production use**
-> -   🔄 APIs may change before the stable release
-> -   🐛 May contain bugs and incomplete features
+> - ✅ Safe for **playground and testing purposes**
+> - ✅ Safe for **development and experimentation**
+> - ❌ **NOT recommended for production use**
+> - 🔄 APIs may change before the stable release
+> - 🐛 May contain bugs and incomplete features
 >
 > **Use at your own risk. Wait for the stable v2.0.0 release for production deployments.**
 > Report issues at [GitHub Issues](https://github.com/moheladwy/Groq-Csharp/issues)
@@ -24,69 +25,69 @@ refactored and enhanced.
 
 ## 📑 Table of Contents
 
--   [Origin & Attribution](#origin--attribution)
--   [Features](#-features)
--   [Requirements](#-requirements)
--   [Installation](#-installation)
--   [Quick Start](#-quick-start)
-    -   [Dependency Injection Setup (Recommended)](#dependency-injection-setup-recommended)
-        -   [Option 1: Using GroqClient (Simplified)](#option-1-using-groqclient-simplified)
-        -   [Option 2: Individual Client Injection](#option-2-individual-client-injection)
-    -   [Manual Initialization](#manual-initialization)
-        -   [Option 1: Using GroqOptions](#option-1-using-groqoptions)
-        -   [Option 2: Using HttpClient Directly](#option-2-using-httpclient-directly)
--   [Available Models](#-available-models)
-    -   [Chat/Text Generation Models](#chattext-generation-models)
-    -   [Vision Models](#vision-models)
-    -   [Audio Models](#audio-models)
-    -   [Agent/Compound Models](#agentcompound-models)
-    -   [Content Moderation Models](#content-moderation-models)
--   [Detailed Usage](#detailed-usage)
-    -   [Chat Completions](#chat-completions)
-    -   [Vision Analysis](#vision-analysis)
-    -   [Audio Processing](#audio-processing)
-    -   [Tool Usage & Function Calling](#tool-usage--function-calling)
-    -   [List Available Models](#list-available-models)
--   [Advanced Features](#-advanced-features)
-    -   [Structured JSON Output](#structured-json-output)
-    -   [Content Moderation](#content-moderation)
-    -   [Reasoning Models (Qwen)](#reasoning-models-qwen)
--   [Configuration Options](#-configuration-options)
-    -   [GroqOptions Configuration](#groqoptions-configuration)
-    -   [Dependency Injection Configuration](#dependency-injection-configuration)
-    -   [Configuration from appsettings.json](#configuration-from-appsettingsjson)
-    -   [HTTP Client Factory Configuration](#http-client-factory-configuration)
-    -   [Model Parameters](#model-parameters)
--   [Migration Guide (v2.0.0.4 → v2.0.0.5)](#-migration-guide-v2004--v2005)
--   [Error Handling](#-error-handling)
--   [Performance Tips](#-performance-tips)
--   [Contributing](#-contributing)
--   [License](#-license)
--   [Acknowledgements](#-acknowledgements)
--   [Support](#-support)
+- [Origin & Attribution](#origin--attribution)
+- [Features](#-features)
+- [Requirements](#-requirements)
+- [Installation](#-installation)
+- [Quick Start](#-quick-start)
+    - [Dependency Injection Setup (Recommended)](#dependency-injection-setup-recommended)
+        - [Option 1: Using GroqClient (Simplified)](#option-1-using-groqclient-simplified)
+        - [Option 2: Individual Client Injection](#option-2-individual-client-injection)
+    - [Manual Initialization](#manual-initialization)
+        - [Option 1: Using GroqOptions](#option-1-using-groqoptions)
+        - [Option 2: Using HttpClient Directly](#option-2-using-httpclient-directly)
+- [Available Models](#-available-models)
+    - [Chat/Text Generation Models](#chattext-generation-models)
+    - [Vision Models](#vision-models)
+    - [Audio Models](#audio-models)
+    - [Agent/Compound Models](#agentcompound-models)
+    - [Content Moderation Models](#content-moderation-models)
+- [Detailed Usage](#detailed-usage)
+    - [Chat Completions](#chat-completions)
+    - [Vision Analysis](#vision-analysis)
+    - [Audio Processing](#audio-processing)
+    - [Tool Usage & Function Calling](#tool-usage--function-calling)
+    - [List Available Models](#list-available-models)
+- [Advanced Features](#-advanced-features)
+    - [Structured JSON Output](#structured-json-output)
+    - [Content Moderation](#content-moderation)
+    - [Reasoning Models (Qwen)](#reasoning-models-qwen)
+- [Configuration Options](#-configuration-options)
+    - [GroqOptions Configuration](#groqoptions-configuration)
+    - [Dependency Injection Configuration](#dependency-injection-configuration)
+    - [Configuration from appsettings.json](#configuration-from-appsettingsjson)
+    - [HTTP Client Factory Configuration](#http-client-factory-configuration)
+    - [Model Parameters](#model-parameters)
+- [Migration Guide (v2.0.0.4 → v2.0.0.5)](#-migration-guide-v2004--v2005)
+- [Error Handling](#-error-handling)
+- [Performance Tips](#-performance-tips)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Acknowledgements](#-acknowledgements)
+- [Support](#-support)
 
 ## 🌟 Features
 
--   🎯 **Unified GroqClient**: Single entry point to access all Groq API capabilities
--   🏗️ **Fluent Request Builder**: ChatCompletionRequestBuilder with type-safe parameter configuration
--   💬 **Chat Completions**: Engage with state-of-the-art language models including Llama, GPT-OSS, and Qwen
--   🔊 **Audio Transcription**: High-accuracy speech-to-text with Whisper models (189x-216x speed)
--   🗣️ **Text-to-Speech**: Natural voice synthesis with PlayAI models in English and Arabic
--   🌐 **Audio Translation**: Automatic translation of audio content to English
--   👁️ **Vision Analysis**: Process images with Llama 4 Scout and Maverick multimodal models
--   🛠️ **Tool Integration**: Extend AI capabilities with custom function calling
--   🌊 **Streaming Support**: Real-time token streaming for interactive applications
--   🤖 **Agent Models**: Groq Compound systems with built-in tools (web search, code execution)
--   🔒 **Content Moderation**: Llama Guard and Prompt Guard for safety and security
--   📦 **Dependency Injection**: First-class support for .NET DI with HttpClientFactory pattern
--   ⚙️ **Flexible Configuration**: GroqOptions with retry policies, timeout, and resilience handlers
--   🔄 **Automatic Retries**: Built-in exponential backoff and circuit breaker patterns
--   🛡️ **Type Safety**: Strongly-typed model definitions and comprehensive XML documentation
+- 🎯 **Unified GroqClient**: Single entry point to access all Groq API capabilities
+- 🏗️ **Fluent Request Builder**: ChatCompletionRequestBuilder with type-safe parameter configuration
+- 💬 **Chat Completions**: Engage with state-of-the-art language models including Llama, GPT-OSS, and Qwen
+- 🔊 **Audio Transcription**: High-accuracy speech-to-text with Whisper models (189x-216x speed)
+- 🗣️ **Text-to-Speech**: Natural voice synthesis with PlayAI models in English and Arabic
+- 🌐 **Audio Translation**: Automatic translation of audio content to English
+- 👁️ **Vision Analysis**: Process images with Llama 4 Scout and Maverick multimodal models
+- 🛠️ **Tool Integration**: Extend AI capabilities with custom function calling
+- 🌊 **Streaming Support**: Real-time token streaming for interactive applications
+- 🤖 **Agent Models**: Groq Compound systems with built-in tools (web search, code execution)
+- 🔒 **Content Moderation**: Llama Guard and Prompt Guard for safety and security
+- 📦 **Dependency Injection**: First-class support for .NET DI with HttpClientFactory pattern
+- ⚙️ **Flexible Configuration**: GroqOptions with retry policies, timeout, and resilience handlers
+- 🔄 **Automatic Retries**: Built-in exponential backoff and circuit breaker patterns
+- 🛡️ **Type Safety**: Strongly-typed model definitions and comprehensive XML documentation
 
 ## Requirements
 
--   **.NET 9.0** or later
--   Groq API key (get one at [console.groq.com](https://console.groq.com))
+- **.NET 9.0** or later
+- Groq API key (get one at [console.groq.com](https://console.groq.com))
 
 ## 📦 Installation
 
@@ -97,18 +98,19 @@ refactored and enhanced.
 > **⚠️ ALPHA RELEASE - NOT PRODUCTION READY**
 > This is an alpha release with the new architecture featuring:
 >
-> -   ✨ **NEW in v2.0.0.5:** Enhanced ChatCompletionRequestBuilder API with separate methods
-> -   ✨ **NEW:** ChatCompletionRequestBuilder for fluent request construction
-> -   ✨ GroqClient unified interface
-> -   ✨ GroqOptions configuration system
-> -   ✨ HttpClientFactory integration with resilience patterns
+> - ✨ **NEW in v2.0.0.5:** Enhanced ChatCompletionRequestBuilder API with separate methods
+> - ✨ **NEW:** ChatCompletionRequestBuilder for fluent request construction
+> - ✨ GroqClient unified interface
+> - ✨ GroqOptions configuration system
+> - ✨ HttpClientFactory integration with resilience patterns
 >
 > **For testing and development only.** APIs are subject to change before stable release.
 >
 > **Breaking Changes in v2.0.0.5:**
 >
-> -   `WithMessages(string, string?)` replaced with separate methods: `WithUserPrompt()`, `WithSystemPrompt()`, `WithAssistantPrompt()`, `WithImageUrl()`
-> -   See [Migration Guide](#migration-guide-v2004---v2005) below for details
+> - `WithMessages(string, string?)` replaced with separate methods: `WithUserPrompt()`, `WithSystemPrompt()`,
+    `WithAssistantPrompt()`, `WithImageUrl()`
+> - See [Migration Guide](#migration-guide-v2004---v2005) below for details
 
 ### NuGet Packages
 
@@ -151,12 +153,12 @@ dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.5-alp
 
 > **💡 Package Selection Guide:**
 >
-> -   Use **Groq.Sdk.Core** only if you're manually instantiating clients with `HttpClient`
-> -   Add **Groq.Sdk.Extensions.DependencyInjection** if you want automatic dependency injection setup (recommended for
+> - Use **Groq.Sdk.Core** only if you're manually instantiating clients with `HttpClient`
+> - Add **Groq.Sdk.Extensions.DependencyInjection** if you want automatic dependency injection setup (recommended for
 
     ASP.NET Core and .NET Generic Host apps)
 
-> -   Both packages work together seamlessly - Groq.Sdk.Extensions.DependencyInjection automatically includes
+> - Both packages work together seamlessly - Groq.Sdk.Extensions.DependencyInjection automatically includes
 
     Groq.Sdk.Core
 
@@ -430,21 +432,22 @@ Console.WriteLine(message);
 
 **Benefits of using ChatCompletionRequestBuilder:**
 
--   ✅ Type-safe parameter configuration
--   ✅ IntelliSense support for all available options
--   ✅ Automatic validation of required parameters
--   ✅ Fluent, readable API
--   ✅ Support for all 34+ Groq API parameters
+- ✅ Type-safe parameter configuration
+- ✅ IntelliSense support for all available options
+- ✅ Automatic validation of required parameters
+- ✅ Fluent, readable API
+- ✅ Support for all 34+ Groq API parameters
 
 **New in v2.0.0.5:** Separate convenience methods for better clarity:
 
--   `WithUserPrompt(string)` - Set the user's message (required)
--   `WithSystemPrompt(string)` - Set system context/instructions (optional)
--   `WithAssistantPrompt(string)` - Add assistant context (optional)
--   `WithImageUrl(string)` - Add image for vision models (optional)
--   `WithMessages(JsonArray)` - Full control over message structure (advanced)
+- `WithUserPrompt(string)` - Set the user's message (required)
+- `WithSystemPrompt(string)` - Set system context/instructions (optional)
+- `WithAssistantPrompt(string)` - Add assistant context (optional)
+- `WithImageUrl(string)` - Add image for vision models (optional)
+- `WithMessages(JsonArray)` - Full control over message structure (advanced)
 
-**⚠️ Important:** If you use `WithMessages()` directly, the convenience methods (`WithUserPrompt`, `WithSystemPrompt`, etc.) will have no effect.
+**⚠️ Important:** If you use `WithMessages()` directly, the convenience methods (`WithUserPrompt`, `WithSystemPrompt`,
+etc.) will have no effect.
 
 #### Streaming Chat
 
@@ -905,28 +908,29 @@ builder.AddGroqApiServices(options =>
 
 The SDK automatically uses `IHttpClientFactory` with resilience patterns:
 
--   **Named Client**: `"GroqHttpClient"`
--   **Resilience Handlers**: Automatic retry with exponential backoff
--   **Timeout Strategy**: Configurable per-attempt and overall timeout
--   **Circuit Breaker**: Built-in protection against cascading failures
+- **Named Client**: `"GroqHttpClient"`
+- **Resilience Handlers**: Automatic retry with exponential backoff
+- **Timeout Strategy**: Configurable per-attempt and overall timeout
+- **Circuit Breaker**: Built-in protection against cascading failures
 
 ### Model Parameters
 
 Common parameters across models:
 
--   `temperature`: Controls randomness (0.0-2.0). Lower = more deterministic
--   `max_tokens`: Maximum tokens to generate
--   `top_p`: Nucleus sampling threshold (0.0-1.0)
--   `stream`: Enable streaming responses
--   `stop`: Stop sequences for completion
--   `presence_penalty`: Penalize repetition (-2.0 to 2.0)
--   `frequency_penalty`: Penalize frequent tokens (-2.0 to 2.0)
+- `temperature`: Controls randomness (0.0-2.0). Lower = more deterministic
+- `max_tokens`: Maximum tokens to generate
+- `top_p`: Nucleus sampling threshold (0.0-1.0)
+- `stream`: Enable streaming responses
+- `stop`: Stop sequences for completion
+- `presence_penalty`: Penalize repetition (-2.0 to 2.0)
+- `frequency_penalty`: Penalize frequent tokens (-2.0 to 2.0)
 
 ## 🔄 Migration Guide (v2.0.0.4 → v2.0.0.5)
 
 ### Breaking Changes in ChatCompletionRequestBuilder
 
-Version 2.0.0.5 introduces a more intuitive and flexible API for building chat completion requests. The main breaking change affects how you set messages.
+Version 2.0.0.5 introduces a more intuitive and flexible API for building chat completion requests. The main breaking
+change affects how you set messages.
 
 #### What Changed
 
@@ -952,11 +956,11 @@ var request = ChatCompletionRequestBuilder.Create()
 #### New Methods Available
 
 | Method                        | Description                         | Required    |
-| ----------------------------- | ----------------------------------- | ----------- |
-| `WithUserPrompt(string)`      | Sets the user's message             | ✅ Yes      |
-| `WithSystemPrompt(string)`    | Sets system instructions/context    | ❌ Optional |
-| `WithAssistantPrompt(string)` | Adds assistant context              | ❌ Optional |
-| `WithImageUrl(string)`        | Adds image for vision models        | ❌ Optional |
+|-------------------------------|-------------------------------------|-------------|
+| `WithUserPrompt(string)`      | Sets the user's message             | ✅ Yes       |
+| `WithSystemPrompt(string)`    | Sets system instructions/context    | ❌ Optional  |
+| `WithAssistantPrompt(string)` | Adds assistant context              | ❌ Optional  |
+| `WithImageUrl(string)`        | Adds image for vision models        | ❌ Optional  |
 | `WithMessages(JsonArray)`     | Full control over message structure | ⚠️ Advanced |
 
 #### Migration Examples
@@ -1027,7 +1031,8 @@ var request = ChatCompletionRequestBuilder.Create()
 
 #### Important Behavioral Notes
 
-⚠️ **Method Priority:** If you call `WithMessages(JsonArray)`, it takes full control and the convenience methods (`WithUserPrompt`, `WithSystemPrompt`, etc.) will be ignored even if called.
+⚠️ **Method Priority:** If you call `WithMessages(JsonArray)`, it takes full control and the convenience methods (
+`WithUserPrompt`, `WithSystemPrompt`, etc.) will be ignored even if called.
 
 ```csharp
 // ❌ BAD: SystemPrompt will be ignored
@@ -1054,7 +1059,8 @@ var request = ChatCompletionRequestBuilder.Create()
 
 #### Affected Client Code
 
-If you were using `ToolClient`, `VisionClient`, or `LlmTextProvider`, these have been updated internally and no changes are required on your end.
+If you were using `ToolClient`, `VisionClient`, or `LlmTextProvider`, these have been updated internally and no changes
+are required on your end.
 
 ## 🚨 Error Handling
 
@@ -1111,10 +1117,10 @@ Contributions are welcome! To contribute:
 
 Please ensure:
 
--   Code follows .NET coding conventions
--   All tests pass
--   XML documentation is provided for public APIs
--   README is updated if adding new features
+- Code follows .NET coding conventions
+- All tests pass
+- XML documentation is provided for public APIs
+- README is updated if adding new features
 
 ## 📄 License
 
@@ -1125,19 +1131,20 @@ This SDK is licensed under the MIT License.
 
 ## 🙏 Acknowledgements
 
--   **J. Gravelle**: Original creator of GroqApiLibrary - thank you for laying the groundwork!
--   **Groq Team**: For providing exceptional AI infrastructure and models
--   **Model Providers**: Meta (Llama), OpenAI (GPT-OSS, Whisper), Alibaba Cloud (Qwen), Moonshot AI (Kimi), PlayAI (TTS)
--   **Original Contributors**: [Marcus Cazzola](https://github.com/CanYouCatchMe01), [Jacob Thomas](https://github.com/Jacob-J-Thomas), and all
-    others who contributed to the original project
--   **Current Contributors**: Thanks to all who have contributed to improving this SDK
+- **J. Gravelle**: Original creator of GroqApiLibrary - thank you for laying the groundwork!
+- **Groq Team**: For providing exceptional AI infrastructure and models
+- **Model Providers**: Meta (Llama), OpenAI (GPT-OSS, Whisper), Alibaba Cloud (Qwen), Moonshot AI (Kimi), PlayAI (TTS)
+- **Original Contributors
+  **: [Marcus Cazzola](https://github.com/CanYouCatchMe01), [Jacob Thomas](https://github.com/Jacob-J-Thomas), and all
+  others who contributed to the original project
+- **Current Contributors**: Thanks to all who have contributed to improving this SDK
 
 ## 📞 Support
 
--   **Issues**: [GitHub Issues](https://github.com/moheladwy/Groq-Csharp/issues)
--   **Original Repository**: [jgravelle/GroqApiLibrary](https://github.com/jgravelle/GroqApiLibrary)
--   **Groq Documentation**: [console.groq.com/docs](https://console.groq.com/docs)
--   **API Keys**: [console.groq.com](https://console.groq.com)
+- **Issues**: [GitHub Issues](https://github.com/moheladwy/Groq-Csharp/issues)
+- **Original Repository**: [jgravelle/GroqApiLibrary](https://github.com/jgravelle/GroqApiLibrary)
+- **Groq Documentation**: [console.groq.com/docs](https://console.groq.com/docs)
+- **API Keys**: [console.groq.com](https://console.groq.com)
 
 ---
 

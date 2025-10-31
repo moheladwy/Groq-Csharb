@@ -101,12 +101,12 @@ public sealed class ToolClient
 
                 var functionResponse = await tool.Function.ExecuteAsync(functionArgs);
                 messages.Add(new JsonObject
-                {
-                    ["tool_call_id"] = toolCallId,
-                    ["role"] = LlmRoles.ToolRole,
-                    ["name"] = functionName,
-                    ["content"] = functionResponse
-                }
+                    {
+                        ["tool_call_id"] = toolCallId,
+                        ["role"] = LlmRoles.ToolRole,
+                        ["name"] = functionName,
+                        ["content"] = functionResponse
+                    }
                 );
             }
 

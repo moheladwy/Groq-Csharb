@@ -70,7 +70,8 @@ public class FluentApiTests
         builder.WithUserPrompt(UserPrompt).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
         builder.WithSystemPrompt(SystemPrompt).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
         builder.WithAssistantPrompt("Assistant context").ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
-        builder.WithImageUrl("https://example.com/image.jpg").ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
+        builder.WithImageUrl("https://example.com/image.jpg")
+            .ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
         builder.WithMessages(testJsonArray).ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
 
         // Optional Parameters
@@ -907,8 +908,7 @@ public class FluentApiTests
         // Arrange - Test toolChoice as an object (not just string)
         var toolChoiceObject = new JsonObject
         {
-            ["type"] = "function",
-            ["function"] = new JsonObject { ["name"] = "specific_function" }
+            ["type"] = "function", ["function"] = new JsonObject { ["name"] = "specific_function" }
         };
 
         // Act

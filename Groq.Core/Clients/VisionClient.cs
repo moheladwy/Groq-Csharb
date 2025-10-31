@@ -76,7 +76,9 @@ public sealed class VisionClient
             .WithImageUrl(imageUrl);
 
         if (temperature.HasValue)
+        {
             builder = builder.WithTemperature(temperature.Value);
+        }
 
         var request = builder.Build();
 
@@ -110,7 +112,9 @@ public sealed class VisionClient
             .WithImageUrl($"data:image/jpeg;base64,{base64Image}");
 
         if (temperature.HasValue)
+        {
             builder = builder.WithTemperature(temperature.Value);
+        }
 
         var request = builder.Build();
 
@@ -136,7 +140,9 @@ public sealed class VisionClient
         ValidateImageUrl(imageUrl);
 
         if (tools.Count == 0)
+        {
             throw new ArgumentException("At least one tool must be specified");
+        }
 
         var toolsObject = new JsonArray();
 

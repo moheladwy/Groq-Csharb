@@ -69,10 +69,14 @@ public sealed class LlmTextProvider
             .WithUserPrompt(userPrompt);
 
         if (systemPrompt is not null)
-           builder = builder.WithSystemPrompt(systemPrompt);
+        {
+            builder = builder.WithSystemPrompt(systemPrompt);
+        }
 
         if (structureOutputJsonFormat is not null)
+        {
             builder = builder.WithResponseFormat(structureOutputJsonFormat);
+        }
 
         var request = builder.Build();
         var response = await _client.CreateChatCompletionAsync(request);
@@ -111,10 +115,14 @@ public sealed class LlmTextProvider
             .WithUserPrompt(userPrompt);
 
         if (systemPrompt is not null)
+        {
             builder = builder.WithSystemPrompt(systemPrompt);
+        }
 
         if (structureOutputJsonFormat is not null)
+        {
             builder = builder.WithResponseFormat(structureOutputJsonFormat);
+        }
 
         var request = builder.Build();
 
