@@ -1,11 +1,11 @@
 # Contributing to Groq C# SDK
 
-> **⚠️ ALPHA DEVELOPMENT WARNING**  
-> **This SDK is currently in ALPHA stage (v2.0.0.x-alpha) and is NOT production-ready.**  
-> - The API surface may change significantly between releases  
-> - Breaking changes are expected as we refine the SDK architecture  
-> - Contributions are welcome, but expect rapid iteration and changes  
-> - Focus on testing, feedback, and experimental features  
+> **⚠️ ALPHA DEVELOPMENT WARNING**
+> **This SDK is currently in ALPHA stage (v2.0.0.x-alpha) and is NOT production-ready.**
+> - The API surface may change significantly between releases
+> - Breaking changes are expected as we refine the SDK architecture
+> - Contributions are welcome, but expect rapid iteration and changes
+> - Focus on testing, feedback, and experimental features
 
 Thank you for your interest in contributing to the Groq C# SDK! This document provides guidelines and instructions for contributing to this project.
 
@@ -69,7 +69,7 @@ If this is your first contribution, look for issues labeled with:
 
 ### Prerequisites
 
--   **.NET 9.0 SDK** or later
+-   **.NET 10.0 SDK** or later
 -   **Git** for version control
 -   **IDE** - Visual Studio 2022, VS Code, or Rider recommended
 -   **Groq API Key** for testing (get one at [console.groq.com](https://console.groq.com))

@@ -85,19 +85,19 @@ refactored and enhanced.
 
 ## Requirements
 
--   **.NET 9.0** or later
+-   **.NET 10.0** or later
 -   Groq API key (get one at [console.groq.com](https://console.groq.com))
 
 ## 📦 Installation
 
 ### Current Release
 
-**Version:** `2.0.0.5-alpha`
+**Version:** `2.0.0.6-alpha`
 
 > **⚠️ ALPHA RELEASE - NOT PRODUCTION READY**
 > This is an alpha release with the new architecture featuring:
 >
-> -   ✨ **NEW in v2.0.0.5:** Enhanced ChatCompletionRequestBuilder API with separate methods
+> -   ✨ **NEW in v2.0.0.6:** Enhanced ChatCompletionRequestBuilder API with separate methods
 > -   ✨ **NEW:** ChatCompletionRequestBuilder for fluent request construction
 > -   ✨ GroqClient unified interface
 > -   ✨ GroqOptions configuration system
@@ -105,7 +105,7 @@ refactored and enhanced.
 >
 > **For testing and development only.** APIs are subject to change before stable release.
 >
-> **Breaking Changes in v2.0.0.5:**
+> **Breaking Changes in v2.0.0.6:**
 >
 > -   `WithMessages(string, string?)` replaced with separate methods: `WithUserPrompt()`, `WithSystemPrompt()`, `WithAssistantPrompt()`, `WithImageUrl()`
 > -   See [Migration Guide](#migration-guide-v2004---v2005) below for details
@@ -119,13 +119,13 @@ The SDK is split into two packages for better modularity:
 Core SDK containing all API clients, models, providers, and the new ChatCompletionRequestBuilder.
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.5-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.6-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Core -Version 2.0.0.5-alpha
+Install-Package Groq.Sdk.Core -Version 2.0.0.6-alpha
 ```
 
 #### **Groq.Sdk.Extensions.DependencyInjection** (Optional)
@@ -133,20 +133,20 @@ Install-Package Groq.Sdk.Core -Version 2.0.0.5-alpha
 Dependency injection extensions for ASP.NET Core and .NET Generic Host applications.
 
 ```bash
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.5-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.6-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.5-alpha
+Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.6-alpha
 ```
 
 ### Quick Install (Both Packages)
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.5-alpha
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.5-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.6-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.6-alpha
 ```
 
 > **💡 Package Selection Guide:**
@@ -922,7 +922,7 @@ Common parameters across models:
 -   `presence_penalty`: Penalize repetition (-2.0 to 2.0)
 -   `frequency_penalty`: Penalize frequent tokens (-2.0 to 2.0)
 
-## 🔄 Migration Guide (v2.0.0.4 → v2.0.0.5)
+## 🔄 Migration Guide (v2.0.0.4 → v2.0.0.5 or v2.0.0.6)
 
 ### Breaking Changes in ChatCompletionRequestBuilder
 
@@ -939,7 +939,7 @@ var request = ChatCompletionRequestBuilder.Create()
     .Build();
 ```
 
-**New API (v2.0.0.5):**
+**New API (v2.0.0.5/v2.0.0.6):**
 
 ```csharp
 var request = ChatCompletionRequestBuilder.Create()
@@ -967,7 +967,7 @@ var request = ChatCompletionRequestBuilder.Create()
 // Old (v2.0.0.4)
 .WithMessages("What is AI?")
 
-// New (v2.0.0.5)
+// New (v2.0.0.5/v2.0.0.6)
 .WithUserPrompt("What is AI?")
 ```
 
@@ -977,12 +977,12 @@ var request = ChatCompletionRequestBuilder.Create()
 // Old (v2.0.0.4)
 .WithMessages("Explain quantum physics", "You are a science teacher")
 
-// New (v2.0.0.5)
+// New (v2.0.0.5/v2.0.0.6)
 .WithUserPrompt("Explain quantum physics")
 .WithSystemPrompt("You are a science teacher")
 ```
 
-**Example 3: Vision requests (NEW in v2.0.0.5)**
+**Example 3: Vision requests (NEW in v2.0.0.5/v2.0.0.6)**
 
 ```csharp
 // New capability - separate method for images
