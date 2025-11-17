@@ -30,6 +30,12 @@ public class GroqOptions
     public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(100);
 
     /// <summary>
+    ///     Gets or sets the timeout duration for individual attempt operations within a retry sequence.
+    ///     This property defines the maximum time allotted for a single attempt to complete before timing out.
+    /// </summary>
+    public TimeSpan AttemptTimeout { get; set; } = TimeSpan.FromSeconds(10);
+
+    /// <summary>
     ///     Gets or sets the maximum number of retry attempts for failed API requests.
     ///     Defaults to 3 retries.
     /// </summary>
