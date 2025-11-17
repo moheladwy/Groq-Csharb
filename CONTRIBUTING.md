@@ -181,6 +181,7 @@ var settings = new GroqSettings
     ApiKey = "your-api-key",
     Model = "llama-3.3-70b-versatile",
     Timeout = TimeSpan.FromSeconds(100),
+    AttemptTimeout = TimeSpan.FromSeconds(50),
     MaxRetries = 3
 };
 
@@ -211,6 +212,7 @@ builder.AddGroqApiServices(options =>
     options.ApiKey = "your-api-key";
     options.Model = "llama-3.3-70b-versatile";
     options.Timeout = TimeSpan.FromSeconds(100);
+    options.AttemptTimeout = TimeSpan.FromSeconds(50);
     options.MaxRetries = 3;
     options.Delay = TimeSpan.FromSeconds(2);
     options.MaxDelay = TimeSpan.FromSeconds(20);

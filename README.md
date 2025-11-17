@@ -92,12 +92,12 @@ refactored and enhanced.
 
 ### Current Release
 
-**Version:** `2.0.0.6-alpha`
+**Version:** `2.0.0.7-alpha`
 
 > **⚠️ ALPHA RELEASE - NOT PRODUCTION READY**
 > This is an alpha release with the new architecture featuring:
 >
-> -   ✨ **NEW in v2.0.0.6:** Enhanced ChatCompletionRequestBuilder API with separate methods
+> -   ✨ **NEW in v2.0.0.7:** Enhanced ChatCompletionRequestBuilder API with separate methods
 > -   ✨ **NEW:** ChatCompletionRequestBuilder for fluent request construction
 > -   ✨ GroqClient unified interface
 > -   ✨ GroqOptions configuration system
@@ -105,7 +105,7 @@ refactored and enhanced.
 >
 > **For testing and development only.** APIs are subject to change before stable release.
 >
-> **Breaking Changes in v2.0.0.6:**
+> **Breaking Changes in v2.0.0.7:**
 >
 > -   `WithMessages(string, string?)` replaced with separate methods: `WithUserPrompt()`, `WithSystemPrompt()`, `WithAssistantPrompt()`, `WithImageUrl()`
 > -   See [Migration Guide](#migration-guide-v2004---v2005) below for details
@@ -119,13 +119,13 @@ The SDK is split into two packages for better modularity:
 Core SDK containing all API clients, models, providers, and the new ChatCompletionRequestBuilder.
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.6-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.7-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Core -Version 2.0.0.6-alpha
+Install-Package Groq.Sdk.Core -Version 2.0.0.7-alpha
 ```
 
 #### **Groq.Sdk.Extensions.DependencyInjection** (Optional)
@@ -133,20 +133,20 @@ Install-Package Groq.Sdk.Core -Version 2.0.0.6-alpha
 Dependency injection extensions for ASP.NET Core and .NET Generic Host applications.
 
 ```bash
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.6-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.7-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.6-alpha
+Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.7-alpha
 ```
 
 ### Quick Install (Both Packages)
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.6-alpha
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.6-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.7-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.7-alpha
 ```
 
 > **💡 Package Selection Guide:**
@@ -921,140 +921,6 @@ Common parameters across models:
 -   `stop`: Stop sequences for completion
 -   `presence_penalty`: Penalize repetition (-2.0 to 2.0)
 -   `frequency_penalty`: Penalize frequent tokens (-2.0 to 2.0)
-
-## 🔄 Migration Guide (v2.0.0.4 → v2.0.0.5 or v2.0.0.6)
-
-### Breaking Changes in ChatCompletionRequestBuilder
-
-Version 2.0.0.5 introduces a more intuitive and flexible API for building chat completion requests. The main breaking change affects how you set messages.
-
-#### What Changed
-
-**Old API (v2.0.0.4):**
-
-```csharp
-var request = ChatCompletionRequestBuilder.Create()
-    .WithModel("llama-3.3-70b-versatile")
-    .WithMessages(userPrompt: "Hello", systemPrompt: "You are helpful")
-    .Build();
-```
-
-**New API (v2.0.0.5/v2.0.0.6):**
-
-```csharp
-var request = ChatCompletionRequestBuilder.Create()
-    .WithModel("llama-3.3-70b-versatile")
-    .WithUserPrompt("Hello")
-    .WithSystemPrompt("You are helpful")
-    .Build();
-```
-
-#### New Methods Available
-
-| Method                        | Description                         | Required    |
-| ----------------------------- | ----------------------------------- | ----------- |
-| `WithUserPrompt(string)`      | Sets the user's message             | ✅ Yes      |
-| `WithSystemPrompt(string)`    | Sets system instructions/context    | ❌ Optional |
-| `WithAssistantPrompt(string)` | Adds assistant context              | ❌ Optional |
-| `WithImageUrl(string)`        | Adds image for vision models        | ❌ Optional |
-| `WithMessages(JsonArray)`     | Full control over message structure | ⚠️ Advanced |
-
-#### Migration Examples
-
-**Example 1: Simple user prompt**
-
-```csharp
-// Old (v2.0.0.4)
-.WithMessages("What is AI?")
-
-// New (v2.0.0.5/v2.0.0.6)
-.WithUserPrompt("What is AI?")
-```
-
-**Example 2: User + System prompts**
-
-```csharp
-// Old (v2.0.0.4)
-.WithMessages("Explain quantum physics", "You are a science teacher")
-
-// New (v2.0.0.5/v2.0.0.6)
-.WithUserPrompt("Explain quantum physics")
-.WithSystemPrompt("You are a science teacher")
-```
-
-**Example 3: Vision requests (NEW in v2.0.0.5/v2.0.0.6)**
-
-```csharp
-// New capability - separate method for images
-var request = ChatCompletionRequestBuilder.Create()
-    .WithModel("llama-4-scout-17b-16e-instruct")
-    .WithUserPrompt("What's in this image?")
-    .WithImageUrl("https://example.com/image.jpg")
-    .Build();
-```
-
-**Example 4: Advanced - Full message control**
-
-```csharp
-// For advanced scenarios requiring full control
-var messages = new JsonArray
-{
-    new JsonObject
-    {
-        ["role"] = "system",
-        ["content"] = "You are helpful"
-    },
-    new JsonObject
-    {
-        ["role"] = "user",
-        ["content"] = new JsonArray
-        {
-            new JsonObject { ["type"] = "text", ["text"] = "Describe this" },
-            new JsonObject
-            {
-                ["type"] = "image_url",
-                ["image_url"] = new JsonObject { ["url"] = "https://..." }
-            }
-        }
-    }
-};
-
-var request = ChatCompletionRequestBuilder.Create()
-    .WithModel("llama-4-maverick-17b-128e-instruct")
-    .WithMessages(messages)  // Takes full control
-    .Build();
-```
-
-#### Important Behavioral Notes
-
-⚠️ **Method Priority:** If you call `WithMessages(JsonArray)`, it takes full control and the convenience methods (`WithUserPrompt`, `WithSystemPrompt`, etc.) will be ignored even if called.
-
-```csharp
-// ❌ BAD: SystemPrompt will be ignored
-var request = ChatCompletionRequestBuilder.Create()
-    .WithModel("llama-3.3-70b-versatile")
-    .WithMessages(customMessagesArray)  // Takes full control
-    .WithSystemPrompt("This will be ignored!")  // ⚠️ No effect!
-    .Build();
-
-// ✅ GOOD: Either use convenience methods OR WithMessages, not both
-var request = ChatCompletionRequestBuilder.Create()
-    .WithModel("llama-3.3-70b-versatile")
-    .WithUserPrompt("Hello")
-    .WithSystemPrompt("You are helpful")
-    .Build();
-```
-
-#### Why This Change?
-
-1. **Better Clarity**: Separate methods make code more readable and self-documenting
-2. **Type Safety**: Each method validates its specific input
-3. **Flexibility**: You can now add assistant prompts and images without complex JSON
-4. **Consistency**: Aligns with how the API actually structures messages
-
-#### Affected Client Code
-
-If you were using `ToolClient`, `VisionClient`, or `LlmTextProvider`, these have been updated internally and no changes are required on your end.
 
 ## 🚨 Error Handling
 
