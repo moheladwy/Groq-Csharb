@@ -65,6 +65,7 @@ public static class DependencyInjection
             .Validate(o => !string.IsNullOrWhiteSpace(o.ApiKey), "Groq:ApiKey is required.")
             .Validate(o => o.MaxRetries >= 0, "Groq:MaxRetries must be >= 0.")
             .Validate(o => o.Timeout > TimeSpan.Zero, "Groq:Timeout must be > 0.")
+            .Validate(o => o.AttemptTimeout > TimeSpan.Zero, "Groq:AttemptTimeout must be > 0.")
             .ValidateOnStart();
 
         builder.AddGroqHttpClientFactory();
@@ -146,7 +147,7 @@ public static class DependencyInjection
                 {
                     Delay = settings.Delay, MaxRetryAttempts = settings.MaxRetries, MaxDelay = settings.MaxDelay
                 };
-                options.AttemptTimeout = new HttpTimeoutStrategyOptions { Timeout = settings.Timeout };
+                options.AttemptTimeout = new HttpTimeoutStrategyOptions { Timeout = settings.AttemptTimeout };
             });
 
         return builder;
