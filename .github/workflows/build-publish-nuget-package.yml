@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -42,5 +42,8 @@ jobs:
       - name: Configure Nuget Source
         run: dotnet nuget add source --username ${{ env.GITHUB_USER }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ env.GITHUB_USER }}/index.json"
 
-      - name: Publish
+      - name: Publish to Github Packages
         run: dotnet nuget push ./nupkgs/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+
+      - name: Publish to Nuget.org
+        run: dotnet nuget push ./nupkgs/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source "https://api.nuget.org/v3/index.json"
