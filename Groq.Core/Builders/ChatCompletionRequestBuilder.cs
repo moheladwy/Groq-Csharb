@@ -68,12 +68,12 @@ public class ChatCompletionRequestBuilder
     /// <exception cref="ArgumentNullException">Thrown when messages is null.</exception>
     /// <remarks>
     ///     <para>
-    ///         <b>IMPORTANT:</b> If this method is used to set messages directly, the following methods will have 
-    ///         no effect even if called: <see cref="WithUserPrompt"/>, <see cref="WithSystemPrompt"/>, 
+    ///         <b>IMPORTANT:</b> If this method is used to set messages directly, the following methods will have
+    ///         no effect even if called: <see cref="WithUserPrompt"/>, <see cref="WithSystemPrompt"/>,
     ///         <see cref="WithAssistantPrompt"/>, and <see cref="WithImageUrl"/>.
     ///     </para>
     ///     <para>
-    ///         Use this method when you need full control over the message structure, or use the convenience 
+    ///         Use this method when you need full control over the message structure, or use the convenience
     ///         methods (WithUserPrompt, etc.) to automatically build the messages array.
     ///     </para>
     /// </remarks>
@@ -94,12 +94,12 @@ public class ChatCompletionRequestBuilder
     /// <exception cref="ArgumentException">Thrown when userPrompt is null or empty.</exception>
     /// <remarks>
     ///     <para>
-    ///         This is a convenience method that automatically builds the messages array. The user prompt is required 
+    ///         This is a convenience method that automatically builds the messages array. The user prompt is required
     ///         and will be included in the final request as a message with role "user".
     ///     </para>
     ///     <para>
-    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called. 
-    ///         Use either WithMessages for full control, or use this method along with <see cref="WithSystemPrompt"/>, 
+    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called.
+    ///         Use either WithMessages for full control, or use this method along with <see cref="WithSystemPrompt"/>,
     ///         <see cref="WithAssistantPrompt"/>, and <see cref="WithImageUrl"/> for automatic message building.
     ///     </para>
     /// </remarks>
@@ -120,12 +120,12 @@ public class ChatCompletionRequestBuilder
     /// <exception cref="ArgumentException">Thrown when systemPrompt is null or empty.</exception>
     /// <remarks>
     ///     <para>
-    ///         This is a convenience method that automatically builds the messages array. The system prompt is optional 
+    ///         This is a convenience method that automatically builds the messages array. The system prompt is optional
     ///         and will be included as the first message with role "system" if provided.
     ///     </para>
     ///     <para>
-    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called. 
-    ///         Use either WithMessages for full control, or use this method along with <see cref="WithUserPrompt"/> 
+    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called.
+    ///         Use either WithMessages for full control, or use this method along with <see cref="WithUserPrompt"/>
     ///         for automatic message building.
     ///     </para>
     /// </remarks>
@@ -146,13 +146,13 @@ public class ChatCompletionRequestBuilder
     /// <exception cref="ArgumentException">Thrown when assistantPrompt is null or empty.</exception>
     /// <remarks>
     ///     <para>
-    ///         This is a convenience method that automatically builds the messages array. The assistant prompt is optional 
-    ///         and will be included as a message with role "assistant" if provided, positioned after the system message 
+    ///         This is a convenience method that automatically builds the messages array. The assistant prompt is optional
+    ///         and will be included as a message with role "assistant" if provided, positioned after the system message
     ///         (if any) and before the user message.
     ///     </para>
     ///     <para>
-    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called. 
-    ///         Use either WithMessages for full control, or use this method along with <see cref="WithUserPrompt"/> 
+    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called.
+    ///         Use either WithMessages for full control, or use this method along with <see cref="WithUserPrompt"/>
     ///         for automatic message building.
     ///     </para>
     /// </remarks>
@@ -173,12 +173,12 @@ public class ChatCompletionRequestBuilder
     /// <exception cref="ArgumentException">Thrown when imageUrl is null or empty.</exception>
     /// <remarks>
     ///     <para>
-    ///         This is a convenience method that automatically builds the messages array with multimodal content. 
+    ///         This is a convenience method that automatically builds the messages array with multimodal content.
     ///         The image URL is optional and will be included in the user message content alongside the text prompt.
     ///     </para>
     ///     <para>
-    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called. 
-    ///         Use either WithMessages for full control over multimodal content, or use this method along with 
+    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called.
+    ///         Use either WithMessages for full control over multimodal content, or use this method along with
     ///         <see cref="WithUserPrompt"/> for automatic message building with vision support.
     ///     </para>
     ///     <para>
@@ -812,5 +812,5 @@ public class ChatCompletionRequestBuilder
     ///     Creates a new instance of ChatCompletionRequestBuilder.
     /// </summary>
     /// <returns>A new ChatCompletionRequestBuilder instance.</returns>
-    public static ChatCompletionRequestBuilder Create() => new();
+    public static ChatCompletionRequestBuilder Builder() => new();
 }

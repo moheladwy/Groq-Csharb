@@ -62,7 +62,7 @@ public sealed class ToolClient
             }));
 
             var request = ChatCompletionRequestBuilder
-                .Create()
+                .Builder()
                 .WithModel(model)
                 .WithUserPrompt(userPrompt)
                 .WithSystemPrompt(systemMessage)

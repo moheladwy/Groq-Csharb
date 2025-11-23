@@ -550,27 +550,27 @@ public class FluentApiTests
     [Fact]
     public void Builder_Should_Use_Static_Create_Method()
     {
-        // Act - Create builder using static factory method
-        var builder = Core.Builders.ChatCompletionRequestBuilder.Create();
+        // Act - Builder builder using static factory method
+        var builder = Core.Builders.ChatCompletionRequestBuilder.Builder();
 
-        // Assert - Verify Create() returns a new instance
+        // Assert - Verify Builder() returns a new instance
         builder.ShouldNotBeNull();
         builder.ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
 
-        // Assert - Verify each call to Create() returns a new instance
-        var builder2 = Core.Builders.ChatCompletionRequestBuilder.Create();
+        // Assert - Verify each call to Builder() returns a new instance
+        var builder2 = Core.Builders.ChatCompletionRequestBuilder.Builder();
         builder2.ShouldNotBeNull();
         builder2.ShouldBeOfType<Core.Builders.ChatCompletionRequestBuilder>();
         builder2.ShouldNotBeSameAs(builder); // Different instances
 
         // Assert - Verify the created builder can be used for method chaining
-        var request = Core.Builders.ChatCompletionRequestBuilder.Create()
+        var request = Core.Builders.ChatCompletionRequestBuilder.Builder()
             .WithModel(DefaultModel)
             .WithUserPrompt(UserPrompt)
             .WithTemperature(TemperatureValue)
             .Build();
 
-        // Assert - Verify the builder created via Create() produces valid requests
+        // Assert - Verify the builder created via Builder() produces valid requests
         request.ShouldNotBeNull();
         request.ShouldContainKey("model");
         request.ShouldContainKey("messages");

@@ -70,7 +70,7 @@ public sealed class VisionClient
         ValidateImageUrl(imageUrl);
 
         var builder = ChatCompletionRequestBuilder
-            .Create()
+            .Builder()
             .WithModel(model)
             .WithUserPrompt(prompt)
             .WithImageUrl(imageUrl);
@@ -104,7 +104,7 @@ public sealed class VisionClient
         ValidateBase64Size(base64Image);
 
         var builder = ChatCompletionRequestBuilder
-            .Create()
+            .Builder()
             .WithModel(model)
             .WithUserPrompt(prompt)
             .WithImageUrl($"data:image/jpeg;base64,{base64Image}");
@@ -152,7 +152,7 @@ public sealed class VisionClient
         }));
 
         var builder = ChatCompletionRequestBuilder
-            .Create()
+            .Builder()
             .WithModel(model)
             .WithUserPrompt(prompt)
             .WithImageUrl(imageUrl)
@@ -181,7 +181,7 @@ public sealed class VisionClient
         ValidateImageUrl(imageUrl);
 
         var request = ChatCompletionRequestBuilder
-            .Create()
+            .Builder()
             .WithModel(model)
             .WithUserPrompt(prompt)
             .WithImageUrl(imageUrl)
