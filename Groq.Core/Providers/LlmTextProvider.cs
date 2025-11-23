@@ -64,7 +64,7 @@ public sealed class LlmTextProvider
         ArgumentNullException.ThrowIfNull(userPrompt);
 
         var builder = ChatCompletionRequestBuilder
-            .Create()
+            .Builder()
             .WithModel(model ?? _model)
             .WithUserPrompt(userPrompt);
 
@@ -106,7 +106,7 @@ public sealed class LlmTextProvider
         ArgumentNullException.ThrowIfNull(userPrompt);
 
         var builder = ChatCompletionRequestBuilder
-            .Create()
+            .Builder()
             .WithModel(model ?? _model)
             .WithUserPrompt(userPrompt);
 

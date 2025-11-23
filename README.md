@@ -92,12 +92,12 @@ refactored and enhanced.
 
 ### Current Release
 
-**Version:** `2.0.0.7-alpha`
+**Version:** `2.0.0.8-alpha`
 
 > **⚠️ ALPHA RELEASE - NOT PRODUCTION READY**
 > This is an alpha release with the new architecture featuring:
 >
-> -   ✨ **NEW in v2.0.0.7:** Enhanced ChatCompletionRequestBuilder API with separate methods
+> -   ✨ **NEW in v2.0.0.8:** Enhanced ChatCompletionRequestBuilder API with separate methods
 > -   ✨ **NEW:** ChatCompletionRequestBuilder for fluent request construction
 > -   ✨ GroqClient unified interface
 > -   ✨ GroqOptions configuration system
@@ -105,7 +105,7 @@ refactored and enhanced.
 >
 > **For testing and development only.** APIs are subject to change before stable release.
 >
-> **Breaking Changes in v2.0.0.7:**
+> **Breaking Changes in v2.0.0.8:**
 >
 > -   `WithMessages(string, string?)` replaced with separate methods: `WithUserPrompt()`, `WithSystemPrompt()`, `WithAssistantPrompt()`, `WithImageUrl()`
 > -   See [Migration Guide](#migration-guide-v2004---v2005) below for details
@@ -119,13 +119,13 @@ The SDK is split into two packages for better modularity:
 Core SDK containing all API clients, models, providers, and the new ChatCompletionRequestBuilder.
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.7-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.8-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Core -Version 2.0.0.7-alpha
+Install-Package Groq.Sdk.Core -Version 2.0.0.8-alpha
 ```
 
 #### **Groq.Sdk.Extensions.DependencyInjection** (Optional)
@@ -133,20 +133,20 @@ Install-Package Groq.Sdk.Core -Version 2.0.0.7-alpha
 Dependency injection extensions for ASP.NET Core and .NET Generic Host applications.
 
 ```bash
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.7-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.8-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.7-alpha
+Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.8-alpha
 ```
 
 ### Quick Install (Both Packages)
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.7-alpha
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.7-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.8-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.8-alpha
 ```
 
 > **💡 Package Selection Guide:**
@@ -414,7 +414,8 @@ Console.WriteLine(message);
 using Groq.Core.Builders;
 using Groq.Core.Models;
 
-var request = ChatCompletionRequestBuilder.Create()
+var request = ChatCompletionRequestBuilder
+    .Builder()
     .WithModel(ChatModels.LLAMA_3_3_70B_VERSATILE.Id)
     .WithUserPrompt("Explain quantum computing in simple terms.")
     .WithSystemPrompt("You are a helpful assistant.")
@@ -435,14 +436,6 @@ Console.WriteLine(message);
 -   ✅ Automatic validation of required parameters
 -   ✅ Fluent, readable API
 -   ✅ Support for all 34+ Groq API parameters
-
-**New in v2.0.0.5:** Separate convenience methods for better clarity:
-
--   `WithUserPrompt(string)` - Set the user's message (required)
--   `WithSystemPrompt(string)` - Set system context/instructions (optional)
--   `WithAssistantPrompt(string)` - Add assistant context (optional)
--   `WithImageUrl(string)` - Add image for vision models (optional)
--   `WithMessages(JsonArray)` - Full control over message structure (advanced)
 
 **⚠️ Important:** If you use `WithMessages()` directly, the convenience methods (`WithUserPrompt`, `WithSystemPrompt`, etc.) will have no effect.
 
@@ -854,6 +847,9 @@ var options = new GroqOptions
     // Optional - Timeout Configuration
     Timeout = TimeSpan.FromSeconds(100), // Default: 100 seconds
 
+    // Optional - Attempt Timeout
+    AttemptTimeout = TimeSpan.FromSeconds(10), // Default: 10 seconds per attempt
+
     // Optional - Retry Configuration
     MaxRetries = 3, // Default: 3 attempts
     Delay = TimeSpan.FromSeconds(2), // Default: 2 seconds initial delay
@@ -873,6 +869,7 @@ builder.AddGroqApiServices(options =>
     options.ApiKey = builder.Configuration["Groq:ApiKey"]!;
     options.Model = "llama-3.3-70b-versatile";
     options.Timeout = TimeSpan.FromSeconds(120);
+    options.AttemptTimeout = TimeSpan.FromSeconds(15);
     options.MaxRetries = 5;
     options.Delay = TimeSpan.FromSeconds(1);
     options.MaxDelay = TimeSpan.FromSeconds(30);
@@ -886,10 +883,11 @@ builder.AddGroqApiServices(options =>
     "Groq": {
         "ApiKey": "your-api-key-here",
         "Model": "llama-3.3-70b-versatile",
-        "Timeout": "00:01:40",
+        "Timeout": "100",
+        "AttemptTimeout": "10",
         "MaxRetries": 3,
-        "Delay": "00:00:02",
-        "MaxDelay": "00:00:20"
+        "Delay": "2",
+        "MaxDelay": "20"
     }
 }
 ```

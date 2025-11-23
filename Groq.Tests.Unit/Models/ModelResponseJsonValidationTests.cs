@@ -104,7 +104,7 @@ public class ModelResponseJsonValidationTests
     [Fact]
     public void Model_Should_Handle_Round_Trip_Serialization()
     {
-        // Arrange - Create a model, serialize it, deserialize it, and compare
+        // Arrange - Builder a model, serialize it, deserialize it, and compare
         var originalModel = new Model
         {
             Id = "llama-guard-3-8b",
