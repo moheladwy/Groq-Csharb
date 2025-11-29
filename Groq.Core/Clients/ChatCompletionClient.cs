@@ -54,7 +54,7 @@ public sealed class ChatCompletionClient
     /// <exception cref="HttpRequestException">Thrown when the API request fails.</exception>
     public async Task<JsonObject?> CreateChatCompletionAsync(JsonObject request)
     {
-        ArgumentNullException.ThrowIfNull(request, nameof(request));
+        ArgumentNullException.ThrowIfNull(request);
         request["stream"] = false;
         var response = await _httpClient.PostAsJsonAsync(Endpoints.ChatCompletionsEndpoint, request);
         if (!response.IsSuccessStatusCode)
@@ -75,7 +75,7 @@ public sealed class ChatCompletionClient
     /// <exception cref="HttpRequestException">Thrown when the API request fails.</exception>
     public async IAsyncEnumerable<JsonObject?> CreateChatCompletionStreamAsync(JsonObject request)
     {
-        ArgumentNullException.ThrowIfNull(request, nameof(request));
+        ArgumentNullException.ThrowIfNull(request);
         request["stream"] = true;
         var content = new StringContent(request.ToJsonString(), Encoding.UTF8, "application/json");
         using var requestMessage =
