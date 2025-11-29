@@ -180,7 +180,7 @@ public class ValidationTests
             .WithUserPrompt("Test");
 
         // Act & Assert
-        Should.Throw<JsonException>(() => builder.WithResponseFormat(""));
+        Should.Throw<ArgumentException>(() => builder.WithResponseFormat(""));
     }
 
     [Fact]

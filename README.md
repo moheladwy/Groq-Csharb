@@ -4,7 +4,8 @@ A comprehensive and modern .NET SDK for seamless integration with the Groq AI AP
 type-safe interface to access Groq's powerful language models, vision capabilities, audio processing, and advanced tool
 integration features.
 
-> **⚠️ ALPHA RELEASE WARNING** > **This package is currently in ALPHA stage (v2.0.0.x-alpha) and is NOT yet production-ready.**
+> **⚠️ ALPHA RELEASE WARNING** > **This package is currently in ALPHA stage (v2.0.0.x-alpha) and is NOT yet
+> production-ready.**
 >
 > -   ✅ Safe for **playground and testing purposes**
 > -   ✅ Safe for **development and experimentation**
@@ -24,7 +25,6 @@ refactored and enhanced.
 
 ## 📑 Table of Contents
 
--   [Origin & Attribution](#origin--attribution)
 -   [Features](#-features)
 -   [Requirements](#-requirements)
 -   [Installation](#-installation)
@@ -57,7 +57,6 @@ refactored and enhanced.
     -   [Configuration from appsettings.json](#configuration-from-appsettingsjson)
     -   [HTTP Client Factory Configuration](#http-client-factory-configuration)
     -   [Model Parameters](#model-parameters)
--   [Migration Guide (v2.0.0.4 → v2.0.0.5)](#-migration-guide-v2004--v2005)
 -   [Error Handling](#-error-handling)
 -   [Performance Tips](#-performance-tips)
 -   [Contributing](#-contributing)
@@ -92,23 +91,11 @@ refactored and enhanced.
 
 ### Current Release
 
-**Version:** `2.0.0.8-alpha`
+**Version:** `2.0.0.9-alpha`
 
 > **⚠️ ALPHA RELEASE - NOT PRODUCTION READY**
-> This is an alpha release with the new architecture featuring:
->
-> -   ✨ **NEW in v2.0.0.8:** Enhanced ChatCompletionRequestBuilder API with separate methods
-> -   ✨ **NEW:** ChatCompletionRequestBuilder for fluent request construction
-> -   ✨ GroqClient unified interface
-> -   ✨ GroqOptions configuration system
-> -   ✨ HttpClientFactory integration with resilience patterns
 >
 > **For testing and development only.** APIs are subject to change before stable release.
->
-> **Breaking Changes in v2.0.0.8:**
->
-> -   `WithMessages(string, string?)` replaced with separate methods: `WithUserPrompt()`, `WithSystemPrompt()`, `WithAssistantPrompt()`, `WithImageUrl()`
-> -   See [Migration Guide](#migration-guide-v2004---v2005) below for details
 
 ### NuGet Packages
 
@@ -119,13 +106,13 @@ The SDK is split into two packages for better modularity:
 Core SDK containing all API clients, models, providers, and the new ChatCompletionRequestBuilder.
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.8-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.9-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Core -Version 2.0.0.8-alpha
+Install-Package Groq.Sdk.Core -Version 2.0.0.9-alpha
 ```
 
 #### **Groq.Sdk.Extensions.DependencyInjection** (Optional)
@@ -133,20 +120,20 @@ Install-Package Groq.Sdk.Core -Version 2.0.0.8-alpha
 Dependency injection extensions for ASP.NET Core and .NET Generic Host applications.
 
 ```bash
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.8-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.9-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.8-alpha
+Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.9-alpha
 ```
 
 ### Quick Install (Both Packages)
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.8-alpha
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.8-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.9-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.9-alpha
 ```
 
 > **💡 Package Selection Guide:**
@@ -285,9 +272,6 @@ var chatClient = new ChatCompletionClient(httpClient);
 var audioClient = new AudioClient(httpClient);
 var visionClient = new VisionClient(chatClient);
 var toolClient = new ToolClient(chatClient);
-
-// Or create unified GroqClient
-var groqClient = new GroqClient(httpClient, model: "llama-3.3-70b-versatile");
 ```
 
 ## 📚 Available Models
@@ -437,7 +421,8 @@ Console.WriteLine(message);
 -   ✅ Fluent, readable API
 -   ✅ Support for all 34+ Groq API parameters
 
-**⚠️ Important:** If you use `WithMessages()` directly, the convenience methods (`WithUserPrompt`, `WithSystemPrompt`, etc.) will have no effect.
+**⚠️ Important:** If you use `WithMessages()` directly, the convenience methods (`WithUserPrompt`, `WithSystemPrompt`,
+etc.) will have no effect.
 
 #### Streaming Chat
 
@@ -766,6 +751,56 @@ var request = new JsonObject
 var response = await chatClient.CreateChatCompletionAsync(request);
 ```
 
+and some of them supports the json_schema format:
+
+```csharp
+var request = new JsonObject
+{
+    ["model"] = ChatModels.LLAMA_3_3_70B_VERSATILE.Id,
+    ["messages"] = new JsonArray
+    {
+        new JsonObject
+        {
+            ["role"] = "user",
+            ["content"] = "List 3 programming languages with their use cases"
+        }
+    },
+    ["response_format"] = new JsonObject
+    {
+        ["type"] = "json_schema",
+        ["json_schema"] = new JsonObject
+        {
+            ["name"] = "response_name",
+            ["schema"] = new JsonObject
+            {
+                ["type"] = "object",
+                ["properties"] = new JsonObject
+                {
+                    ["languages"] = new JsonObject
+                    {
+                        ["type"] = "array",
+                        ["items"] = new JsonObject
+                        {
+                            ["type"] = "object",
+                            ["properties"] = new JsonObject
+                            {
+                                ["name"] = new JsonObject { ["type"] = "string" },
+                                ["use_case"] = new JsonObject { ["type"] = "string" }
+                            },
+                            ["required"] = new JsonArray { "name", "use_case" }
+                        }
+                    }
+                },
+                ["required"] = new JsonArray { "languages" },
+                ["additionalProperties"] = false // Disallow extra properties
+            }
+        }
+    }
+};
+
+var response = await chatClient.CreateChatCompletionAsync(request);
+```
+
 ### Content Moderation
 
 ```csharp
@@ -992,7 +1027,8 @@ This SDK is licensed under the MIT License.
 -   **J. Gravelle**: Original creator of GroqApiLibrary - thank you for laying the groundwork!
 -   **Groq Team**: For providing exceptional AI infrastructure and models
 -   **Model Providers**: Meta (Llama), OpenAI (GPT-OSS, Whisper), Alibaba Cloud (Qwen), Moonshot AI (Kimi), PlayAI (TTS)
--   **Original Contributors**: [Marcus Cazzola](https://github.com/CanYouCatchMe01), [Jacob Thomas](https://github.com/Jacob-J-Thomas), and all
+-   **Original Contributors
+    **: [Marcus Cazzola](https://github.com/CanYouCatchMe01), [Jacob Thomas](https://github.com/Jacob-J-Thomas), and all
     others who contributed to the original project
 -   **Current Contributors**: Thanks to all who have contributed to improving this SDK
 

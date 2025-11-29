@@ -13,6 +13,8 @@ namespace Groq.Core.Builders;
 /// </summary>
 public class ChatCompletionRequestBuilder
 {
+    private string? _assistantPrompt;
+
     // Optional core parameters
     private string? _citationOptions;
     private JsonObject? _compoundCustom;
@@ -24,6 +26,7 @@ public class ChatCompletionRequestBuilder
     private double? _frequencyPenalty;
     private JsonNode? _functionCall;
     private JsonArray? _functions;
+    private string? _imageUrl;
     private JsonArray? _includeDomains;
     private bool? _includeReasoning;
     private JsonObject? _logitBias;
@@ -31,12 +34,6 @@ public class ChatCompletionRequestBuilder
     private int? _maxCompletionTokens;
 
     private int? _maxTokens;
-
-    // Required parameters
-    private string _userPrompt = string.Empty;
-    private string? _systemPrompt;
-    private string? _assistantPrompt;
-    private string? _imageUrl;
     private JsonArray? _messages;
     private JsonObject? _metadata;
     private string? _model;
@@ -53,12 +50,16 @@ public class ChatCompletionRequestBuilder
     private bool? _store;
     private bool? _stream;
     private JsonObject? _streamOptions;
+    private string? _systemPrompt;
     private double? _temperature;
     private JsonNode? _toolChoice; // Can be string or object
     private JsonArray? _tools;
     private int? _topLogprobs;
     private double? _topP;
     private string? _user;
+
+    // Required parameters
+    private string _userPrompt = string.Empty;
 
     /// <summary>
     ///     Sets the list of messages comprising the conversation so far.
@@ -69,8 +70,8 @@ public class ChatCompletionRequestBuilder
     /// <remarks>
     ///     <para>
     ///         <b>IMPORTANT:</b> If this method is used to set messages directly, the following methods will have
-    ///         no effect even if called: <see cref="WithUserPrompt"/>, <see cref="WithSystemPrompt"/>,
-    ///         <see cref="WithAssistantPrompt"/>, and <see cref="WithImageUrl"/>.
+    ///         no effect even if called: <see cref="WithUserPrompt" />, <see cref="WithSystemPrompt" />,
+    ///         <see cref="WithAssistantPrompt" />, and <see cref="WithImageUrl" />.
     ///     </para>
     ///     <para>
     ///         Use this method when you need full control over the message structure, or use the convenience
@@ -79,7 +80,7 @@ public class ChatCompletionRequestBuilder
     /// </remarks>
     public ChatCompletionRequestBuilder WithMessages(JsonArray messages)
     {
-        ArgumentNullException.ThrowIfNull(messages, nameof(messages));
+        ArgumentNullException.ThrowIfNull(messages);
 
         _messages = messages;
 
@@ -98,14 +99,14 @@ public class ChatCompletionRequestBuilder
     ///         and will be included in the final request as a message with role "user".
     ///     </para>
     ///     <para>
-    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called.
-    ///         Use either WithMessages for full control, or use this method along with <see cref="WithSystemPrompt"/>,
-    ///         <see cref="WithAssistantPrompt"/>, and <see cref="WithImageUrl"/> for automatic message building.
+    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages" /> was previously called.
+    ///         Use either WithMessages for full control, or use this method along with <see cref="WithSystemPrompt" />,
+    ///         <see cref="WithAssistantPrompt" />, and <see cref="WithImageUrl" /> for automatic message building.
     ///     </para>
     /// </remarks>
     public ChatCompletionRequestBuilder WithUserPrompt(string userPrompt)
     {
-        ArgumentException.ThrowIfNullOrEmpty(userPrompt, nameof(userPrompt));
+        ArgumentException.ThrowIfNullOrEmpty(userPrompt);
 
         _userPrompt = userPrompt;
 
@@ -124,14 +125,14 @@ public class ChatCompletionRequestBuilder
     ///         and will be included as the first message with role "system" if provided.
     ///     </para>
     ///     <para>
-    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called.
-    ///         Use either WithMessages for full control, or use this method along with <see cref="WithUserPrompt"/>
+    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages" /> was previously called.
+    ///         Use either WithMessages for full control, or use this method along with <see cref="WithUserPrompt" />
     ///         for automatic message building.
     ///     </para>
     /// </remarks>
     public ChatCompletionRequestBuilder WithSystemPrompt(string systemPrompt)
     {
-        ArgumentException.ThrowIfNullOrEmpty(systemPrompt, nameof(systemPrompt));
+        ArgumentException.ThrowIfNullOrEmpty(systemPrompt);
 
         _systemPrompt = systemPrompt;
 
@@ -151,14 +152,14 @@ public class ChatCompletionRequestBuilder
     ///         (if any) and before the user message.
     ///     </para>
     ///     <para>
-    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called.
-    ///         Use either WithMessages for full control, or use this method along with <see cref="WithUserPrompt"/>
+    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages" /> was previously called.
+    ///         Use either WithMessages for full control, or use this method along with <see cref="WithUserPrompt" />
     ///         for automatic message building.
     ///     </para>
     /// </remarks>
     public ChatCompletionRequestBuilder WithAssistantPrompt(string assistantPrompt)
     {
-        ArgumentException.ThrowIfNullOrEmpty(assistantPrompt, nameof(assistantPrompt));
+        ArgumentException.ThrowIfNullOrEmpty(assistantPrompt);
 
         _assistantPrompt = assistantPrompt;
 
@@ -177,9 +178,9 @@ public class ChatCompletionRequestBuilder
     ///         The image URL is optional and will be included in the user message content alongside the text prompt.
     ///     </para>
     ///     <para>
-    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages"/> was previously called.
+    ///         <b>NOTE:</b> This method has no effect if <see cref="WithMessages" /> was previously called.
     ///         Use either WithMessages for full control over multimodal content, or use this method along with
-    ///         <see cref="WithUserPrompt"/> for automatic message building with vision support.
+    ///         <see cref="WithUserPrompt" /> for automatic message building with vision support.
     ///     </para>
     ///     <para>
     ///         This method is typically used with vision-capable models like Llama 4 Scout or Llama 4 Maverick.
@@ -187,7 +188,7 @@ public class ChatCompletionRequestBuilder
     /// </remarks>
     public ChatCompletionRequestBuilder WithImageUrl(string imageUrl)
     {
-        ArgumentException.ThrowIfNullOrEmpty(imageUrl, nameof(imageUrl));
+        ArgumentException.ThrowIfNullOrEmpty(imageUrl);
 
         _imageUrl = imageUrl;
 
@@ -200,6 +201,7 @@ public class ChatCompletionRequestBuilder
         {
             throw new InvalidOperationException("User prompt is required. Use WithUserPrompt() to set it.");
         }
+
         _messages = [];
 
         if (_systemPrompt is not null)
@@ -216,7 +218,10 @@ public class ChatCompletionRequestBuilder
 
         if (_imageUrl is not null)
         {
-            userContent.Add(new JsonObject { ["type"] = "image_url", ["image_url"] = new JsonObject { ["url"] = _imageUrl } });
+            userContent.Add(new JsonObject
+            {
+                ["type"] = "image_url", ["image_url"] = new JsonObject { ["url"] = _imageUrl }
+            });
         }
 
         _messages.Add(new JsonObject { ["role"] = LlmRoles.UserRole, ["content"] = userContent });
@@ -381,7 +386,7 @@ public class ChatCompletionRequestBuilder
     /// <summary>
     ///     Sets the reasoning effort level.
     /// </summary>
-    /// <param name="reasoningEffort">One of: "none", "default", "low", "medium", "high".</param>
+    /// <param name="reasoningEffort">One of: "low", "medium", "high".</param>
     /// <returns>The ChatCompletionRequestBuilder instance for method chaining.</returns>
     public ChatCompletionRequestBuilder WithReasoningEffort(string reasoningEffort)
     {
@@ -401,15 +406,24 @@ public class ChatCompletionRequestBuilder
     }
 
     /// <summary>
-    ///     Sets the response format specification.
+    ///     Sets the response format specification as a JSON schema.
     /// </summary>
     /// <param name="responseFormat">Response format string (json_schema).</param>
     /// <returns>The ChatCompletionRequestBuilder instance for method chaining.</returns>
     /// <exception cref="ArgumentNullException">Thrown when the responseFormat is null.</exception>
     /// <exception cref="JsonException">Thrown when responseFormat is not valid JSON.</exception>
-    public ChatCompletionRequestBuilder WithResponseFormat(string responseFormat)
+    public ChatCompletionRequestBuilder WithResponseFormat(string responseFormat, string responseName = "response")
     {
-        _responseFormat = new JsonObject { ["type"] = "json_schema", ["json_schema"] = JsonNode.Parse(responseFormat) };
+        ArgumentException.ThrowIfNullOrWhiteSpace(responseFormat);
+        ArgumentException.ThrowIfNullOrWhiteSpace(responseName);
+        _responseFormat = new JsonObject
+        {
+            ["type"] = "json_schema",
+            ["json_schema"] = new JsonObject
+            {
+                ["name"] = responseName, ["schema"] = JsonNode.Parse(responseFormat)
+            }
+        };
         return this;
     }
 
