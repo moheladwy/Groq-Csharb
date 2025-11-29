@@ -381,7 +381,7 @@ public class ChatCompletionRequestBuilder
     /// <summary>
     ///     Sets the reasoning effort level.
     /// </summary>
-    /// <param name="reasoningEffort">One of: "none", "default", "low", "medium", "high".</param>
+    /// <param name="reasoningEffort">One of: "low", "medium", "high".</param>
     /// <returns>The ChatCompletionRequestBuilder instance for method chaining.</returns>
     public ChatCompletionRequestBuilder WithReasoningEffort(string reasoningEffort)
     {
@@ -401,15 +401,23 @@ public class ChatCompletionRequestBuilder
     }
 
     /// <summary>
-    ///     Sets the response format specification.
+    ///     Sets the response format specification as a JSON schema.
     /// </summary>
     /// <param name="responseFormat">Response format string (json_schema).</param>
     /// <returns>The ChatCompletionRequestBuilder instance for method chaining.</returns>
     /// <exception cref="ArgumentNullException">Thrown when the responseFormat is null.</exception>
     /// <exception cref="JsonException">Thrown when responseFormat is not valid JSON.</exception>
-    public ChatCompletionRequestBuilder WithResponseFormat(string responseFormat)
+    public ChatCompletionRequestBuilder WithResponseFormat(string responseFormat, string responseName = "response")
     {
-        _responseFormat = new JsonObject { ["type"] = "json_schema", ["json_schema"] = JsonNode.Parse(responseFormat) };
+        _responseFormat = new JsonObject
+        {
+            ["type"] = "json_schema",
+            ["json_schema"] = new JsonObject
+            {
+                ["name"] = responseName,
+                ["schema"] = JsonNode.Parse(responseFormat)
+            }
+        };
         return this;
     }
 
