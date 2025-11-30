@@ -1,6 +1,6 @@
 ﻿# Groq C# SDK
 
-A comprehensive and modern .NET SDK for seamless integration with the Groq AI API. This SDK provides a clean,
+A comprehensive and modern .NET Community SDK for seamless integration with the Groq AI API. This SDK provides a clean,
 type-safe interface to access Groq's powerful language models, vision capabilities, audio processing, and advanced tool
 integration features.
 
@@ -84,14 +84,14 @@ refactored and enhanced.
 
 ## Requirements
 
--   **.NET 10.0** or later
+-   **.NET 8.0** or later
 -   Groq API key (get one at [console.groq.com](https://console.groq.com))
 
 ## 📦 Installation
 
 ### Current Release
 
-**Version:** `2.0.0.9-alpha`
+**Version:** `2.0.0.10-alpha`
 
 > **⚠️ ALPHA RELEASE - NOT PRODUCTION READY**
 >
@@ -106,13 +106,13 @@ The SDK is split into two packages for better modularity:
 Core SDK containing all API clients, models, providers, and the new ChatCompletionRequestBuilder.
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.9-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.10-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Core -Version 2.0.0.9-alpha
+Install-Package Groq.Sdk.Core -Version 2.0.0.10-alpha
 ```
 
 #### **Groq.Sdk.Extensions.DependencyInjection** (Optional)
@@ -120,20 +120,20 @@ Install-Package Groq.Sdk.Core -Version 2.0.0.9-alpha
 Dependency injection extensions for ASP.NET Core and .NET Generic Host applications.
 
 ```bash
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.9-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.10-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.9-alpha
+Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.10-alpha
 ```
 
 ### Quick Install (Both Packages)
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.9-alpha
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.9-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.10-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.10-alpha
 ```
 
 > **💡 Package Selection Guide:**
