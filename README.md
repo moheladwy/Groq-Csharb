@@ -91,7 +91,7 @@ refactored and enhanced.
 
 ### Current Release
 
-**Version:** `2.0.0.10-alpha`
+**Version:** `2.0.0.11-alpha`
 
 > **⚠️ ALPHA RELEASE - NOT PRODUCTION READY**
 >
@@ -106,13 +106,13 @@ The SDK is split into two packages for better modularity:
 Core SDK containing all API clients, models, providers, and the new ChatCompletionRequestBuilder.
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.10-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.11-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Core -Version 2.0.0.10-alpha
+Install-Package Groq.Sdk.Core -Version 2.0.0.11-alpha
 ```
 
 #### **Groq.Sdk.Extensions.DependencyInjection** (Optional)
@@ -120,20 +120,20 @@ Install-Package Groq.Sdk.Core -Version 2.0.0.10-alpha
 Dependency injection extensions for ASP.NET Core and .NET Generic Host applications.
 
 ```bash
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.10-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.11-alpha
 ```
 
 Or via Package Manager Console:
 
 ```powershell
-Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.10-alpha
+Install-Package Groq.Sdk.Extensions.DependencyInjection -Version 2.0.0.11-alpha
 ```
 
 ### Quick Install (Both Packages)
 
 ```bash
-dotnet add package Groq.Sdk.Core --version 2.0.0.10-alpha
-dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.10-alpha
+dotnet add package Groq.Sdk.Core --version 2.0.0.11-alpha
+dotnet add package Groq.Sdk.Extensions.DependencyInjection --version 2.0.0.11-alpha
 ```
 
 > **💡 Package Selection Guide:**
@@ -523,13 +523,12 @@ Console.WriteLine(result?["choices"]?[0]?["message"]?["content"]?.ToString());
 ```csharp
 using Groq.Core.Models;
 
-using var audioStream = File.OpenRead("meeting.mp3");
+Stream audioStream = File.OpenRead("meeting.mp3");
 
 var result = await audioClient.CreateTranscriptionAsync(
     audioFile: audioStream,
     fileName: "meeting.mp3",
     model: AudioModels.WHISPER_LARGE_V3_TURBO.Id,
-    prompt: "Tech conference discussion",
     language: "en",
     temperature: 0.0f
 );
@@ -540,13 +539,12 @@ Console.WriteLine(result?["text"]?.ToString());
 #### Audio Translation
 
 ```csharp
-using var audioStream = File.OpenRead("spanish_audio.mp3");
+var audioStream = File.OpenRead("spanish_audio.mp3");
 
 var result = await audioClient.CreateTranslationAsync(
     audioFile: audioStream,
     fileName: "spanish_audio.mp3",
-    model: AudioModels.WHISPER_LARGE_V3.Id,
-    prompt: "Translate this Spanish speech to English"
+    model: AudioModels.WHISPER_LARGE_V3.Id
 );
 
 Console.WriteLine(result?["text"]?.ToString());
