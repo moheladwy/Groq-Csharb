@@ -52,30 +52,30 @@ public sealed class AudioClient
     {
         using var content = new MultipartFormDataContent();
 
-        using var fileContent = new StreamContent(audioFile);
+        var fileContent = new StreamContent(audioFile);
         content.Add(fileContent, "file", fileName);
 
-        using var modelContent = new StringContent(model);
+        var modelContent = new StringContent(model);
         content.Add(modelContent, "model");
 
-        if (!string.IsNullOrEmpty(prompt))
+        if (!string.IsNullOrWhiteSpace(prompt))
         {
-            using var promptContent = new StringContent(prompt);
+            var promptContent = new StringContent(prompt);
             content.Add(promptContent, "prompt");
         }
 
-        using var responseFormatContent = new StringContent(responseFormat);
+        var responseFormatContent = new StringContent(responseFormat);
         content.Add(responseFormatContent, "response_format");
 
-        if (!string.IsNullOrEmpty(language))
+        if (!string.IsNullOrWhiteSpace(language))
         {
-            using var languageContent = new StringContent(language);
+            var languageContent = new StringContent(language);
             content.Add(languageContent, "language");
         }
 
         if (temperature.HasValue)
         {
-            using var temperatureContent = new StringContent(temperature.Value.ToString(CultureInfo.CurrentCulture));
+            var temperatureContent = new StringContent(temperature.Value.ToString(CultureInfo.CurrentCulture));
             content.Add(temperatureContent, "temperature");
         }
 
@@ -104,24 +104,24 @@ public sealed class AudioClient
         float? temperature = null)
     {
         using var content = new MultipartFormDataContent();
-        using var fileContent = new StreamContent(audioFile);
+        var fileContent = new StreamContent(audioFile);
         content.Add(fileContent, "file", fileName);
 
-        using var modelContent = new StringContent(model);
+        var modelContent = new StringContent(model);
         content.Add(modelContent, "model");
 
-        if (!string.IsNullOrEmpty(prompt))
+        if (!string.IsNullOrWhiteSpace(prompt))
         {
-            using var promptContent = new StringContent(prompt);
+            var promptContent = new StringContent(prompt);
             content.Add(promptContent, "prompt");
         }
 
-        using var responseFormatContent = new StringContent(responseFormat);
+        var responseFormatContent = new StringContent(responseFormat);
         content.Add(responseFormatContent, "response_format");
 
         if (temperature.HasValue)
         {
-            using var temperatureContent = new StringContent(temperature.Value.ToString(CultureInfo.CurrentCulture));
+            var temperatureContent = new StringContent(temperature.Value.ToString(CultureInfo.CurrentCulture));
             content.Add(temperatureContent, "temperature");
         }
 
